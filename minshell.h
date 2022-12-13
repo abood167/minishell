@@ -25,9 +25,15 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-
 char	**ft_splitquote(char const *s);
-void    printlist(char **list);
-char** strip_redirect(char **cmd, t_pipex *pipex, int ac);
+void    printarr(char **list);
+void    printlist(t_list *list);
+char** strip_redirect(char **cmd, t_pipex *pipex);
+
+t_list* ft_arrtolst(char **arr);
+char** ft_lsttoarr(t_list *list);
+char **ft_copyarr(char **arr);
+
+char** set_var(char **cmd, t_list *g_env, t_list **l_var, int ac);
 
 #endif

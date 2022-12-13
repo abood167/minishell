@@ -213,21 +213,30 @@ void print_env(char **cmd)
 // upgrade splitquotes for both | and ""
 //Need to figure out sort order of env
 //Export and set in pipe?
-int main(int ac, char **av, char **envp)
+//Export and set $?
+//Set cannot be mixed with other commands. If mixed, nothing happens
+//handle for "d=55 c=$d"
+int main(int ac, char **av, char **env)
 {
 	char	**cmd;
 	char	*line;
+	char	**envp;
 	t_pipex	pipex;
 	int 	status;
+	t_list 	*g_env;
+	t_list	*l_var;
 	// int z = 0;
 	// char **
 
 	status = EXIT_SUCCESS;
 	ft_int_signal();
+
+	g_env = ft_arrtolst(env);
+	l_var = ft_lstnew(ft_strdup("?"));
 	while (1)
 	{
 	// 	int s;
-	
+		envp = ft_lsttoarr(g_env);
 		pipex_init(&pipex, envp);
 
 		char s[100] ;
@@ -247,8 +256,9 @@ int main(int ac, char **av, char **envp)
 		else
 			cmd = &av[1];
 		
-		// DO environment variable conversion (Even for echo$asd)
-		 cmd = strip_redirect(cmd, &pipex, ac);
+		 //do replace var $ here
+		 cmd = set_var(cmd, g_env, &l_var, ac);
+		 cmd = strip_redirect(cmd, &pipex);
 		 if(!cmd)
 		 	continue;
 		// if(cmd[0] != '\0' && cmd[0] != NULL)
@@ -275,7 +285,7 @@ int main(int ac, char **av, char **envp)
 				cd_cmd(cmd);
 			}
 			else if (ft_strcmp(cmd[0],"env") == 0){
-				printlist(envp);
+				printarr(envp);
 			}
 			else {
 				printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
@@ -296,6 +306,7 @@ int main(int ac, char **av, char **envp)
 					// printf("%s    \n",cmd[1]);
 
 				// print_env(cmd);
+		ft_freearray((void**)envp);
 		if (ac != 1)
 			break;		
 	}

@@ -1,1 +1,8 @@
-{}
+{
+    "files.associations": {
+        "*.c": "c",
+        "minshell.h": "c",
+        "pipex.h": "c",
+        "random": "c"
+    }
+}

@@ -1,9 +1,16 @@
 #include "minshell.h"
 
-void printlist(char **list) {
-    while(*list) {
-        printf("%s\n", *list);
-        list++;
+void printarr(char **arr) {
+    while(*arr) {
+        printf("%s\n", *arr);
+        arr++;
+    }
+}
+
+void printlist(t_list *list) {
+    while(list) {
+        printf("%s\n", (char*)list->content);
+        list = list->next;
     }
 }
 
@@ -22,7 +29,7 @@ char** ft_lsttoarr(t_list *list) {
     char    **arr;
     int     i;
 
-    arr = (char **)malloc((char **)malloc(sizeof(char *) * (ft_lstsize(list) + 1)));
+    arr = (char **)malloc(sizeof(char *) * (ft_lstsize(list) + 1));
     i = 0;
     while (list)
     {
@@ -30,4 +37,16 @@ char** ft_lsttoarr(t_list *list) {
         list = list->next;
     }
     arr[i] = NULL;
+    return arr;
+}
+
+char **ft_copyarr(char **arr) {
+    char **copy;
+    int     len;
+    len = ft_2dlen((void**)arr);
+    copy = (char **)malloc(sizeof(char *) * (len + 1));
+    copy[len] = NULL;
+    while(len--)
+        copy[len] = strdup(arr[len]);
+    return copy;
 }

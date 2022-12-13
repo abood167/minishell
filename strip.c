@@ -1,6 +1,6 @@
 #include "minshell.h"
 
-char** strip_copy(char **cmd, int len, int ac){
+char** strip_copy(char **cmd, int len){
     char **strip;
     int i;
     int j;
@@ -29,13 +29,12 @@ char** strip_copy(char **cmd, int len, int ac){
         i++;
         j++;
     }
-    if (ac == 1)
-        ft_freearray((void **)cmd);
+    ft_freearray((void **)cmd);
     strip[i] = NULL;
     return (strip);
 }
 
-char** strip_redirect(char **cmd, t_pipex *pipex, int ac) {
+char** strip_redirect(char **cmd, t_pipex *pipex) {
     int arr_len;
     int cmd_pos;
 
@@ -108,5 +107,5 @@ char** strip_redirect(char **cmd, t_pipex *pipex, int ac) {
         }
         arr_len++;
     }
-    return(strip_copy(cmd, arr_len, ac));
+    return(strip_copy(cmd, arr_len));
 } 
