@@ -16,20 +16,6 @@ void ctrl_c()
 	rl_redisplay();
 }
 
-int ft_strcmp(const char *s1, const char *s2)
-{
-	int i = 0;
-	while(s1[i] != '\0' && s2[i] != '\0')
-	{
-		if(s1[i] != s2[i])
-		{
-			return (s1[i] - s2[i]);
-		}
-		i++;
-	}
-	return (s1[i] - s2[i]);
-}
-
 void ft_int_signal()
 {
 	signal(SIGQUIT, SIG_IGN);
@@ -221,11 +207,12 @@ int main(int ac, char **av, char **envp)
 {
 	char	**cmd;
 	char	*line;
-	t_pipex pipex;
+	t_pipex	pipex;
+	int 	status;
 	// int z = 0;
 	// char **
 
-	
+	status = EXIT_SUCCESS;
 	ft_int_signal();
 	while (ac == 1)
 	{
@@ -270,8 +257,13 @@ int main(int ac, char **av, char **envp)
 				printlist(envp);
 			}
 			else {
+				printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
 				pipex_init(&pipex, envp);
-				child(pipex, 0, cmd, envp);
+				pipex.pid = fork();
+				if (pipex.pid == 0)
+					child(pipex, 0, cmd, envp);			
+				waitpid(pipex.pid, &status, 0);
+				status = WEXITSTATUS(status); //enviroment variable
 			}
 			//strip redirection
 

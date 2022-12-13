@@ -5,7 +5,8 @@ SRCS =	minishell.c split_qoute.c utils.c \
 
 CC = gcc -I/usr/local/opt/readline/include
 
-CFLAGS = -Wall -Wextra -g
+# CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -g
 
 OBJS = $(SRCS:.c=.o)
 
