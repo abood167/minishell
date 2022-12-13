@@ -1,12 +1,11 @@
 NAME = minishell
 
-SRCS = minishell.c split_qoute.c
+SRCS =	minishell.c split_qoute.c utils.c \
+		pipex/childs.c pipex/here_doc.c pipex/pipex.c 
 
 CC = gcc -I/usr/local/opt/readline/include
 
-
-
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -g
 
 OBJS = $(SRCS:.c=.o)
 

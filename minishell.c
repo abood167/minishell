@@ -217,16 +217,17 @@ void print_env(char **cmd)
 	}
 }
 
-int main()
+int main(int ac, char **av, char **envp)
 {
 	char	**cmd;
 	char	*line;
+	t_pipex pipex;
 	// int z = 0;
 	// char **
 
 	
 	ft_int_signal();
-	while (1)
+	while (ac == 1)
 	{
 	// 	int s;
 		char s[100] ;
@@ -254,7 +255,6 @@ int main()
 			{
 					exit_whitout_arg(cmd);
 			}
-			
 			else if(cmd && ft_strcmp(cmd[0],"echo") == 0)
 			{
 				echo_cmd(cmd);
@@ -266,6 +266,17 @@ int main()
 			else if(cmd && ft_strcmp(cmd[0],"cd") == 0){
 				cd_cmd(cmd);
 			}
+			else if (ft_strcmp(cmd[0],"env") == 0){
+				printlist(envp);
+			}
+			else {
+				pipex_init(&pipex, envp);
+				child(pipex, 0, cmd, envp);
+			}
+			//strip redirection
+
+
+			
 		// 		// execve("/bin/ls", ,envp);
 
 					// printf("%s    \n",cmd[1]);

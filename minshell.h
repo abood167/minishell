@@ -21,10 +21,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "libft/libft.h"
+#include "pipex/pipex.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 
 
 char	**ft_splitquote(char const *s);
+void    printlist(char **list);
 
 #endif

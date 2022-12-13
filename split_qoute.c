@@ -151,7 +151,7 @@ static char	**ft_splitquote2(char **split, char const *s, char c, int *word)
 					// ft_freearray((void **)split);
 					return (NULL);
 				}
-				str = ft_strchrquote(str, c, quote);
+			str = ft_strchrquote(str, c, quote);
 		}
 		else if (*str != '\0')
 		{
