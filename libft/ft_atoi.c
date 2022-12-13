@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 08:12:15 by abin-saa          #+#    #+#             */
-/*   Updated: 2022/07/03 18:25:03 by abin-saa         ###   ########.fr       */
+/*   Updated: 2022/12/13 11:49:57 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int	ft_atoi(const char *str)
 			return (0);
 		i++;
 	}
+	if(value * k == 0)
+		return (-880);
 	return (value * k);
 }
 
