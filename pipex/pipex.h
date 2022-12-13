@@ -37,7 +37,7 @@ typedef struct s_pipex
 void		pipex_init(t_pipex *pipex, char **envp);
 
 void		child(t_pipex pipex, int pos, char *argv[], char *envp[]);
-void		here_doc(t_pipex *pipex, char **argv);
+void		here_doc(t_pipex *pipex, char *lim);
 
 void		parent_free(t_pipex *pipex);
 void		child_free(t_pipex *pipex);
@@ -47,5 +47,7 @@ void		error_free(t_pipex *pipex, char *error);
 void		cmdnotfound(char *cmd);
 void		filenotfound(char *file);
 void		writeline(char *str);
+
+void		check_pipe(t_pipex *pipex);
 
 #endif

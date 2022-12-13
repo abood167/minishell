@@ -203,6 +203,16 @@ void print_env(char **cmd)
 	}
 }
 
+// void minishell(int ac, char **cmd, char** envp, t_pipex *pipex){
+
+// }
+
+// handle tab for "<" ie like "<tect.1"
+// Test writing to place without permision
+//pipe without spaces
+// upgrade splitquotes for both | and ""
+//Need to figure out sort order of env
+//Export and set in pipe?
 int main(int ac, char **av, char **envp)
 {
 	char	**cmd;
@@ -214,22 +224,33 @@ int main(int ac, char **av, char **envp)
 
 	status = EXIT_SUCCESS;
 	ft_int_signal();
-	while (ac == 1)
+	while (1)
 	{
 	// 	int s;
-		char s[100] ;
-		line = readline("minishell % ");
-		if (line == NULL)
-		{
-			//remember to clean the memory before exiting
-			exit(0);
-		}
+	
+		pipex_init(&pipex, envp);
 
-		cmd = ft_splitquote(line);
-		 if(cmd[0])
-		 {
-			 add_history(line);
-		 }
+		char s[100] ;
+		if (ac == 1) {
+			line = readline("minishell % ");
+			if (line == NULL)
+			{
+				//remember to clean the memory before exiting
+				exit(0);
+			}
+			cmd = ft_splitquote(line);
+			if(cmd[0])
+			{
+				add_history(line);
+			}
+		}
+		else
+			cmd = &av[1];
+		
+		// DO environment variable conversion (Even for echo$asd)
+		 cmd = strip_redirect(cmd, &pipex, ac);
+		 if(!cmd)
+		 	continue;
 		// if(cmd[0] != '\0' && cmd[0] != NULL)
 		// {
 
@@ -240,7 +261,7 @@ int main(int ac, char **av, char **envp)
 				// else
 			if(cmd && ft_strcmp(cmd[0],"exit") == 0)
 			{
-					exit_whitout_arg(cmd);
+				exit_whitout_arg(cmd);
 			}
 			else if(cmd && ft_strcmp(cmd[0],"echo") == 0)
 			{
@@ -248,7 +269,7 @@ int main(int ac, char **av, char **envp)
 			}
 			else if(cmd && ft_strcmp(cmd[0],"pwd") == 0){
 				getcwd(s, 100);
-			printf("%s\n",getcwd(s,100));
+				printf("%s\n",getcwd(s,100));
 			}
 			else if(cmd && ft_strcmp(cmd[0],"cd") == 0){
 				cd_cmd(cmd);
@@ -258,12 +279,13 @@ int main(int ac, char **av, char **envp)
 			}
 			else {
 				printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
-				pipex_init(&pipex, envp);
+				check_pipe(&pipex);
 				pipex.pid = fork();
 				if (pipex.pid == 0)
 					child(pipex, 0, cmd, envp);			
 				waitpid(pipex.pid, &status, 0);
 				status = WEXITSTATUS(status); //enviroment variable
+				//close pipes
 			}
 			//strip redirection
 
@@ -274,8 +296,8 @@ int main(int ac, char **av, char **envp)
 					// printf("%s    \n",cmd[1]);
 
 				// print_env(cmd);
-
-			
+		if (ac != 1)
+			break;		
 	}
 
 

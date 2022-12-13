@@ -12,24 +12,22 @@
 
 #include "pipex.h"
 
-void	here_doc(t_pipex *pipex, char **argv)
+void	here_doc(t_pipex *pipex, char *lim)
 {
 	char	*str;
 	int		len[2];
 
-	if (pipex->argc < 6)
-		error_exit(NULL);
 	pipex->here_doc = 1;
 	if (pipe(pipex->out) == -1)
 		error_exit("Pipe: ");
-	len[1] = ft_strlen(argv[2]);
+	len[1] = ft_strlen(lim);
 	while (1)
 	{
-		ft_printf("pipe heredoc> ");
+		ft_printf("> ");
 		str = get_next_line(0);
 		len[0] = ft_strlen(str);
-		if (len[0] - 1 == len[1] && ft_strncmp(str, argv[2], len[0] - 1) == 0)
-			break ;
+		if (len[0] - 1 == len[1] && ft_strncmp(str, lim, len[0] - 1) == 0)
+			break;
 		write(pipex->out[1], str, len[0]);
 		free(str);
 	}

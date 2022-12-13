@@ -28,5 +28,6 @@
 
 char	**ft_splitquote(char const *s);
 void    printlist(char **list);
+char** strip_redirect(char **cmd, t_pipex *pipex, int ac);
 
 #endif

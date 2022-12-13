@@ -63,8 +63,8 @@ void	pipex_init(t_pipex *pipex, char **envp)
 	pipex->here_doc = 0;
 	// pipex->argc = argc;
 	pipex->argc = 0;
-	pipex->in = 0;
-	pipex->out[1] = 1;
+	pipex->in = -1;
+	pipex->out[1] = -1;
 	// if (!ft_strcmp(argv[1], "here_doc"))
 	// 	here_doc(pipex, argv);
 	// else
@@ -78,6 +78,13 @@ void	pipex_init(t_pipex *pipex, char **envp)
 	pipex->paths = ft_split((*path + 5), ':');
 	pipex->status = EXIT_SUCCESS;
 	pipex->cmd = NULL;
+}
+
+void check_pipe(t_pipex *pipex) {
+	if (pipex->in == -1)
+		pipex->in = 0;
+	if (pipex->out[1] == -1)
+		pipex->out[1] = 1;
 }
 
 // int	main(int argc, char **argv, char **envp)
