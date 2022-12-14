@@ -233,6 +233,8 @@ void print_env(char **cmd)
 //do *
 // when piping, fork self and not recall minishell
 //Check last pipe have command
+//fix ffff" "ffff
+//unset 3asdasd
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
