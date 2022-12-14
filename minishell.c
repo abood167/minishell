@@ -106,12 +106,11 @@ void exit_whitout_arg(char **cmd)
 
 	
 }
-void echo_cmd(char **cmd)
+void echo_cmd(char **cmd, t_pipex pipex)
 {
 		int i = 1;
 		int x = 1;
 		int t = 0;
-
 	// check_getenv(cmd);
 	while (cmd[i])
 	{
@@ -139,17 +138,18 @@ void echo_cmd(char **cmd)
 
 	while (cmd[i])
 	{
-		printf("%s",cmd[i]);
+		
+		ft_putstr_fd(cmd[i],pipex.out[1]);
 		if(cmd[(i + 1)] != NULL)
 		{
-			printf(" ");
+			ft_putstr_fd(" ",pipex.out[1]);
 		}
 		i++;
 	}
 	
 	if (t == 0)
     {
-        printf("\n");
+        ft_putstr_fd("\n",pipex.out[1]);
     }
 
 	//  i = 1;
@@ -270,6 +270,7 @@ int main(int ac, char **av, char **env)
 		// if(cmd[0] != '\0' && cmd[0] != NULL)
 		// {
 
+			check_pipe(&pipex);
 			if( !cmd || !cmd[0])
 			{
 				continue;
@@ -281,7 +282,7 @@ int main(int ac, char **av, char **env)
 			}
 			else if(cmd && ft_strcmp(cmd[0],"echo") == 0)
 			{
-				echo_cmd(cmd);
+				echo_cmd(cmd, pipex);
 			}
 			else if(cmd && ft_strcmp(cmd[0],"pwd") == 0){
 				getcwd(s, 100);
@@ -298,7 +299,6 @@ int main(int ac, char **av, char **env)
 			}
 			else {
 				printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
-				check_pipe(&pipex);
 				//Convert echo if redirection
 				pipex.pid = fork();
 				if (pipex.pid == 0)
