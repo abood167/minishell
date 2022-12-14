@@ -8,8 +8,13 @@
 
 // -L/usr/local/opt/readline/lib -lreadline
 
+
+static t_pipex	pipex;
+
 void ctrl_c()
 {
+	if(pipex.pid != 0)
+		return ;
 	rl_replace_line("", 0);
 	printf("\n");
 	rl_on_new_line();
@@ -106,12 +111,11 @@ void exit_whitout_arg(char **cmd)
 
 	
 }
-void echo_cmd(char **cmd)
+void echo_cmd(char **cmd, t_pipex pipex)
 {
 		int i = 1;
 		int x = 1;
 		int t = 0;
-
 	// check_getenv(cmd);
 	while (cmd[i])
 	{
@@ -139,17 +143,18 @@ void echo_cmd(char **cmd)
 
 	while (cmd[i])
 	{
-		printf("%s",cmd[i]);
+		
+		ft_putstr_fd(cmd[i],pipex.out[1]);
 		if(cmd[(i + 1)] != NULL)
 		{
-			printf(" ");
+			ft_putstr_fd(" ",pipex.out[1]);
 		}
 		i++;
 	}
 	
 	if (t == 0)
     {
-        printf("\n");
+        ft_putstr_fd("\n",pipex.out[1]);
     }
 
 	//  i = 1;
@@ -183,8 +188,15 @@ void get_path(char **cmd)
 
 void cd_cmd(char **cmd)
 {
+	char *tmp;
 	if(cmd[1] == NULL)
 	{
+		tmp = getenv("HOME");
+		if(tmp == NULL)
+		{
+			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+			return;
+		}
 		chdir(getenv("HOME"));
 	}
 	else
@@ -228,14 +240,12 @@ int main(int ac, char **av, char **env)
 	char	**cmd;
 	char	*line;
 	char	**envp;
-	t_pipex	pipex;
-	int 	status;
 	t_list 	*g_env;
 	t_list	*l_var;
 	// int z = 0;
 	// char **
 
-	status = EXIT_SUCCESS;
+	pipex.status = EXIT_SUCCESS;
 	ft_int_signal();
 
 	g_env = ft_arrtolst(env);
@@ -247,7 +257,12 @@ int main(int ac, char **av, char **env)
 		pipex_init(&pipex, envp);
 
 		char s[100] ;
+		while(!getcwd(s, 100)) //find out why 100
+			cd_cmd(ft_split("cd ..", ' '));
+
 		if (ac == 1) {
+			if(pipex.status == 130)
+				printf("\n");
 			line = readline("minishell % ");
 			if (line == NULL)
 			{
@@ -255,7 +270,7 @@ int main(int ac, char **av, char **env)
 				exit(0);
 			}
 			//Handle * before this
-			cmd = ft_splitquote(line, ' ');
+			cmd = ft_splitquote(line, ' '); //record which arr index is quote
 			if(cmd[0])
 			{
 				add_history(line);
@@ -272,6 +287,7 @@ int main(int ac, char **av, char **env)
 		// if(cmd[0] != '\0' && cmd[0] != NULL)
 		// {
 
+			check_pipe(&pipex);
 			if( !cmd || !cmd[0])
 			{
 				continue;
@@ -283,7 +299,7 @@ int main(int ac, char **av, char **env)
 			}
 			else if(cmd && ft_strcmp(cmd[0],"echo") == 0)
 			{
-				echo_cmd(cmd);
+				echo_cmd(cmd, pipex);
 			}
 			else if(cmd && ft_strcmp(cmd[0],"pwd") == 0){
 				getcwd(s, 100);
@@ -300,13 +316,12 @@ int main(int ac, char **av, char **env)
 			}
 			else {
 				printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
-				check_pipe(&pipex);
 				//Convert echo if redirection
 				pipex.pid = fork();
 				if (pipex.pid == 0)
 					child(pipex, 0, cmd, envp);			
-				waitpid(pipex.pid, &status, 0);
-				status = WEXITSTATUS(status); //enviroment variable
+				waitpid(pipex.pid, &pipex.status, 0);
+				pipex.status = WEXITSTATUS(pipex.status); //enviroment variable 
 				//close pipes
 			}
 			//strip redirection

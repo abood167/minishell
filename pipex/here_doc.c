@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 15:58:04 by sbokhari          #+#    #+#             */
-/*   Updated: 2022/12/12 15:58:20 by sbokhari         ###   ########.fr       */
+/*   Updated: 2022/12/14 14:45:05 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ void	here_doc(t_pipex *pipex, char *lim)
 	{
 		ft_printf("> ");
 		str = get_next_line(0);
+		if(str == NULL)
+		{
+			// child(*pipex, 0,&pipex->args[0], pipex->args);
+			break;
+		}
+			
 		len[0] = ft_strlen(str);
 		if (len[0] - 1 == len[1] && ft_strncmp(str, lim, len[0] - 1) == 0)
 			break;

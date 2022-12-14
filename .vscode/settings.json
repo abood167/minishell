@@ -3,6 +3,8 @@
         "*.c": "c",
         "minshell.h": "c",
         "pipex.h": "c",
-        "random": "c"
+        "random": "c",
+        "string": "c",
+        "iosfwd": "c"
     }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 13:16:25 by sbokhari          #+#    #+#             */
-/*   Updated: 2022/12/12 15:58:20 by sbokhari         ###   ########.fr       */
+/*   Updated: 2022/12/14 15:49:19 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	main2(t_pipex *pipex, char **argv, char **envp)
 void	pipex_init(t_pipex *pipex, char **envp)
 {
 	char	**path;
-
+	
+	pipex->pid = 0;
 	pipex->paths = NULL;
 	pipex->here_doc = 0;
 	// pipex->argc = argc;
