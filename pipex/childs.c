@@ -17,7 +17,7 @@ char	*getcommand(char **paths, char *cmd)
 	char	*temp;
 	char	*command;
 
-	if (ft_strchr(cmd, '/'))
+	if (ft_strchr(cmd, '/') || !*paths)
 	{
 		if (access(cmd, 0) == 0)
 			return (cmd);

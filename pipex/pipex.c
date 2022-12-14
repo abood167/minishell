@@ -78,7 +78,7 @@ void	pipex_init(t_pipex *pipex, char **envp)
 	if (*path)
 		pipex->paths = ft_split((*path + 5), ':');
 	else
-		pipex->paths = NULL;
+		pipex->paths = ft_split(" ", ' ');
 	pipex->status = EXIT_SUCCESS;
 	pipex->cmd = NULL;
 }
