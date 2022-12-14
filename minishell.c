@@ -269,6 +269,7 @@ int main(int ac, char **av, char **env)
 			}
 			//Handle * before this
 			cmd = ft_splitquote(line, ' '); //record which arr index is quote
+			cmd = wildcard(cmd);
 			if(cmd[0])
 			{
 				add_history(line);
