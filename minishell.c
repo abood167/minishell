@@ -291,6 +291,7 @@ int main(int ac, char **av, char **env)
 			else {
 				printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
 				check_pipe(&pipex);
+				//Convert echo if redirection
 				pipex.pid = fork();
 				if (pipex.pid == 0)
 					child(pipex, 0, cmd, envp);			
