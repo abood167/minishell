@@ -216,6 +216,7 @@ void print_env(char **cmd)
 //Export and set $?
 //Set cannot be mixed with other commands. If mixed, nothing happens
 //handle for "d=55 c=$d"
+//export alpha=5
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
