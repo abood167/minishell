@@ -8,8 +8,13 @@
 
 // -L/usr/local/opt/readline/lib -lreadline
 
+
+static t_pipex	pipex;
+
 void ctrl_c()
 {
+	if(pipex.pid != 0)
+		return ;
 	rl_replace_line("", 0);
 	printf("\n");
 	rl_on_new_line();
@@ -183,8 +188,15 @@ void get_path(char **cmd)
 
 void cd_cmd(char **cmd)
 {
+	char *tmp;
 	if(cmd[1] == NULL)
 	{
+		tmp = getenv("HOME");
+		if(tmp == NULL)
+		{
+			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+			return;
+		}
 		chdir(getenv("HOME"));
 	}
 	else
@@ -226,14 +238,12 @@ int main(int ac, char **av, char **env)
 	char	**cmd;
 	char	*line;
 	char	**envp;
-	t_pipex	pipex;
-	int 	status;
 	t_list 	*g_env;
 	t_list	*l_var;
 	// int z = 0;
 	// char **
 
-	status = EXIT_SUCCESS;
+	pipex.status = EXIT_SUCCESS;
 	ft_int_signal();
 
 	g_env = ft_arrtolst(env);
@@ -245,7 +255,12 @@ int main(int ac, char **av, char **env)
 		pipex_init(&pipex, envp);
 
 		char s[100] ;
+		while(!getcwd(s, 100)) //find out why 100
+			cd_cmd(ft_split("cd ..", ' '));
+
 		if (ac == 1) {
+			if(pipex.status == 130)
+				printf("\n");
 			line = readline("minishell % ");
 			if (line == NULL)
 			{
@@ -253,7 +268,7 @@ int main(int ac, char **av, char **env)
 				exit(0);
 			}
 			//Handle * before this
-			cmd = ft_splitquote(line, ' ');
+			cmd = ft_splitquote(line, ' '); //record which arr index is quote
 			if(cmd[0])
 			{
 				add_history(line);
@@ -303,8 +318,8 @@ int main(int ac, char **av, char **env)
 				pipex.pid = fork();
 				if (pipex.pid == 0)
 					child(pipex, 0, cmd, envp);			
-				waitpid(pipex.pid, &status, 0);
-				status = WEXITSTATUS(status); //enviroment variable
+				waitpid(pipex.pid, &pipex.status, 0);
+				pipex.status = WEXITSTATUS(pipex.status); //enviroment variable 
 				//close pipes
 			}
 			//strip redirection
