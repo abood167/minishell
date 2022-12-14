@@ -1,0 +1,6 @@
+The minishell does not work after unseting path for parent bash.
+ctrl d in minishell should not exit bash
+
+
+
+
