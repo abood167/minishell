@@ -34,6 +34,6 @@ t_list* ft_arrtolst(char **arr);
 char** ft_lsttoarr(t_list *list);
 char **ft_copyarr(char **arr);
 
-char** set_var(char **cmd, t_list *g_env, t_list **l_var, int ac);
+char** set_var(char **cmd, t_list *g_env, t_list **l_var);
 
 #endif

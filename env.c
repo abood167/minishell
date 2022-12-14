@@ -17,7 +17,7 @@ int update_var(char *var, t_list *g_env) {
     return 0;
 }
 
-char** set_var(char **cmd, t_list *g_env, t_list **l_var, int ac) {
+char** set_var(char **cmd, t_list *g_env, t_list **l_var) {
     int i;
     int pos;
     char **newcmd;
@@ -32,8 +32,7 @@ char** set_var(char **cmd, t_list *g_env, t_list **l_var, int ac) {
         i++;
     }
     newcmd = ft_copyarr(&cmd[i]);
-    if (ac == 1)
-        ft_freearray((void**)cmd);
+    ft_freearray((void**)cmd);
     return newcmd;
 }
 

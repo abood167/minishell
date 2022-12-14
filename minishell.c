@@ -218,6 +218,8 @@ void print_env(char **cmd)
 //handle for "d=55 c=$d"
 //export alpha=5
 //Var start with alpha or _
+//do *
+// when piping, fork self and not recall minishell
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -249,6 +251,7 @@ int main(int ac, char **av, char **env)
 				//remember to clean the memory before exiting
 				exit(0);
 			}
+			//Handle * before this
 			cmd = ft_splitquote(line);
 			if(cmd[0])
 			{
@@ -256,10 +259,10 @@ int main(int ac, char **av, char **env)
 			}
 		}
 		else
-			cmd = &av[1];
-		
+			cmd = ft_copyarr(&av[1]);
+
 		 //do replace var $ here
-		 cmd = set_var(cmd, g_env, &l_var, ac);
+		 cmd = set_var(cmd, g_env, &l_var);
 		 cmd = strip_redirect(cmd, &pipex);
 		 if(!cmd)
 		 	continue;
