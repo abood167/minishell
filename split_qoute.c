@@ -164,18 +164,18 @@ static char	**ft_splitquote2(char **split, char const *s, char c, int *word)
 	return (split);
 }
 
-char	**ft_splitquote(char const *s)
+char	**ft_splitquote(char const *s, char c)
 {
 	char	**split;
 	int		word;
 
 	if (!s)
 		return (NULL);
-	split = (char **)malloc(sizeof(char *) * (wordcount(s, ' ') + 1));
+	split = (char **)malloc(sizeof(char *) * (wordcount(s, c) + 1));
 	if (!split)
 		return (NULL);
 	word = 0;
-	if (!ft_splitquote2(split, s, ' ', &word))
+	if (!ft_splitquote2(split, s, c, &word))
 		return (NULL);
 	split[word] = 0;
 	return (split);

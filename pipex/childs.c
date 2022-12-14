@@ -28,7 +28,6 @@ char	*getcommand(char **paths, char *cmd)
 
 	while (*paths)
 	{
-		//Handle if provided path to exe include ./
 		temp = ft_strjoin(*paths, "/");
 		command = ft_strjoin(temp, cmd);
 		free(temp);
@@ -37,6 +36,7 @@ char	*getcommand(char **paths, char *cmd)
 		free(command);
 		paths++;
 	}
+	cmdnotfound(cmd);
 	return (NULL);
 }
 

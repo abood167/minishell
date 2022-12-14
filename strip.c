@@ -14,7 +14,7 @@ char** strip_copy(char **cmd, int len){
             continue;
         }
         else if (ft_strncmp(cmd[j], ">", 1) == 0) {
-            j += 1 + 1 * (cmd[j][2] == '\0');
+            j += 1 + 1 * (cmd[j][1] == '\0');
             continue;
         }
         else if (ft_strncmp(cmd[j], "<<", 2) == 0) {
@@ -22,7 +22,7 @@ char** strip_copy(char **cmd, int len){
             continue;
         }
         else if (ft_strncmp(cmd[j], "<", 1) == 0) {
-            j += 1 + 1 * (cmd[j][2] == '\0');
+            j += 1 + 1 * (cmd[j][1] == '\0');
             continue;
         }
         strip[i] = ft_strdup(cmd[j]);

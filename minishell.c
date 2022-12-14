@@ -216,6 +216,11 @@ void print_env(char **cmd)
 //Export and set $?
 //Set cannot be mixed with other commands. If mixed, nothing happens
 //handle for "d=55 c=$d"
+//export alpha=5
+//Var start with alpha or _
+//do *
+// when piping, fork self and not recall minishell
+//Check last pipe have command
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -247,17 +252,18 @@ int main(int ac, char **av, char **env)
 				//remember to clean the memory before exiting
 				exit(0);
 			}
-			cmd = ft_splitquote(line);
+			//Handle * before this
+			cmd = ft_splitquote(line, ' ');
 			if(cmd[0])
 			{
 				add_history(line);
 			}
 		}
 		else
-			cmd = &av[1];
-		
+			cmd = ft_copyarr(&av[1]);
+
 		 //do replace var $ here
-		 cmd = set_var(cmd, g_env, &l_var, ac);
+		 cmd = set_var(cmd, g_env, &l_var);
 		 cmd = strip_redirect(cmd, &pipex);
 		 if(!cmd)
 		 	continue;
@@ -284,12 +290,16 @@ int main(int ac, char **av, char **env)
 			else if(cmd && ft_strcmp(cmd[0],"cd") == 0){
 				cd_cmd(cmd);
 			}
+			else if(cmd && ft_strcmp(cmd[0],"unset") == 0){
+				unset_var(&cmd[1], &g_env, &l_var);
+			}
 			else if (ft_strcmp(cmd[0],"env") == 0){
 				printarr(envp);
 			}
 			else {
 				printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
 				check_pipe(&pipex);
+				//Convert echo if redirection
 				pipex.pid = fork();
 				if (pipex.pid == 0)
 					child(pipex, 0, cmd, envp);			

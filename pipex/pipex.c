@@ -73,9 +73,12 @@ void	pipex_init(t_pipex *pipex, char **envp)
 	// 	error_exit(argv[1]);
 	path = envp;
 	//Handle failed to find path
-	while (ft_strncmp("PATH", *path, 4))
+	while (*path && ft_strncmp("PATH", *path, 4))
 		path++;
-	pipex->paths = ft_split((*path + 5), ':');
+	if (*path)
+		pipex->paths = ft_split((*path + 5), ':');
+	else
+		pipex->paths = NULL;
 	pipex->status = EXIT_SUCCESS;
 	pipex->cmd = NULL;
 }
