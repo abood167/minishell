@@ -217,6 +217,7 @@ void print_env(char **cmd)
 //Set cannot be mixed with other commands. If mixed, nothing happens
 //handle for "d=55 c=$d"
 //export alpha=5
+//Var start with alpha or _
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
