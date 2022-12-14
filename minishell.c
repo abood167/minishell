@@ -220,6 +220,7 @@ void print_env(char **cmd)
 //Var start with alpha or _
 //do *
 // when piping, fork self and not recall minishell
+//Check last pipe have command
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -252,7 +253,7 @@ int main(int ac, char **av, char **env)
 				exit(0);
 			}
 			//Handle * before this
-			cmd = ft_splitquote(line);
+			cmd = ft_splitquote(line, ' ');
 			if(cmd[0])
 			{
 				add_history(line);
@@ -288,6 +289,9 @@ int main(int ac, char **av, char **env)
 			}
 			else if(cmd && ft_strcmp(cmd[0],"cd") == 0){
 				cd_cmd(cmd);
+			}
+			else if(cmd && ft_strcmp(cmd[0],"unset") == 0){
+				unset_var(&cmd[1], &g_env, &l_var);
 			}
 			else if (ft_strcmp(cmd[0],"env") == 0){
 				printarr(envp);

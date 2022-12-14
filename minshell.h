@@ -25,7 +25,7 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-char	**ft_splitquote(char const *s);
+char	**ft_splitquote(char const *s, char c);
 void    printarr(char **list);
 void    printlist(t_list *list);
 char** strip_redirect(char **cmd, t_pipex *pipex);
@@ -35,5 +35,6 @@ char** ft_lsttoarr(t_list *list);
 char **ft_copyarr(char **arr);
 
 char** set_var(char **cmd, t_list *g_env, t_list **l_var);
+void unset_var(char **cmd, t_list **g_env, t_list **l_var);
 
 #endif
