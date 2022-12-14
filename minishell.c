@@ -235,6 +235,7 @@ void print_env(char **cmd)
 //Check last pipe have command
 //fix ffff" "ffff
 //unset 3asdasd
+//exit prints exit
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
