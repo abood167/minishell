@@ -19,7 +19,7 @@ int update_var(char *var, t_list *g_env) {
 
 char** set_var(char **cmd, t_list *g_env, t_list **l_var) {
     int i;
-    int pos;
+    // int pos;
     char **newcmd;
 
     i = 0;
@@ -43,7 +43,7 @@ char** set_var(char **cmd, t_list *g_env, t_list **l_var) {
 void unset_var(char **cmd, t_list **g_env, t_list **l_var) {
     int i;
     int len;
-    int flag;
+    // int flag;
     t_list *g_point;
     t_list *l_point;
     t_list *prev;

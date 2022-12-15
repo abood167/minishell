@@ -1,6 +1,10 @@
 The minishell does not work after unseting path for parent bash.
 ctrl d in minishell should not exit bash
 
-
+remove write prmition from file (chmod -w filename , ls > filename)
+files that dont execute dont kill the child (readme.md, ctrl+d, ctrl+d )
+cnrl+c in heredoc (child does not die)
+$builtins
+echo "12 "12
 
 

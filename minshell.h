@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 11:55:17 by abin-saa          #+#    #+#             */
-/*   Updated: 2022/12/12 12:00:33 by abin-saa         ###   ########.fr       */
+/*   Updated: 2022/12/15 11:18:10 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 #include "pipex/pipex.h"
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <fnmatch.h>
+#include <dirent.h>
 
 char	**ft_splitquote(char const *s, char c);
 void    printarr(char **list);
@@ -36,5 +38,6 @@ char **ft_copyarr(char **arr);
 
 char** set_var(char **cmd, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
+char*ft_wildcard(char **line);
 
 #endif
