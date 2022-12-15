@@ -1,7 +1,11 @@
-#include "minshell.h"
+#include <fnmatch.h>
+#include <dirent.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+#include <stdio.h>
 
-
+// Function that checks if a string matches a wildcard pattern
 int match_pattern(const char *pattern, const char *str) {
   while (*pattern != '\0') {
     // Handle wildcard characters in the pattern
@@ -33,33 +37,19 @@ int match_pattern(const char *pattern, const char *str) {
   return *pattern == '\0' && *str == '\0';
 }
 
+int main(int argc, char *argv[]) {
+  // Get all filenames in the current directory
+  DIR *dir = opendir(".");
+  struct dirent *entry;
 
-
-char *ft_wildcard(char **line) {
-	t_list *list;
-	int i;
-
-	DIR *dir = opendir(".");
- 	 struct dirent *entry;
-	list = NULL;
-	i = 0;
-	while(line[i]) {
-		if (ft_strchr(line[i],'*')) {
-			while ((entry = readdir(dir)) != NULL) {
+  // Iterate over the filenames in the directory
+  while ((entry = readdir(dir)) != NULL) {
     // Check if the filename matches the pattern "*.txt"
-   				if (match_pattern(line[i], entry->d_name)) {
-     				 printf("%s\n", entry->d_name);
-    			}
-	  			}
-			// match();
-			ft_lstadd_back(&list, ft_lstnew(entry->d_name));
-		}
-		else {
-			ft_lstadd_back(&list, ft_lstnew(ft_strdup(line[i])));
-		}
-		i++;
-	}
-	 closedir(dir);
-	return (NULL);
-	// return *ft_lsttoarr(list);
+    if (match_pattern("*.c", entry->d_name)) {
+      printf("%s\n", entry->d_name);
+    }
+  }
+
+  closedir(dir);
+  return 0;
 }
