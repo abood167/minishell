@@ -38,6 +38,6 @@ char **ft_copyarr(char **arr);
 
 char** set_var(char **cmd, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
-char*ft_wildcard(char **line);
+char** ft_wildcard(char **line);
 
 #endif

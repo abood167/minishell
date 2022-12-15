@@ -105,17 +105,14 @@ void exit_whitout_arg(char **cmd)
 	// }
 	printf("exit\n");
 	printf("exit: %s: numeric argument required\n",cmd[1]);
-	exit(0);
-
-	
-
-	
+	exit(0);	
 }
+
 void echo_cmd(char **cmd, t_pipex pipex)
 {
-		int i = 1;
-		int x = 1;
-		int t = 0;
+	int i = 1;
+	int x = 1;
+	int t = 0;
 		
 	while (cmd[i])
 	{
@@ -255,7 +252,7 @@ int main(int ac, char **av, char **env)
 			}
 			//Handle * before this
 			cmd = ft_splitquote(line, ' '); //record which arr index is quote
-			ft_wildcard(cmd);
+			cmd = ft_wildcard(cmd);
 			if(cmd[0])
 			{
 				add_history(line);

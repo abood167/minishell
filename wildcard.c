@@ -1,7 +1,5 @@
 #include "minshell.h"
 
-
-
 int match_pattern(const char *pattern, const char *str) {
   while (*pattern != '\0') {
     // Handle wildcard characters in the pattern
@@ -35,7 +33,7 @@ int match_pattern(const char *pattern, const char *str) {
 
 
 
-char *ft_wildcard(char **line) {
+char **ft_wildcard(char **line) {
 	t_list *list;
 	int i;
 
@@ -48,11 +46,10 @@ char *ft_wildcard(char **line) {
 			while ((entry = readdir(dir)) != NULL) {
     // Check if the filename matches the pattern "*.txt"
    				if (match_pattern(line[i], entry->d_name)) {
-     				 printf("%s\n", entry->d_name);
+			      ft_lstadd_back(&list, ft_lstnew(ft_strdup(entry->d_name)));
     			}
-	  			}
+        }
 			// match();
-			ft_lstadd_back(&list, ft_lstnew(entry->d_name));
 		}
 		else {
 			ft_lstadd_back(&list, ft_lstnew(ft_strdup(line[i])));
@@ -60,6 +57,5 @@ char *ft_wildcard(char **line) {
 		i++;
 	}
 	 closedir(dir);
-	return (NULL);
-	// return *ft_lsttoarr(list);
+	return (ft_lsttoarr(list));
 }
