@@ -36,26 +36,31 @@ int match_pattern(const char *pattern, const char *str) {
 char **ft_wildcard(char **line) {
 	t_list *list;
 	int i;
+  int flag;
 
 	DIR *dir = opendir(".");
  	 struct dirent *entry;
 	list = NULL;
 	i = 0;
 	while(line[i]) {
+    flag = 0;
 		if (ft_strchr(line[i],'*')) {
 			while ((entry = readdir(dir)) != NULL) {
     // Check if the filename matches the pattern "*.txt"
    				if (match_pattern(line[i], entry->d_name)) {
 			      ft_lstadd_back(&list, ft_lstnew(ft_strdup(entry->d_name)));
+            flag = 1;
     			}
         }
-			// match();
+      if(!flag)
+        ft_lstadd_back(&list, ft_lstnew(ft_strdup(line[i])));
 		}
 		else {
 			ft_lstadd_back(&list, ft_lstnew(ft_strdup(line[i])));
 		}
 		i++;
 	}
-	 closedir(dir);
-	return (ft_lsttoarr(list));
+  closedir(dir);
+  
+  return (ft_lsttoarr(list));
 }
