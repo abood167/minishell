@@ -1,9 +1,9 @@
 #include "minshell.h"
 
 int match_pattern(const char *pattern, const char *str) {
-  while (*pattern != '\0') {
+  while (*pattern != '\0'  ) {
     // Handle wildcard characters in the pattern
-    if (*pattern == '*') {
+    if (*pattern == '*'  && *str != '.') {
       // The "*" wildcard matches any sequence of characters
       pattern++;
       // Try to match the rest of the pattern with the remaining part of the string
@@ -14,7 +14,7 @@ int match_pattern(const char *pattern, const char *str) {
         str++;
       }
       return *pattern == '\0'; // match found if end of pattern reached
-    } else if (*pattern == '?') {
+    } else if (*pattern == '?'  ) {
       // The "?" wildcard matches any single character
       str++;
     } else {
