@@ -116,7 +116,7 @@ void echo_cmd(char **cmd, t_pipex pipex)
 		int i = 1;
 		int x = 1;
 		int t = 0;
-	// check_getenv(cmd);
+		
 	while (cmd[i])
 	{
 		if(cmd[i][0] == '-')
@@ -138,8 +138,6 @@ void echo_cmd(char **cmd, t_pipex pipex)
 		i++;
 	}
 	i = x;
-	// printf("x = %d\n",x);
-	// printf("i = %d\n",i);
 
 	while (cmd[i])
 	{
@@ -156,14 +154,6 @@ void echo_cmd(char **cmd, t_pipex pipex)
     {
         ft_putstr_fd("\n",pipex.out[1]);
     }
-
-	//  i = 1;
-	// while(cmd[i])
-	// {
-	// 	printf("%s",cmd[i]);
-	// 	i++;
-	// }
-	// printf("%s",getenv("HjjjOME"));
 }
 
 // void get_get
@@ -215,10 +205,6 @@ void print_env(char **cmd)
 	}
 }
 
-// void minishell(int ac, char **cmd, char** envp, t_pipex *pipex){
-
-// }
-
 // handle tab for "<" ie like "<tect.1"
 // Test writing to place without permision
 //pipe without spaces
@@ -243,8 +229,6 @@ int main(int ac, char **av, char **env)
 	char	**envp;
 	t_list 	*g_env;
 	t_list	*l_var;
-	// int z = 0;
-	// char **
 
 	pipex.status = EXIT_SUCCESS;
 	ft_int_signal();
@@ -253,13 +237,12 @@ int main(int ac, char **av, char **env)
 	l_var = ft_lstnew(ft_strdup("?"));
 	while (1)
 	{
-	// 	int s;
 		envp = ft_lsttoarr(g_env);
 		pipex_init(&pipex, envp);
 
 		char s[100] ;
 		while(!getcwd(s, 100)) //find out why 100
-			cd_cmd(ft_split("cd ..", ' '));
+			cd_cmd(ft_split("cd ..", ' ')); //Not like bash
 
 		if (ac == 1) {
 			if(pipex.status == 130)
@@ -272,7 +255,7 @@ int main(int ac, char **av, char **env)
 			}
 			//Handle * before this
 			cmd = ft_splitquote(line, ' '); //record which arr index is quote
-			cmd = wildcard(cmd);
+			// cmd = wildcard(cmd);
 			if(cmd[0])
 			{
 				add_history(line);

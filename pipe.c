@@ -5,4 +5,5 @@
 
 //     pipe_line = ft_splitquote(line, '|');
 //     while()
+    // ft_lstclear(pipex.quote);
 // }
