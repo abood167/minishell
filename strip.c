@@ -1,4 +1,4 @@
-#include "minshell.h"
+#include "minishell.h"
 
 char	*strip_copy(char *str, int len)
 {

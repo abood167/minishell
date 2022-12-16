@@ -1,4 +1,4 @@
-#include "minshell.h"
+#include "minishell.h"
 
 char	*pipe_shell(char *line, t_pipex *pipex)
 {

@@ -1,4 +1,4 @@
-#include "minshell.h"
+#include "minishell.h"
 
 int	match_pattern(const char *pattern, const char *str)
 {

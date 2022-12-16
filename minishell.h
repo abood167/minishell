@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minshell.h                                         :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINSHELL_H
-# define MINSHELL_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 #include <sys/types.h>
 
@@ -27,27 +27,32 @@
 #include <fnmatch.h>
 #include <dirent.h>
 
-char	**ft_splitquote(char *s, char c);
-void    printarr(char **list);
-void    printlist(t_list *list);
-char*   strip_redirect(char *line, t_pipex *pipex);
+//built in
+void echo_cmd(char **cmd, t_pipex pipex);
+void cd_cmd(char **cmd);
 
-t_list* ft_arrtolst(char **arr);
-char** ft_lsttoarr(t_list *list);
-char **ft_copyarr(char **arr);
-
+//env
 char* set_var(char *line, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
-char** ft_wildcard(char **line);
 
-int in_quote(char c, int *quote);
+//Arrays, list and strings
+char**  ft_splitquote(char *s, char c);
 char* get_next_word(const char *str, int *pos, char c);
-int split_len(char *str, char *split);
+t_list* ft_arrtolst(char **arr);
+char** ft_lsttoarr(t_list *list);
+char** ft_copyarr(char **arr);
+void    printarr(char **list);
+void    printlist(t_list *list);
 char* arrtostr(char **arr);
 char* listtostr(t_list *arr);
 
-int get_status();
-
+//input modifiers
 char	*pipe_shell(char *line, t_pipex *pipex);
+char*   strip_redirect(char *line, t_pipex *pipex);
+char** ft_wildcard(char **line);
+
+void ft_int_signal();
+t_pipex* get_pipex();
+int in_quote(char c, int *quote);
 
 #endif

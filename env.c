@@ -1,9 +1,9 @@
-#include "minshell.h"
+#include "minishell.h"
 
 char	*get_var(char *varname, int len, t_list *g_env, t_list *l_var)
 {
 	if (strcmp(varname, "?") == 0)
-		return (ft_itoa(get_status()));
+		return (ft_itoa(get_pipex()->status));
 	while (g_env)
 	{
 		if (strncmp(g_env->content, varname, len) == 0

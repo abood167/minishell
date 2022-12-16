@@ -1,4 +1,4 @@
-#include "minshell.h"
+#include "minishell.h"
 
 void	printarr(char **arr)
 {
@@ -60,44 +60,6 @@ char	**ft_copyarr(char **arr)
 	return (copy);
 }
 
-int	in_quote(char c, int *quote)
-{
-	if (c == '\'' || c == '\"')
-	{
-		if (c == *quote)
-		{
-			*quote = 0;
-			return (1); //close
-		}
-		else if (!*quote)
-		{
-			*quote = c;
-			return (2); //open
-		}
-	}
-	else if (*quote)
-		return (3); //ingore quote
-	return (0);     //not in quote
-}
-
-int	split_len(char *str, char *split)
-{
-	int	len;
-	int	split_pos;
-
-	len = 0;
-	split_pos = 0;
-	while (split[split_pos])
-	{
-		if (split[split_pos] == str[len])
-			split_pos++;
-		len++;
-	}
-	if (str[len] == '\'' || str[len] == '\"')
-		len++;
-	return (len);
-}
-
 char	*listtostr(t_list *arr)
 {
 	char	*str;
@@ -147,63 +109,4 @@ char	*arrtostr(char **arr)
 		i++;
 	}
 	return (str);
-}
-
-char	*get_next_word(const char *str, int *pos, char c)
-{
-	int		quote;
-	int		start;
-	int		count;
-	char	**words;
-	char	*line;
-
-	quote = 0;
-	count = 0;
-	while (str[*pos] && str[*pos] == c)
-		(*pos)++;
-	if (!str[*pos])
-		return (NULL);
-	start = *pos;
-	while (str[*pos] && (str[*pos] != c || quote))
-	{
-		if (in_quote(str[*pos], &quote) == 2)
-			count++;
-		else if (*pos - start == 0)
-			count++;
-		else if (!quote && *pos - start && in_quote(str[*pos - 1], &quote))
-		{
-			quote = 0;
-			count++;
-		}
-		(*pos)++;
-	}
-	if (quote)
-		return (NULL); //Quotes did not close
-	words = (char **)malloc(sizeof(char *) * (count + 1));
-	*pos = start;
-	count = 0;
-	while (str[*pos] && str[*pos] != c)
-	{
-		start = *pos;
-		if (in_quote(str[*pos], &quote) == 2)
-		{
-			start = ++(*pos);
-			while (in_quote(str[*pos], &quote) != 1)
-				(*pos)++;
-			words[count++] = ft_substr(str, start, *pos - start);
-			(*pos)++;
-		}
-		else
-		{
-			while (str[*pos] && str[*pos] != c && !in_quote(str[*pos], &quote))
-				(*pos)++;
-			words[count++] = ft_substr(str, start, *pos - start);
-			if (quote)
-				quote = 0;
-		}
-	}
-	words[count] = NULL;
-	line = arrtostr(words);
-	ft_freearray((void **)words);
-	return (line);
 }

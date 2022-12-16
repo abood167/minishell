@@ -49,5 +49,6 @@ void		filenotfound(char *file);
 void		writeline(char *str);
 
 void		check_pipe(t_pipex *pipex);
+void		exit_command(t_pipex *pipex);
 
 #endif

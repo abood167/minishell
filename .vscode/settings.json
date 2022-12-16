@@ -1,11 +1,7 @@
 {
     "files.associations": {
         "*.c": "c",
-        "minshell.h": "c",
-        "pipex.h": "c",
-        "random": "c",
-        "string": "c",
-        "iosfwd": "c",
-        "algorithm": "c"
+        "minishell.h": "c"
     }
+    
 }
