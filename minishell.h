@@ -29,9 +29,10 @@
 
 //built in
 void echo_cmd(char **cmd, t_pipex pipex);
-void cd_cmd(char **cmd);
+void cd_cmd(char **cmd, t_list *g_env, t_list *l_var);
 
 //env
+char*   get_var(char *varname, int len, t_list *g_env, t_list *l_var);
 char* set_var(char *line, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
 

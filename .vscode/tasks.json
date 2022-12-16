@@ -7,7 +7,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "minishell.c", "split_qoute.c", "utils.c", "strip.c", "env.c", "pipe.c", "wildcard.c",
+                "minishell.c", "split_qoute.c", "utils.c", "strip.c", "env.c", "pipe.c", "wildcard.c", "built_in.c", "signals.c",
                 "pipex/*.c",
                 "libft/*.c",
                 "-I/usr/local/opt/readline/include", "-L/usr/local/opt/readline/lib", "-lreadline",

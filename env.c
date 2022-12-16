@@ -18,7 +18,7 @@ char	*get_var(char *varname, int len, t_list *g_env, t_list *l_var)
 			return (&((char *)l_var->content)[len + 1]);
 		l_var = l_var->next;
 	}
-	return ("");
+	return (NULL);
 }
 
 int	update_var(char *var, t_list *g_env)
@@ -62,8 +62,10 @@ char	*replace_withvar(char *str, t_list *g_env, t_list *l_var)
 				pos++;
 			if (start == pos)
 				pos++;
-			ft_lstadd_back(&list, ft_lstnew(ft_strdup(get_var(&str[start], pos
-								- start, g_env, l_var))));
+			val = get_var(&str[start], pos - start, g_env, l_var);
+			if (!val)
+				val = "";
+			ft_lstadd_back(&list, ft_lstnew(ft_strdup(val)));
 			start = pos;
 		}
 		pos++;

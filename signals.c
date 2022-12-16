@@ -18,5 +18,5 @@ void ctrl_c()
 void ft_int_signal()
 {
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT,ctrl_c );
+	signal(SIGINT, ctrl_c );
 }

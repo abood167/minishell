@@ -26,8 +26,6 @@ void echo_cmd(char **cmd, t_pipex pipex)
 		{
 			if(check_n(cmd[i]) == 0)
 			{
-				//possible leak, try free(cmd[i]) if found leak 
-				// cmd[i] = ft_strdup("");
 				x++;
 				t = 1;
 
@@ -59,16 +57,14 @@ void echo_cmd(char **cmd, t_pipex pipex)
     }
 }
 
-void cd_cmd(char **cmd)
+void cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 {
 	char *tmp;
 	if(cmd[1] == NULL)
 	{
-		tmp = getenv("HOME");
+		tmp = get_var("HOME", 4, g_env, l_var);
 		if(tmp == NULL)
-		{
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-		}
 		else if (chdir(getenv("HOME")) < 0) {
 			ft_putstr_fd("minishell: cd: ", 2);
 			perror(getenv("HOME"));
