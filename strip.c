@@ -6,27 +6,32 @@ char	*strip_copy(char *str, int len)
 	char	*word;
 	int		i;
 	int		j;
+	int		quote;
 
 	i = 0;
 	j = 0;
+	quote = 0;
 	strip = (char *)malloc(sizeof(char) * (len + 1));
 	while (i < len)
 	{
-		if (ft_strncmp(&str[j], ">>", 2) == 0 || ft_strncmp(&str[j], "<<",
-				2) == 0)
+		if (!in_quote(str[j], &quote))
 		{
-			j += 2;
-			word = get_next_word(str, &j, ' ');
-			free(word);
-			continue ;
-		}
-		else if (ft_strncmp(&str[j], ">", 1) == 0 || ft_strncmp(&str[j], "<",
-					1) == 0)
-		{
-			j += 1;
-			word = get_next_word(str, &j, ' ');
-			free(word);
-			continue ;
+			if (ft_strncmp(&str[j], ">>", 2) == 0 || ft_strncmp(&str[j], "<<",
+					2) == 0)
+			{
+				j += 2;
+				word = get_next_word(str, &j, ' ');
+				free(word);
+				continue ;
+			}
+			else if (ft_strncmp(&str[j], ">", 1) == 0 || ft_strncmp(&str[j], "<",
+						1) == 0)
+			{
+				j += 1;
+				word = get_next_word(str, &j, ' ');
+				free(word);
+				continue ;
+			}
 		}
 		strip[i] = str[j];
 		i++;
@@ -66,7 +71,13 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 			word = get_next_word(line, &i, ' '); //handle error
 			// Handle closing if out is not -1
 			pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_APPEND, 0644);
-				//handle error
+			if (pipex->out[1] < 0)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				perror(word);
+				free(word);
+				return (NULL);
+			}
 			free(word);
 			continue ;
 		}
@@ -82,7 +93,13 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 			word = get_next_word(line, &i, ' '); //handle error
 			// Handle closing if out is not -1
 			pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-				//handle error
+			if (pipex->out[1] < 0)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				perror(word);
+				free(word);
+				return (NULL);
+			}
 			free(word);
 			continue ;
 		}

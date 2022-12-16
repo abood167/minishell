@@ -83,10 +83,14 @@ char	*set_var(char *line, t_list *g_env, t_list **l_var)
 	int		j;
 	char	*newline;
 	char	*word;
+	int		quote;
 
 	i = 0;
+	quote = 0;
 	while (line[i])
 	{
+		if(in_quote(line[i], &quote)) 
+			break;
 		while (line[i] == ' ')
 			i++;
 		j = i;

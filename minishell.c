@@ -1,21 +1,12 @@
 #include "minshell.h"
 
-
-// # include <readline/history.h>
-
-// gcc test.c libft.a  -I/usr/local/opt/readline/include -L/usr/local/opt/readline/lib -lreadline
-// void
-
-// -L/usr/local/opt/readline/lib -lreadline
-
-
 static t_pipex	pipex;
 
 void ctrl_c()
 {
 	//Maybe do wait here and then apply pipex.status?
 	if(pipex.pid != 0)
-		return ;
+		return;
 	pipex.status = 130;
 	rl_replace_line("", 0);
 	printf("\n");
@@ -183,13 +174,19 @@ void cd_cmd(char **cmd)
 		if(tmp == NULL)
 		{
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-			return;
 		}
-		chdir(getenv("HOME"));
+		else if (chdir(getenv("HOME")) < 0) {
+			ft_putstr_fd("minishell: cd: ", 2);
+			perror(getenv("HOME"));
+		}
 	}
 	else
 	{
-		chdir(cmd[1]);
+		 if (chdir(cmd[1]) < 0) 
+		 {
+			ft_putstr_fd("minishell: cd: ", 2);
+			perror(cmd[1]);	//handle error
+		 }
 	}
 }
 
@@ -249,9 +246,14 @@ int main(int ac, char **av, char **env)
 		envp = ft_lsttoarr(g_env);
 		pipex_init(&pipex, envp);
 
-		char s[100] ;
-		while(!getcwd(s, 100)) //find out why 100
+		line = getcwd(NULL, 0);
+		while(!line) //find out why 100
+		{
 			cd_cmd(ft_split("cd ..", ' ')); //Not like bash
+			free(line);	
+			line = getcwd(NULL, 0);
+		}
+		free(line);
 
 		if (ac == 1) {
 			if(pipex.status == 130)
@@ -299,8 +301,11 @@ int main(int ac, char **av, char **env)
 				echo_cmd(cmd, pipex);
 			}
 			else if(cmd && ft_strcmp(cmd[0],"pwd") == 0){
-				getcwd(s, 100);
-				printf("%s\n",getcwd(s,100));
+				//switch to print env
+				line = getcwd(NULL, 0);
+				ft_putstr_fd(line, pipex.out[1]);
+				ft_putstr_fd("\n", pipex.out[1]);
+				free(line);
 			}
 			else if(cmd && ft_strcmp(cmd[0],"cd") == 0){
 				cd_cmd(cmd);

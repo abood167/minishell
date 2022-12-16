@@ -45,7 +45,7 @@ void	here_doc(t_pipex *pipex, char *lim)
 void	cmdnotfound(char *cmd)
 {
 	write(2, "Command '", 9);
-	while (*cmd && *cmd != ' ')
+	while (*cmd)
 		write(2, cmd++, 1);
 	write(2, "' not found\n", 13);
 }
@@ -53,7 +53,7 @@ void	cmdnotfound(char *cmd)
 void	filenotfound(char *file)
 {
 	write(2, "minishell: ", 11);
-	while (*file && *file != ' ')
+	while (*file)
 		write(2, file++, 1);
 	write(2, ": No such file or directory\n", 29);
 }
