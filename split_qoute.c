@@ -10,35 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "minshell.h"
 
 static int	wordcount(char const *str, char c)
 {
-	int	i;
-	int	wordcount;
-	int quote;
+	int		wordcount;
+	char	*word;
+	int		i;
 
-	i = 0;
-	quote = 0;
 	wordcount = 0;
-	while (str[i] != '\0')
+	i = 0;
+	while (1)
 	{
-		if (!quote && (str[i] == '\"' || str[i] == '\'')) {
-			if (i && str[i - 1] != c)
-				wordcount--;
-			quote = str[i];
-		}
-		else if (quote && quote == str[i]) {
-			quote = 0;
-			wordcount++;
-		}
-		else if (!quote && i == 0 && c != str[i])
-			wordcount++;
-		else if (!quote && c != str[i] && c == str[i - 1])
-			wordcount++;
-		i++;
+		word = get_next_word(str, &i, c);
+		if (!word)
+			break ;
+		free(word);
+		wordcount++;
 	}
 	return (wordcount);
 }
@@ -54,15 +42,18 @@ size_t	ft_strlcpyquote(char *dst, const char *src, size_t dstsize, int quote)
 	j = 0;
 	while (src[i] != '\0' && i < dstsize - 1)
 	{
-		if (src[i] == '\'' || src[i] == '\"') {
-			if (quote == 0) {
+		if (src[i] == '\'' || src[i] == '\"')
+		{
+			if (quote == 0)
+			{
 				quote = src[i++];
-				continue;
+				continue ;
 			}
-			else if (quote == src[i]) {
+			else if (quote == src[i])
+			{
 				quote = 0;
 				i++;
-				continue;
+				continue ;
 			}
 		}
 		dst[j] = src[i];
@@ -74,7 +65,8 @@ size_t	ft_strlcpyquote(char *dst, const char *src, size_t dstsize, int quote)
 	return (ft_strlen(src));
 }
 
-char	*ft_substrquote(char const *s, unsigned int start, size_t len, int quote)
+char	*ft_substrquote(char const *s, unsigned int start, size_t len,
+		int quote)
 {
 	char	*substr;
 	size_t	i;
@@ -105,12 +97,14 @@ char	*ft_strchrquote(const char *s, int c, int quote)
 	a = (char *)s;
 	while (a[i])
 	{
-		if (quote > 0){
+		if (quote > 0)
+		{
 			while (a[i] != quote)
 				i++;
-			return(&a[i]);
+			return (&a[i]);
 		}
-		else if (quote < 0) {
+		else if (quote < 0)
+		{
 			while (a[i] != -quote)
 				i++;
 			quote = 0;
@@ -124,60 +118,34 @@ char	*ft_strchrquote(const char *s, int c, int quote)
 	return (NULL);
 }
 
-static char	**ft_splitquote2(char **split, char const *s, char c, int *word)
+static char	**ft_splitquote2(char **split, char const *s, char c)
 {
-	char	*str;
-	int quote;
+	int	word;
+	int	i;
 
-	str = (char *)s;
-	while (str && *str != '\0')
+	word = 0;
+	i = 0;
+	while (1)
 	{
-		quote = 0;
-		while ((*str == c) && *str != '\0')
-			str++;
-		if (*str  == '\'' || *str  == '\"') {
-			quote = *str;
-			str++;
-		}
-		if (ft_strchr(str, c))
-		{
-			split[(*word)++] = ft_substrquote(str, 0, (size_t)(ft_strchrquote(str, c, quote) - str), quote);
-			quote *= -1;
-			for (int i = 0; i < *word ; i++)
-				// ft_printf("test %d: %s\n", *word, split[i]);
-				if (!split[*word - 1])
-				{
-				// ft_printf("reach 1\n");
-					// ft_freearray((void **)split);
-					return (NULL);
-				}
-			str = ft_strchrquote(str, c, quote);
-		}
-		else if (*str != '\0')
-		{
-			split[(*word)++] = ft_substrquote(str, 0, ft_strlen(str), quote);
+		split[word] = get_next_word(s, &i, c);
+		if (!split[word])
 			break ;
-		}
+		word++;
 	}
-	// for (int i = 0; split[i]; i++)
-	// 	ft_printf("end: %s\n", split[i]);
 	return (split);
 }
 
-char	**ft_splitquote(char const *s, char c)
+char	**ft_splitquote(char *s, char c)
 {
 	char	**split;
-	int		word;
 
 	if (!s)
 		return (NULL);
 	split = (char **)malloc(sizeof(char *) * (wordcount(s, c) + 1));
 	if (!split)
 		return (NULL);
-	word = 0;
-	if (!ft_splitquote2(split, s, c, &word))
+	if (!ft_splitquote2(split, s, c))
 		return (NULL);
-	split[word] = 0;
 	return (split);
 }
 
@@ -185,8 +153,9 @@ char	**ft_splitquote(char const *s, char c)
 // 	//
 // 	// char *str = "asd asdasd \"asdasd asdas\"";
 // 	// char *str = "asda asd \"asdasdasd       asd\"";
-// 	// char *str = "asuadsjkdas \"Asdasd\" asdasd asd ss\"asdasd asdasd asdasd\"ss"; //need to fix
-// 	char *str = " asd asd \"asdasd  asd\"\n"; 
+// 	// char *str = "asuadsjkdas \"Asdasd\" asdasd asd ss\"asdasd asdasd asdasd\"ss";
+		//need to fix
+// 	char *str = " asd asd \"asdasd  asd\"\n";
 // 	// char *str = get_next_line(0);
 // 	ft_printf("str: %s\n", str);
 // 	ft_printf("WC: %d\n", wordcount(str, ' '));
@@ -194,7 +163,6 @@ char	**ft_splitquote(char const *s, char c)
 // 	int i;
 // 	for (i = 0; split[i]; i++);
 // 	ft_printf("ARR: %d\n", i);
-
 
 // 	for (i = 0; split[i]; i++)
 // 		ft_printf("%s\n", split[i]);

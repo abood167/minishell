@@ -1,111 +1,129 @@
 #include "minshell.h"
 
-char** strip_copy(char **cmd, int len){
-    char **strip;
-    int i;
-    int j;
-    
-    i = 0;
-    j = 0;
-    strip = (char **)malloc(sizeof(char *) * (len + 1));
-    while (i < len) {
-        if (ft_strncmp(cmd[j], ">>", 2) == 0) {
-            j += 1 + 1 * (cmd[j][2] == '\0');
-            continue;
-        }
-        else if (ft_strncmp(cmd[j], ">", 1) == 0) {
-            j += 1 + 1 * (cmd[j][1] == '\0');
-            continue;
-        }
-        else if (ft_strncmp(cmd[j], "<<", 2) == 0) {
-            j += 1 + 1 * (cmd[j][2] == '\0');
-            continue;
-        }
-        else if (ft_strncmp(cmd[j], "<", 1) == 0) {
-            j += 1 + 1 * (cmd[j][1] == '\0');
-            continue;
-        }
-        strip[i] = ft_strdup(cmd[j]);
-        i++;
-        j++;
-    }
-    ft_freearray((void **)cmd);
-    strip[i] = NULL;
-    return (strip);
+char	*strip_copy(char *str, int len)
+{
+	char	*strip;
+	char	*word;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	strip = (char *)malloc(sizeof(char) * (len + 1));
+	while (i < len)
+	{
+		if (ft_strncmp(&str[j], ">>", 2) == 0 || ft_strncmp(&str[j], "<<",
+				2) == 0)
+		{
+			j += 2;
+			word = get_next_word(str, &j, ' ');
+			free(word);
+			continue ;
+		}
+		else if (ft_strncmp(&str[j], ">", 1) == 0 || ft_strncmp(&str[j], "<",
+					1) == 0)
+		{
+			j += 1;
+			word = get_next_word(str, &j, ' ');
+			free(word);
+			continue ;
+		}
+		strip[i] = str[j];
+		i++;
+		j++;
+	}
+	free(str);
+	strip[i] = '\0';
+	return (strip);
 }
 
-char** strip_redirect(char **cmd, t_pipex *pipex) {
-    int arr_len;
-    int cmd_pos;
+char	*strip_redirect(char *line, t_pipex *pipex)
+{
+	int len;
+	int quote;
+	int line_len;
+	char *word;
 
-    arr_len = 0;
-    for (size_t i = 0; cmd[i]; i++)
-    {
-        cmd_pos = 0;
-        if (ft_strncmp(cmd[i], ">>", 2) == 0) {
-            if (cmd[i][2] != '\0') 
-                cmd_pos = 2;
-            else
-                i++;
-            if (!cmd[i])
-            { 
-                printf("minishell: syntax error near unexpected token `newline'\n");
-                return NULL;
-            }
-            // Handle closing if out is not -1
-            pipex->out[1] = open(&cmd[i][cmd_pos], O_CREAT | O_WRONLY | O_APPEND, 0644); //handle error
-            continue;
-        }
-        else if (ft_strncmp(cmd[i], ">", 1) == 0) {
-            if (cmd[i][1] != '\0') {
-                cmd_pos = 1;
-            }
-            else
-                i++;
-            if (!cmd[i])
-            { 
-                printf("minishell: syntax error near unexpected token `newline'\n"); //TODO handle more unexpected token
-                return NULL;
-            }                
-            // Handle closing if out is not -1
-            pipex->out[1] = open(&cmd[i][cmd_pos], O_CREAT | O_WRONLY | O_TRUNC, 0644); //handle error
-            continue;
-        }
-        else if (ft_strncmp(cmd[i], "<<", 2) == 0) {
-            if (cmd[i][2] != '\0') 
-                cmd_pos = 2;
-            else
-                i++;
-            if (!cmd[i])
-            { 
-                printf("minishell: syntax error near unexpected token `newline'\n");
-                return NULL;
-            }
-            // Handle closing if in/out is not -1
-            here_doc(pipex, &cmd[i][cmd_pos]);  //handle error
-            continue;
-        }
-        else if (ft_strncmp(cmd[i], "<", 1) == 0) {
-            if (cmd[i][1] != '\0') {
-                cmd_pos = 1;
-            }
-            else
-                i++;
-            if (!cmd[i])
-            { 
-                printf("minishell: syntax error near unexpected token `newline'\n");
-                return NULL;
-            }                
-            // Handle closing if in is not -1
-            pipex->in = open(&cmd[i][cmd_pos], O_RDONLY); // handle error
-            if (pipex->in < 0) {
-                write(2, "minishell: ", 7);
-		        perror(&cmd[i][cmd_pos]);
-                return NULL;
-            }
-            continue;
-        }
-        arr_len++;
-    }
-    return(strip_copy(cmd, arr_len));
-} 
+	len = 0;
+	quote = 0;
+	line_len = ft_strlen(line);
+	for (int i = 0; line[i]; i++)
+	{
+		if (in_quote(line[i], &quote))
+		{
+			len++;
+			continue ;
+		}
+		if (ft_strncmp(&line[i], ">>", 2) == 0)
+		{
+			i += 2;
+			if (i >= line_len)
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
+						2); //TODO handle more unexpected token
+				return (NULL);
+			}
+			word = get_next_word(line, &i, ' '); //handle error
+			// Handle closing if out is not -1
+			pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_APPEND, 0644);
+				//handle error
+			free(word);
+			continue ;
+		}
+		else if (ft_strncmp(&line[i], ">", 1) == 0)
+		{
+			i++;
+			if (i >= line_len)
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
+						2);
+				return (NULL);
+			}
+			word = get_next_word(line, &i, ' '); //handle error
+			// Handle closing if out is not -1
+			pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+				//handle error
+			free(word);
+			continue ;
+		}
+		else if (ft_strncmp(&line[i], "<<", 2) == 0)
+		{
+			i += 2;
+			if (i >= line_len)
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
+						2);
+				return (NULL);
+			}
+			word = get_next_word(line, &i, ' '); //handle error
+			// Handle closing if in/out is not -1
+			here_doc(pipex, word); //handle error
+			free(word);
+			continue ;
+		}
+		else if (ft_strncmp(&line[i], "<", 1) == 0)
+		{
+			i++;
+			if (i >= line_len)
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
+						2);
+				return (NULL);
+			}
+			word = get_next_word(line, &i, ' '); //handle error
+			// Handle closing if in is not -1
+			pipex->in = open(word, O_RDONLY); // handle error
+			if (pipex->in < 0)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				perror(word);
+				free(word);
+				return (NULL);
+			}
+			free(word);
+			continue ;
+		}
+		len++;
+	}
+	return (strip_copy(line, len));
+}

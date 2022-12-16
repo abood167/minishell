@@ -81,7 +81,7 @@ void	child(t_pipex pipex, int pos, char *argv[], char *envp[])
 	if (!pipex.cmd)
 	{
 		child_free(&pipex);
-		exit(EXIT_FAILURE);
+		exit(127);
 	}
 	execve(pipex.cmd, pipex.args, envp);
 }

@@ -27,17 +27,27 @@
 #include <fnmatch.h>
 #include <dirent.h>
 
-char	**ft_splitquote(char const *s, char c);
+char	**ft_splitquote(char *s, char c);
 void    printarr(char **list);
 void    printlist(t_list *list);
-char** strip_redirect(char **cmd, t_pipex *pipex);
+char*   strip_redirect(char *line, t_pipex *pipex);
 
 t_list* ft_arrtolst(char **arr);
 char** ft_lsttoarr(t_list *list);
 char **ft_copyarr(char **arr);
 
-char** set_var(char **cmd, t_list *g_env, t_list **l_var);
+char* set_var(char *line, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
 char** ft_wildcard(char **line);
+
+int in_quote(char c, int *quote);
+char* get_next_word(const char *str, int *pos, char c);
+int split_len(char *str, char *split);
+char* arrtostr(char **arr);
+char* listtostr(t_list *arr);
+
+int get_status();
+
+char	*pipe_shell(char *line, t_pipex *pipex);
 
 #endif

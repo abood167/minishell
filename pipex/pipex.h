@@ -23,9 +23,9 @@
 
 typedef struct s_pipex
 {
-	int		argc;
 	int		here_doc;
 	int		in;
+	int		is_child;
 	pid_t	pid;
 	int		out[2];
 	char	*cmd;

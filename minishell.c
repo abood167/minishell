@@ -13,8 +13,10 @@ static t_pipex	pipex;
 
 void ctrl_c()
 {
+	//Maybe do wait here and then apply pipex.status?
 	if(pipex.pid != 0)
 		return ;
+	pipex.status = 130;
 	rl_replace_line("", 0);
 	printf("\n");
 	rl_on_new_line();
@@ -39,7 +41,6 @@ void check_getenv(char **cmd)
 		}
 		i++;
 	}
-	
 }
 
 int check_n(char *s)
@@ -105,7 +106,7 @@ void exit_whitout_arg(char **cmd)
 	// }
 	printf("exit\n");
 	printf("exit: %s: numeric argument required\n",cmd[1]);
-	exit(0);	
+	exit(pipex.status);	
 }
 
 void echo_cmd(char **cmd, t_pipex pipex)
@@ -202,6 +203,10 @@ void print_env(char **cmd)
 	}
 }
 
+int get_status() {
+	return pipex.status;
+}
+
 // handle tab for "<" ie like "<tect.1"
 // Test writing to place without permision
 //pipe without spaces
@@ -219,6 +224,13 @@ void print_env(char **cmd)
 //fix ffff" "ffff
 //unset 3asdasd
 //exit prints exit
+//test with symbolic link
+//dont use env function?
+//use getenv?
+//bash: /home/zin: Is a directory
+//command not found with number has different output
+//exit status of execve
+//<"|" cat | asd
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -231,7 +243,7 @@ int main(int ac, char **av, char **env)
 	ft_int_signal();
 
 	g_env = ft_arrtolst(env);
-	l_var = ft_lstnew(ft_strdup("?"));
+	l_var = NULL;
 	while (1)
 	{
 		envp = ft_lsttoarr(g_env);
@@ -250,24 +262,27 @@ int main(int ac, char **av, char **env)
 				//remember to clean the memory before exiting
 				exit(0);
 			}
-			//Handle * before this
-			cmd = ft_splitquote(line, ' '); //record which arr index is quote
-			cmd = ft_wildcard(cmd);
-			if(cmd[0])
-			{
+			//Quotation error and pipe error
+			if(line[0] && line[0] != ' ')
 				add_history(line);
-			}
+
+			if(ft_strchr(line, '|'))
+				line = pipe_shell(line, &pipex);
+			//Handle * before this
+			line = set_var(line, g_env, &l_var); 
+			line = strip_redirect(line, &pipex);
+			if (!line)
+				continue;
+			cmd = ft_splitquote(line, ' '); //record which arr index is quote
+			// Sort wildcard?./m //make ignore qoute
+			cmd = ft_wildcard(cmd);
 		}
 		else
 			cmd = ft_copyarr(&av[1]);
 
-		 //do replace var $ here
-		 cmd = set_var(cmd, g_env, &l_var);
-		 cmd = strip_redirect(cmd, &pipex);
-		 if(!cmd)
-		 	continue;
-		// if(cmd[0] != '\0' && cmd[0] != NULL)
-		// {
+		if(!cmd || (cmd && !cmd[0]))
+		continue;
+			
 
 			check_pipe(&pipex);
 			if( !cmd || !cmd[0])
@@ -293,35 +308,21 @@ int main(int ac, char **av, char **env)
 			else if(cmd && ft_strcmp(cmd[0],"unset") == 0){
 				unset_var(&cmd[1], &g_env, &l_var);
 			}
-			else if (ft_strcmp(cmd[0],"env") == 0){
-				printarr(envp);
-			}
 			else {
-				printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
-				//Convert echo if redirection
+				// printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
 				pipex.pid = fork();
 				if (pipex.pid == 0)
 					child(pipex, 0, cmd, envp);			
-				waitpid(pipex.pid, &pipex.status, 0);
+				waitpid(pipex.pid, &pipex.status, 0); //text exucting non executable
 				pipex.status = WEXITSTATUS(pipex.status); //enviroment variable 
+				// printf("stat: %d", pipex.status);
 				//close pipes
 			}
-			//strip redirection
 
-
-			
-		// 		// execve("/bin/ls", ,envp);
-
-					// printf("%s    \n",cmd[1]);
-
-				// print_env(cmd);
 		ft_freearray((void**)envp);
-		if (ac != 1)
-			break;		
+		if (ac != 1 || pipex.is_child)
+			break;
 	}
 
-
-		// scanf("%d", &s);
-		// printf("%d\n",s);
-	// }
+	return (pipex.status);
 }
