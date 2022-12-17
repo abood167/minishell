@@ -50,12 +50,15 @@ void	cmdnotfound(char *cmd)
 	write(2, "' not found\n", 13);
 }
 
-void	filenotfound(char *file)
+void	filenotfound(char *file, int dir)
 {
 	write(2, "minishell: ", 11);
 	while (*file)
 		write(2, file++, 1);
-	write(2, ": No such file or directory\n", 29);
+	if (dir == 0)
+		ft_putstr_fd(": No such file or directory\n", 2);
+	else
+		ft_putstr_fd(": Is a directory\n", 2);
 }
 
 void	error_exit(char *error)

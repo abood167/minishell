@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static t_pipex	pipex;
+static t_pipex	pipex; //change to pointer so you can call it one variable?
 
 t_pipex* get_pipex() {
 	return &pipex;
@@ -24,7 +24,6 @@ void fix_dir() {
 //Need to figure out sort order of env
 //update status in more places
 //Set cannot be mixed with other commands. If mixed, nothing happens
-//handle for "d=55 c=$d"
 //export alpha=5
 //Var start with alpha or _
 // when piping, fork self and not recall minishell
@@ -35,6 +34,7 @@ void fix_dir() {
 //command not found with number has different output
 //exit status of execve
 //<"|" cat | asd
+//< |
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -62,7 +62,7 @@ int main(int ac, char **av, char **env)
 			if (line == NULL)
 			{
 				//remember to clean the memory before exiting
-				printf("exit\n");
+				ft_putstr_fd("exit\n", 1);
 				exit(0);
 			}
 			//Quotation error and pipe error

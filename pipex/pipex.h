@@ -45,7 +45,7 @@ void		child_free(t_pipex *pipex);
 void		error_exit(char *err);
 void		error_free(t_pipex *pipex, char *error);
 void		cmdnotfound(char *cmd);
-void		filenotfound(char *file);
+void		filenotfound(char *file, int dir);
 void		writeline(char *str);
 
 void		check_pipe(t_pipex *pipex);

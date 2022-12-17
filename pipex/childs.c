@@ -11,27 +11,35 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include <sys/stat.h>
 
 char	*getcommand(char **paths, char *cmd)
 {
 	char	*temp;
 	char	*command;
+	struct stat path;
 
 	if (ft_strchr(cmd, '/') || !*paths)
 	{
 		if (access(cmd, 0) == 0)
+		{
+			stat(cmd, &path);
+			if(S_ISREG(path.st_mode) == 0) {
+				filenotfound(cmd, 1);
+				return NULL;
+			}
 			return (cmd);
-		filenotfound(cmd);
+		}
+		filenotfound(cmd, 0);
 		return NULL;
 	}
-
 
 	while (*paths)
 	{
 		temp = ft_strjoin(*paths, "/");
 		command = ft_strjoin(temp, cmd);
 		free(temp);
-		if (access(command, 0) == 0)
+		if (access(command, 0) == 0 && stat(command, &path) == 0 && S_ISREG(path.st_mode))
 			return (command);
 		free(command);
 		paths++;
@@ -44,6 +52,7 @@ void	exit_command(t_pipex *pipex)
 {
 	int	exit_code;
 
+	// ft_putstr_fd("exit\n", 2);
 	if (ft_2dlen((void **)pipex->args) == 1)
 	{
 		child_free(pipex);

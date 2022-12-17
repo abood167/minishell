@@ -45,33 +45,36 @@ char	*replace_withvar(char *str, t_list *g_env, t_list *l_var)
 	int		start;
 	int		pos;
 	t_list	*list;
+	int		quote;
 
 	list = NULL;
 	pos = 0;
 	start = 0;
 	while (str[pos])
 	{
-		if (str[pos] == '$' && (ft_isalpha(str[pos + 1]) || str[pos + 1] == '_'
-				|| str[pos + 1] == '$' || str[pos + 1] == '?'
-				|| ft_isdigit(str[pos + 1])))
-		{
-			ft_lstadd_back(&list, ft_lstnew(ft_substr(str, start, pos)));
-			start = ++pos;
-			while (ft_isalpha(str[pos]) || str[pos] == '_'
-				|| ft_isdigit(str[pos]))
-				pos++;
-			if (start == pos)
-				pos++;
-			val = get_var(&str[start], pos - start, g_env, l_var);
-			if (!val)
-				val = "";
-			ft_lstadd_back(&list, ft_lstnew(ft_strdup(val)));
-			start = pos;
+		if((str[pos] == '\'' && !in_quote(str[pos], &quote)) || !quote) {
+			if (str[pos] == '$' && (ft_isalpha(str[pos + 1]) || str[pos + 1] == '_'
+					|| str[pos + 1] == '$' || str[pos + 1] == '?'
+					|| ft_isdigit(str[pos + 1])))
+			{
+				ft_lstadd_back(&list, ft_lstnew(ft_substr(str, start, pos - start)));
+				start = ++pos;
+				while (ft_isalpha(str[pos]) || str[pos] == '_'
+					|| ft_isdigit(str[pos]))
+					pos++;
+				if (start == pos)
+					pos++;
+				val = get_var(&str[start], pos - start, g_env, l_var);
+				if (!val)
+					val = "";
+				ft_lstadd_back(&list, ft_lstnew(ft_strdup(val)));
+				start = pos;
+			}
 		}
 		pos++;
 	}
 	if (pos - start > 0)
-		ft_lstadd_back(&list, ft_lstnew(ft_substr(str, start, pos)));
+		ft_lstadd_back(&list, ft_lstnew(ft_strdup(&str[start])));
 	else if (pos == 0)
 		return (ft_strdup(""));
 	val = listtostr(list);

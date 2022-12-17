@@ -46,12 +46,10 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 {
 	int len;
 	int quote;
-	int line_len;
 	char *word;
 
 	len = 0;
 	quote = 0;
-	line_len = ft_strlen(line);
 	for (int i = 0; line[i]; i++)
 	{
 		if (in_quote(line[i], &quote))
@@ -62,13 +60,13 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 		if (ft_strncmp(&line[i], ">>", 2) == 0)
 		{
 			i += 2;
-			if (i >= line_len)
+			word = get_next_word(line, &i, ' '); //handle special character
+			if (!word)
 			{
 				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
-						2); //TODO handle more unexpected token
+						2);
 				return (NULL);
 			}
-			word = get_next_word(line, &i, ' '); //handle error
 			// Handle closing if out is not -1
 			pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_APPEND, 0644);
 			if (pipex->out[1] < 0)
@@ -84,13 +82,13 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 		else if (ft_strncmp(&line[i], ">", 1) == 0)
 		{
 			i++;
-			if (i >= line_len)
+			word = get_next_word(line, &i, ' ');
+			if (!word)
 			{
 				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
 						2);
 				return (NULL);
 			}
-			word = get_next_word(line, &i, ' '); //handle error
 			// Handle closing if out is not -1
 			pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 			if (pipex->out[1] < 0)
@@ -106,13 +104,14 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 		else if (ft_strncmp(&line[i], "<<", 2) == 0)
 		{
 			i += 2;
-			if (i >= line_len)
+			word = get_next_word(line, &i, ' ');
+			if (!word)
 			{
 				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
 						2);
 				return (NULL);
 			}
-			word = get_next_word(line, &i, ' '); //handle error
+
 			// Handle closing if in/out is not -1
 			here_doc(pipex, word); //handle error
 			free(word);
@@ -121,15 +120,15 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 		else if (ft_strncmp(&line[i], "<", 1) == 0)
 		{
 			i++;
-			if (i >= line_len)
+			word = get_next_word(line, &i, ' ');
+			if (!word)
 			{
 				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
 						2);
 				return (NULL);
 			}
-			word = get_next_word(line, &i, ' '); //handle error
 			// Handle closing if in is not -1
-			pipex->in = open(word, O_RDONLY); // handle error
+			pipex->in = open(word, O_RDONLY);
 			if (pipex->in < 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
