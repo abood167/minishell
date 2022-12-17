@@ -20,26 +20,36 @@ void	here_doc(t_pipex *pipex, char *lim)
 	pipex->here_doc = 1;
 	if (pipe(pipex->out) == -1)
 		error_exit("Pipe: ");
-	len[1] = ft_strlen(lim);
-	while (1)
-	{
-		ft_printf("> ");
-		str = get_next_line(0);
-		if(str == NULL)
+	
+	pipex->pid = fork();
+	if (pipex->pid == 0) {
+		len[1] = ft_strlen(lim);
+		while (1)
 		{
-			// child(*pipex, 0,&pipex->args[0], pipex->args);
-			break;
+			ft_printf("> ");
+			str = get_next_line(0);
+			if(str == NULL)
+			{
+				// child(*pipex, 0,&pipex->args[0], pipex->args);
+				break;
+			}
+				
+			len[0] = ft_strlen(str);
+			if (len[0] - 1 == len[1] && ft_strncmp(str, lim, len[0] - 1) == 0)
+				break;
+			write(pipex->out[1], str, len[0]);
+			free(str);
 		}
-			
-		len[0] = ft_strlen(str);
-		if (len[0] - 1 == len[1] && ft_strncmp(str, lim, len[0] - 1) == 0)
-			break;
-		write(pipex->out[1], str, len[0]);
 		free(str);
+		close(pipex->out[1]);
+		close(pipex->out[0]);
+		exit(EXIT_SUCCESS);
 	}
-	free(str);
 	close(pipex->out[1]);
 	pipex->in = pipex->out[0];
+	waitpid(pipex->pid, &pipex->status, 0);
+	pipex->status = WEXITSTATUS(pipex->status);
+	pipex->here_doc = 0;
 }
 
 void	cmdnotfound(char *cmd)

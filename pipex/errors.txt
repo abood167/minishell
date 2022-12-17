@@ -5,10 +5,9 @@ ctrl+c in heredoc (child does not die)
 $builtins
 $echo - hi
 $     |     
-$      >      
-$""|""
-$echo $""$
+$""|"" 
+$echo $""$  //No need to fix?
 $echo " sadfjkh hi
-$echo '$USER'
 $  > | >|>|
-$   <<  
+echo a | d | echo b  /maybe fix with wait?
+<< lm | echo b  //handle with ^C

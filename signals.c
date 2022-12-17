@@ -6,6 +6,9 @@ void ctrl_c()
     
     pipex = get_pipex();
 	//Maybe do wait here and then apply pipex.status?
+	if(pipex->here_doc && pipex->pid == 0) 
+		exit(130);
+		// kill(pipex->pid, SIGTERM); //could cause leaks? // free stuff and do exit instead?
 	if(pipex->pid != 0)
 		return;
 	pipex->status = 130;
