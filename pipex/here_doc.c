@@ -16,13 +16,15 @@ void	here_doc(t_pipex *pipex, char *lim)
 {
 	char	*str;
 	int		len[2];
-
-	pipex->here_doc = 1;
+	int		old_out;
+	
+	old_out = pipex->out[1];
 	if (pipe(pipex->out) == -1)
 		error_exit("Pipe: ");
 	
 	pipex->pid = fork();
 	if (pipex->pid == 0) {
+		pipex->here_doc = 1;
 		len[1] = ft_strlen(lim);
 		while (1)
 		{
@@ -46,6 +48,7 @@ void	here_doc(t_pipex *pipex, char *lim)
 		exit(EXIT_SUCCESS);
 	}
 	close(pipex->out[1]);
+	pipex->out[1] = old_out;
 	pipex->in = pipex->out[0];
 	waitpid(pipex->pid, &pipex->status, 0);
 	pipex->status = WEXITSTATUS(pipex->status);

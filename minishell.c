@@ -25,16 +25,15 @@ void fix_dir() {
 //update status in more places
 //Set cannot be mixed with other commands. If mixed, nothing happens
 //export alpha=5
-//Var start with alpha or _
-// when piping, fork self and not recall minishell
-//unset 3asdasd
 //exit prints exit
 //test with symbolic link
 //handle for execution and redirect? bash: /home/zin: Is a directory
 //command not found with number has different output
+//exit status for other errors
 //exit status of execve
 //<"|" cat | asd
 //< |
+// <<lm | <<lm  //Solution do pipe without forking in function. Make it handle | && || 
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -68,7 +67,6 @@ int main(int ac, char **av, char **env)
 			//Quotation error and pipe error
 			if(line[0] && line[0] != ' ')
 				add_history(line);
-
 			if(ft_strchr(line, '|'))
 				line = pipe_shell(line, &pipex);
 			if(!line)
@@ -76,7 +74,7 @@ int main(int ac, char **av, char **env)
 			line = set_var(line, g_env, &l_var); 
 			line = strip_redirect(line, &pipex); //handle bash: *: ambiguous redirect
 			if(!line) //update status code
-				continue;
+				continue; //If null could
 			//Handle * before this
 			cmd = ft_splitquote(line, ' '); //record which arr index is quote
 			// Sort wildcard?./m //make ignore qoute

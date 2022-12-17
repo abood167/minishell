@@ -77,7 +77,6 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 				return (NULL);
 			}
 			free(word);
-			continue ;
 		}
 		else if (ft_strncmp(&line[i], ">", 1) == 0)
 		{
@@ -99,7 +98,6 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 				return (NULL);
 			}
 			free(word);
-			continue ;
 		}
 		else if (ft_strncmp(&line[i], "<<", 2) == 0)
 		{
@@ -117,7 +115,6 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 			free(word);
 			if(pipex->status != 0)
 				return NULL;
-			continue ;
 		}
 		else if (ft_strncmp(&line[i], "<", 1) == 0)
 		{
@@ -139,7 +136,6 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 				return (NULL);
 			}
 			free(word);
-			continue ;
 		}
 		len++;
 	}
