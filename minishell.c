@@ -92,25 +92,26 @@ int main(int ac, char **av, char **env)
 
 		check_pipe(&pipex);
 		
-		if(cmd && ft_strcmp(cmd[0],"exit") == 0)
+		if(ft_strcmp(cmd[0],"exit") == 0)
 		{
 			pipex.args = cmd;
 			exit_command(&pipex);
 		}
-		else if(cmd && ft_strcmp(cmd[0],"echo") == 0)
+		else if(ft_strcmp(cmd[0],"echo") == 0)
 			echo_cmd(cmd, pipex);
-		else if(cmd && ft_strcmp(cmd[0],"pwd") == 0){
+		else if(ft_strcmp(cmd[0],"pwd") == 0){
 			//switch to print env
 			line = getcwd(NULL, 0);
 			ft_putstr_fd(line, pipex.out[1]);
 			ft_putstr_fd("\n", pipex.out[1]);
 			free(line);
 		}
-		else if(cmd && ft_strcmp(cmd[0],"cd") == 0)
+		else if(ft_strcmp(cmd[0],"cd") == 0)
 			cd_cmd(cmd, g_env, l_var);
-		else if(cmd && ft_strcmp(cmd[0],"unset") == 0){
+		else if(ft_strcmp(cmd[0],"unset") == 0)
 			unset_var(&cmd[1], &g_env, &l_var);
-		}
+		else if(ft_strcmp(cmd[0],"export") == 0)
+			export_var(cmd, &g_env, &l_var);
 		else {
 			// printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
 			pipex.pid = fork();

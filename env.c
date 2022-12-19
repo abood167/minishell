@@ -117,9 +117,53 @@ char	*set_var(char *line, t_list *g_env, t_list **l_var)
 	return (newline);
 }
 
-// void export_var() {
+void export_var(char **cmd, t_list **g_env, t_list **l_var) {
+	int i;
+	int j;
+	char* temp[3];
+	char** temp_s;
 
-// }
+	i = 0;
+	while (cmd[i])
+	{
+		j = 0;
+		while (ft_isalpha(cmd[i][j]) || cmd[i][j] == '_' || (j
+				&& ft_isdigit(cmd[i][j])))
+			j++;
+		if (cmd[i][j] != '=')
+		{
+			temp[0] = ft_substr(cmd[i], 0, j);
+			temp_s = ft_split(temp[0], '\0');
+			unset_var(temp_s, g_env, l_var);
+			ft_lstadd_back(g_env, ft_lstnew((void *)cmd[i]));
+			free(temp[0]);
+			ft_freearray((void**)temp_s);
+		}
+		else if(!cmd[i][j])
+		{
+			temp[0] = get_var(cmd[i], ft_strlen(cmd[i]), *g_env, *l_var);
+			temp[1] = ft_strjoin(cmd[i], "=");
+			temp[2] = ft_strjoin(temp[1], temp[0]);
+			ft_lstadd_back(g_env, ft_lstnew((void *)temp[2]));
+			free(temp[0]);
+			free(temp[1]);
+			free(temp[2]);
+			temp[0] = ft_strdup(cmd[i]);
+			temp_s = ft_split(temp[0], '\0');
+			unset_var(temp_s, g_env, l_var);
+			free(temp[0]);
+			ft_freearray((void**)temp_s);
+
+		}
+		else {
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(cmd[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			get_pipex()->status = 1;
+		}
+		i++;
+	}
+}
 
 void	unset_var(char **cmd, t_list **g_env, t_list **l_var)
 {
