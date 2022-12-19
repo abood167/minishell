@@ -45,14 +45,14 @@ int main(int ac, char **av, char **env)
 	char	**envp;
 	t_list 	*g_env;
 	t_list	*l_var;
-	t_list	*buffer;
+	// t_list	*buffer;
 
 	pipex.status = EXIT_SUCCESS;
 	ft_int_signal();
 
 	g_env = ft_arrtolst(env);
 	l_var = NULL;
-	buffer = NULL;
+	// buffer = NULL;
 	while (1)
 	{
 		envp = ft_lsttoarr(g_env);
