@@ -22,7 +22,7 @@ void echo_cmd(char **cmd, t_pipex pipex)
 		
 	while (cmd[i])
 	{
-		if(cmd[i][0] == '-')
+		if(cmd[i][0] == '-' && cmd[i][1] != '\0' && cmd[i][1] == 'n')
 		{
 			if(check_n(cmd[i]) == 0)
 			{

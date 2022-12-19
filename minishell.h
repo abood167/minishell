@@ -35,6 +35,7 @@ void cd_cmd(char **cmd, t_list *g_env, t_list *l_var);
 char*   get_var(char *varname, int len, t_list *g_env, t_list *l_var);
 char* set_var(char *line, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
+void export_var(char **cmd, t_list **g_env, t_list **l_var);
 
 //Arrays, list and strings
 char**  ft_splitquote(char *s, char c);

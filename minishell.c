@@ -31,11 +31,13 @@ void fix_dir() {
 //test with symbolic link
 //handle for execution and redirect? bash: /home/zin: Is a directory
 //command not found with number has different output
-//<"|" cat | asd
-//< |
 // <<lm | <<lm  //Solution do pipe without forking in function. Make it handle | && || 
 // echo <d <<lm  (does here_doc first before error)
 // <<should be done before pipe and &&
+//bash-3.2$ true || (echo aaa && echo bbb)
+//bash-3.2$ false || (echo aaa && echo bbb)
+//bash-3.2$ false && echo a && echo b
+//bash-3.2$ true || echo a && echo b
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -59,8 +61,6 @@ int main(int ac, char **av, char **env)
 		fix_dir();
 
 		if (ac == 1) {
-			if(pipex.status == 130)
-				printf("\n");
 			line = readline("minishell % ");
 			if (line == NULL)
 			{
@@ -94,25 +94,26 @@ int main(int ac, char **av, char **env)
 
 		check_pipe(&pipex);
 		
-		if(cmd && ft_strcmp(cmd[0],"exit") == 0)
+		if(ft_strcmp(cmd[0],"exit") == 0)
 		{
 			pipex.args = cmd;
 			exit_command(&pipex);
 		}
-		else if(cmd && ft_strcmp(cmd[0],"echo") == 0)
+		else if(ft_strcmp(cmd[0],"echo") == 0)
 			echo_cmd(cmd, pipex);
-		else if(cmd && ft_strcmp(cmd[0],"pwd") == 0){
+		else if(ft_strcmp(cmd[0],"pwd") == 0){
 			//switch to print env
 			line = getcwd(NULL, 0);
 			ft_putstr_fd(line, pipex.out[1]);
 			ft_putstr_fd("\n", pipex.out[1]);
 			free(line);
 		}
-		else if(cmd && ft_strcmp(cmd[0],"cd") == 0)
+		else if(ft_strcmp(cmd[0],"cd") == 0)
 			cd_cmd(cmd, g_env, l_var);
-		else if(cmd && ft_strcmp(cmd[0],"unset") == 0){
+		else if(ft_strcmp(cmd[0],"unset") == 0)
 			unset_var(&cmd[1], &g_env, &l_var);
-		}
+		else if(ft_strcmp(cmd[0],"export") == 0)
+			export_var(cmd, &g_env, &l_var);
 		else {
 			// printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
 			pipex.pid = fork();
