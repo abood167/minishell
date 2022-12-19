@@ -12,11 +12,12 @@ t_list*	ft_split_shell(char *str, int mode)
 	split = NULL;
 	pos = 0;
 	start = 0;
+    quote = 0;
 	while (str[pos])
 	{
 		if (!in_quote(str[pos], &quote))
 		{
-            if((mode == 2 && (!ft_strncmp(&str[pos], "&&", 2) || !ft_strncmp(&str[pos], "||", 2))) || (mode == 1 && !ft_strncmp(&str[pos], "|", 1))) { 
+            if((mode == 2 && !ft_strncmp(&str[pos], "&&", 2)) || !ft_strncmp(&str[pos], "||", mode)) { 
 	            if (pos - start > 0)
 				    ft_lstadd_back(&split, ft_lstnew(ft_substr(str, start, pos - start)));      
 				ft_lstadd_back(&split, ft_lstnew(ft_substr(str, pos, mode)));
