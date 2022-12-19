@@ -35,6 +35,7 @@ void fix_dir() {
 //< |
 // <<lm | <<lm  //Solution do pipe without forking in function. Make it handle | && || 
 // echo <d <<lm  (does here_doc first before error)
+// <<should be done before pipe and &&
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -65,15 +66,17 @@ int main(int ac, char **av, char **env)
 				ft_putstr_fd("exit\n", 1);
 				exit(0);
 			}
-			//Quotation error and pipe error
+
 			if(line[0] && line[0] != ' ')
 				add_history(line);
+			if(invalid_syntax(line, &pipex))
+				continue;
 			if(ft_strchr(line, '|'))
 				line = pipe_shell(line, &pipex);
 			if(!line)
 				continue;
 			line = set_var(line, g_env, &l_var); 
-			line = strip_redirect(line, &pipex); //handle bash: *: ambiguous redirect
+			line = strip_redirect(line, &pipex, 0); //handle bash: *: ambiguous redirect
 			if(!line) //update status code
 				continue; //If null could
 			//Handle * before this

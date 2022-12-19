@@ -42,7 +42,7 @@ char	*strip_copy(char *str, int len)
 	return (strip);
 }
 
-char	*strip_redirect(char *line, t_pipex *pipex)
+char	*strip_redirect(char *line, t_pipex *pipex, int test)
 {
 	int len;
 	int quote;
@@ -68,13 +68,15 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 				return (NULL);
 			}
 			// Handle closing if out is not -1
-			pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (pipex->out[1] < 0)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				perror(word);
-				free(word);
-				return (NULL);
+			if(!test) {
+				pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_APPEND, 0644);
+				if (pipex->out[1] < 0)
+				{
+					ft_putstr_fd("minishell: ", 2);
+					perror(word);
+					free(word);
+					return (NULL);
+				}
 			}
 			free(word);
 		}
@@ -89,13 +91,15 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 				return (NULL);
 			}
 			// Handle closing if out is not -1
-			pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (pipex->out[1] < 0)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				perror(word);
-				free(word);
-				return (NULL);
+			if(!test) {
+				pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+				if (pipex->out[1] < 0)
+				{
+					ft_putstr_fd("minishell: ", 2);
+					perror(word);
+					free(word);
+					return (NULL);
+				}
 			}
 			free(word);
 		}
@@ -111,7 +115,8 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 			}
 
 			// Handle closing if in/out is not -1
-			here_doc(pipex, word); //handle error
+			if(!test) 
+				here_doc(pipex, word); //handle error
 			free(word);
 			if(pipex->status != 0)
 				return NULL;
@@ -127,13 +132,15 @@ char	*strip_redirect(char *line, t_pipex *pipex)
 				return (NULL);
 			}
 			// Handle closing if in is not -1
-			pipex->in = open(word, O_RDONLY);
-			if (pipex->in < 0)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				perror(word);
-				free(word);
-				return (NULL);
+			if(!test) {
+				pipex->in = open(word, O_RDONLY);
+				if (pipex->in < 0)
+				{
+					ft_putstr_fd("minishell: ", 2);
+					perror(word);
+					free(word);
+					return (NULL);
+				}
 			}
 			free(word);
 		}

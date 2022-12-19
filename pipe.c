@@ -10,15 +10,17 @@ make sure no empty and does not start/end have in between with special
 
 char	*pipe_shell(char *line, t_pipex *pipex)
 {
-	int i;
-    char **pipe_line;
+    t_list *pipe_line;
+    t_list *start;
 
-	pipe_line = ft_split(line, '|');
+	pipe_line = ft_split_shell(line, 1);
+    start = pipe_line;
     free(line);
     line = NULL;
-    i = 0;
-    while(pipe_line[i]){
-        if (pipe_line[i  + 1])
+    while(pipe_line){
+        if(((char *)pipe_line->content)[0] == '|')   
+            pipe_line = pipe_line->next;
+        if (pipe_line->next)
             pipe(pipex->out); //error handle?
         pipex->pid = fork();
         if (pipex->pid == 0) {
@@ -31,11 +33,11 @@ char	*pipe_shell(char *line, t_pipex *pipex)
             close(pipex->out[1]);
         pipex->in = pipex->out[0];
 		pipex->out[1] = 1;
-        i++;
+        pipe_line = pipe_line->next;
     }
-    if (pipe_line[i])
-        line = ft_strdup(pipe_line[i]);
-    ft_freearray((void **)pipe_line);
+    if (pipe_line)
+        line = ft_strdup((char*)pipe_line->content);
+    ft_lstclear(&start, free);
     if(pipex->pid != 0) {  
         waitpid(pipex->pid, &pipex->status, 0);
         pipex->status = WEXITSTATUS(pipex->status);
