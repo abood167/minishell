@@ -115,7 +115,7 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 			if(!test) 
 				here_doc(pipex, word); //handle error
 			free(word);
-			if(pipex->status != 0)
+			if(pipex->status != 0 && !test)
 				return NULL;
 		}
 		else if (ft_strncmp(&line[i], "<", 1) == 0)

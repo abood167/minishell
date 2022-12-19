@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include "../minishell.h"
 
 void	here_doc(t_pipex *pipex, char *lim)
 {
@@ -28,18 +29,16 @@ void	here_doc(t_pipex *pipex, char *lim)
 		len[1] = ft_strlen(lim);
 		while (1)
 		{
-			ft_printf("> ");
-			str = get_next_line(0);
+			str = readline("> ");
+			// str = get_next_line(0);
 			if(str == NULL)
-			{
-				// child(*pipex, 0,&pipex->args[0], pipex->args);
-				break;
-			}
+				exit(130);
 				
 			len[0] = ft_strlen(str);
-			if (len[0] - 1 == len[1] && ft_strncmp(str, lim, len[0] - 1) == 0)
+			if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
 				break;
 			write(pipex->out[1], str, len[0]);
+			write(pipex->out[1], "\n", 1);
 			free(str);
 		}
 		free(str);

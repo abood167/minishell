@@ -92,7 +92,14 @@ void	child(t_pipex pipex, int pos, char *argv[], char *envp[])
 		child_free(&pipex);
 		exit(127);
 	}
-	execve(pipex.cmd, pipex.args, envp);
+	if(execve(pipex.cmd, pipex.args, envp))
+	{
+		ft_putstr_fd("minishell: " , 2);
+		ft_putstr_fd(pipex.cmd, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		child_free(&pipex);
+		exit(126);
+	}
 }
 
 void	parent_free(t_pipex *pipex)

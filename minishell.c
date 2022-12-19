@@ -31,11 +31,13 @@ void fix_dir() {
 //test with symbolic link
 //handle for execution and redirect? bash: /home/zin: Is a directory
 //command not found with number has different output
-//<"|" cat | asd
-//< |
 // <<lm | <<lm  //Solution do pipe without forking in function. Make it handle | && || 
 // echo <d <<lm  (does here_doc first before error)
 // <<should be done before pipe and &&
+//bash-3.2$ true || (echo aaa && echo bbb)
+//bash-3.2$ false || (echo aaa && echo bbb)
+//bash-3.2$ false && echo a && echo b
+//bash-3.2$ true || echo a && echo b
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;
@@ -57,8 +59,6 @@ int main(int ac, char **av, char **env)
 		fix_dir();
 
 		if (ac == 1) {
-			if(pipex.status == 130)
-				printf("\n");
 			line = readline("minishell % ");
 			if (line == NULL)
 			{
