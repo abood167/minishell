@@ -40,6 +40,7 @@ int	match_pattern(const char *pattern, const char *str)
 	return (*pattern == '\0' && *str == '\0');
 }
 
+//if nothing found return as is
 char	**ft_wildcard(char **line)
 {
 	t_list *list;

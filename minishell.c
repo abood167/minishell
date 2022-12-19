@@ -23,17 +23,18 @@ void fix_dir() {
 //upgrade splitquotes for both | and ""
 //Need to figure out sort order of env
 //update status in more places
+//exit status for other errors
+//exit status of execve
 //Set cannot be mixed with other commands. If mixed, nothing happens
 //export alpha=5
 //exit prints exit
 //test with symbolic link
 //handle for execution and redirect? bash: /home/zin: Is a directory
 //command not found with number has different output
-//exit status for other errors
-//exit status of execve
 //<"|" cat | asd
 //< |
 // <<lm | <<lm  //Solution do pipe without forking in function. Make it handle | && || 
+// echo <d <<lm  (does here_doc first before error)
 int main(int ac, char **av, char **env)
 {
 	char	**cmd;

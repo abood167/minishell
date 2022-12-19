@@ -1,5 +1,13 @@
 #include "minishell.h"
 
+/*Solution for validation
+first clone line
+make sure quotes closes
+empty strip redirect (to find issues)
+split && || and | (special)
+make sure no empty and does not start/end have in between with special
+*/
+
 char	*pipe_shell(char *line, t_pipex *pipex)
 {
 	int i;

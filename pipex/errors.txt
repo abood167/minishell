@@ -11,3 +11,4 @@ $echo " sadfjkh hi
 $  > | >|>|
 echo a | d | echo b  /maybe fix with wait?
 << lm | echo b  //handle with ^C
+echo "s*".c
