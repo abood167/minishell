@@ -50,6 +50,7 @@ char	*replace_withvar(char *str, t_list *g_env, t_list *l_var)
 	list = NULL;
 	pos = 0;
 	start = 0;
+	quote = 0;
 	while (str[pos])
 	{
 		if((str[pos] == '\'' && !in_quote(str[pos], &quote)) || !quote) {
@@ -110,7 +111,6 @@ char	*set_var(char *line, t_list *g_env, t_list **l_var)
 		if (!update_var(word, g_env))
 			if (!update_var(word, *l_var))
 				ft_lstadd_back(l_var, ft_lstnew((void *)word));
-		i++;
 	}
 	newline = replace_withvar(&line[i], g_env, *l_var);
 	free(line);
@@ -124,34 +124,32 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 	char** temp_s;
 
 	i = 0;
-	while (cmd[i])
+	while (cmd[++i])
 	{
 		j = 0;
 		while (ft_isalpha(cmd[i][j]) || cmd[i][j] == '_' || (j
 				&& ft_isdigit(cmd[i][j])))
 			j++;
-		if (cmd[i][j] != '=')
+		if (cmd[i][j] == '=')
 		{
 			temp[0] = ft_substr(cmd[i], 0, j);
 			temp_s = ft_split(temp[0], '\0');
 			unset_var(temp_s, g_env, l_var);
-			ft_lstadd_back(g_env, ft_lstnew((void *)cmd[i]));
+			ft_lstadd_back(g_env, ft_lstnew((void *)ft_strdup(cmd[i])));
 			free(temp[0]);
 			ft_freearray((void**)temp_s);
 		}
 		else if(!cmd[i][j])
 		{
 			temp[0] = get_var(cmd[i], ft_strlen(cmd[i]), *g_env, *l_var);
+			if (!temp[0])
+				continue;
 			temp[1] = ft_strjoin(cmd[i], "=");
 			temp[2] = ft_strjoin(temp[1], temp[0]);
-			ft_lstadd_back(g_env, ft_lstnew((void *)temp[2]));
-			free(temp[0]);
-			free(temp[1]);
-			free(temp[2]);
-			temp[0] = ft_strdup(cmd[i]);
-			temp_s = ft_split(temp[0], '\0');
+			temp_s = ft_split(cmd[i], '\0');
 			unset_var(temp_s, g_env, l_var);
-			free(temp[0]);
+			ft_lstadd_back(g_env, ft_lstnew((void *)temp[2]));
+			free(temp[1]);
 			ft_freearray((void**)temp_s);
 
 		}
@@ -161,7 +159,6 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 			ft_putstr_fd("': not a valid identifier\n", 2);
 			get_pipex()->status = 1;
 		}
-		i++;
 	}
 }
 
