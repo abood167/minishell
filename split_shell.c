@@ -125,4 +125,4 @@ void syntax_error(char *str) {
 //         *buffer = ft_split_shell()
 //     }
 
-}
+// }
