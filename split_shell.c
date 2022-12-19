@@ -120,9 +120,4 @@ void syntax_error(char *str) {
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 }
 
-// char* for_each_line(t_list **buffer, char* line, t_pipex *pipex) {
-//     if(line) {
-//         *buffer = ft_split_shell()
-//     }
-
-// }
+// char* fx
