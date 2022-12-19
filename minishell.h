@@ -57,5 +57,6 @@ void ft_int_signal();
 t_pipex* get_pipex();
 int in_quote(char c, int *quote);
 int invalid_syntax(char *str, t_pipex *pipex);
+void syntax_error(char *str);
 
 #endif

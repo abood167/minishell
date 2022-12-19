@@ -67,7 +67,7 @@ int main(int ac, char **av, char **env)
 				exit(0);
 			}
 
-			if(line[0] && line[0] != ' ')
+			if(line[0])
 				add_history(line);
 			if(invalid_syntax(line, &pipex))
 				continue;

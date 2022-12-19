@@ -46,7 +46,7 @@ int split_valid(t_list *split) {
             while(str[i] && str[i] == ' ')
                 i++;
             if (str[i] == '|' || str[i] == '&') {
-                ft_putstr_fd("Error description tbd\n", 2); //need to do
+                syntax_error(&str[i]); //need to do update status
                 return 0;
             }
         }
@@ -102,4 +102,19 @@ int invalid_syntax(char *str, t_pipex *pipex) {
     }
     ft_lstclear(&start, free);
     return 0;
+}
+
+void syntax_error(char *str) {
+    if(!str)
+        ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+    else if(!ft_strncmp(str, "||", 2))
+        ft_putstr_fd("minishell: syntax error near unexpected token `||'\n", 2);
+    else if(!ft_strncmp(str, "&&", 2))
+        ft_putstr_fd("minishell: syntax error near unexpected token `&&'\n", 2);
+    else if(!ft_strncmp(str, "|", 1))
+        ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+    else if(!ft_strncmp(str, "*", 1))
+        ft_putstr_fd("minishell: *: ambiguous redirect\n", 2);
+    else
+        ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 }

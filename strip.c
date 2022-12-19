@@ -61,10 +61,9 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' '); //handle special character
-			if (!word)
+			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*')))
 			{
-				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
-						2);
+				syntax_error(word);
 				return (NULL);
 			}
 			// Handle closing if out is not -1
@@ -84,10 +83,9 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 		{
 			i++;
 			word = get_next_word(line, &i, ' ');
-			if (!word)
+			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*')))
 			{
-				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
-						2);
+				syntax_error(word);
 				return (NULL);
 			}
 			// Handle closing if out is not -1
@@ -107,10 +105,9 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' ');
-			if (!word)
+			if (!word || (word && (word[0] == '&' || word[0] == '|')))
 			{
-				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
-						2);
+				syntax_error(word);
 				return (NULL);
 			}
 
@@ -125,10 +122,9 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 		{
 			i++;
 			word = get_next_word(line, &i, ' ');
-			if (!word)
+			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*')))
 			{
-				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
-						2);
+				syntax_error(word);
 				return (NULL);
 			}
 			// Handle closing if in is not -1
