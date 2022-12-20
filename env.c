@@ -122,8 +122,10 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 	int j;
 	char* temp[3];
 	char** temp_s;
+	int flag;
 
 	i = 0;
+	flag = 0;
 	while (cmd[++i])
 	{
 		j = 0;
@@ -157,9 +159,10 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 			ft_putstr_fd("minishell: export: `", 2);
 			ft_putstr_fd(cmd[i], 2);
 			ft_putstr_fd("': not a valid identifier\n", 2);
-			get_pipex()->status = 1;
+			flag = 1;
 		}
 	}
+	get_pipex()->status = flag;
 }
 
 void	unset_var(char **cmd, t_list **g_env, t_list **l_var)
