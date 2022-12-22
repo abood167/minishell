@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 13:16:25 by sbokhari          #+#    #+#             */
-/*   Updated: 2022/12/14 15:49:19 by abin-saa         ###   ########.fr       */
+/*   Updated: 2022/12/22 16:07:26 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,9 @@ void	pipex_init(t_pipex *pipex, char **envp)
 	path = envp;
 	while (*path && ft_strncmp("PATH", *path, 4))
 		path++;
-	if (*path)
+	if (*path){
 		pipex->paths = ft_split((*path + 5), ':');
+	}
 	else
 		pipex->paths = ft_split(" ", ' ');
 	pipex->cmd = NULL;

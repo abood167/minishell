@@ -85,6 +85,7 @@ int main(int ac, char **av, char **env)
 			cmd = ft_splitquote(line, ' '); //record which arr index is quote
 			// Sort wildcard?./m //make ignore qoute
 			cmd = ft_wildcard(cmd);
+			free(line);
 		}
 		else
 			cmd = ft_copyarr(&av[1]);
@@ -126,6 +127,7 @@ int main(int ac, char **av, char **env)
 		}
 		ft_freearray((void**)envp);
 		ft_freearray((void**)cmd);
+		// ft_freearray((void**)pipex.args);
 		if (ac != 1 || pipex.is_child)
 			break;
 	}
