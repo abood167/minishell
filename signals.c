@@ -9,7 +9,7 @@ void ctrl_c()
 	if(pipex->here_doc) 
 		exit(130);
 		// kill(pipex->pid, SIGTERM); //could cause leaks? // free stuff and do exit instead?
-	if(pipex->pid != 0)
+	if(pipex->pid && ft_lstlast(pipex->pid)->content != 0)
 		return;
 	pipex->status = 130;
 	rl_replace_line("", 0);

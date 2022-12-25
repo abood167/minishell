@@ -117,10 +117,10 @@ int main(int ac, char **av, char **env)
 			export_var(cmd, &g_env, &l_var);
 		else {
 			// printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
-			pipex.pid = fork();
-			if (pipex.pid == 0)
-				child(pipex, 0, cmd, envp);			
-			waitpid(pipex.pid, &pipex.status, 0); //text exucting non executable
+        	ft_lstadd_back(&pipex.pid, ft_lstnew((void*)(intptr_t)fork()));
+			if (ft_lstlast(pipex.pid)->content == 0) 
+				child(pipex, 0, cmd, envp);		
+        	waitpid((pid_t)(intptr_t)ft_lstlast(pipex.pid)->content, &pipex.status, 0);
 			pipex.status = WEXITSTATUS(pipex.status); //enviroment variable 
 			// printf("stat: %d", pipex.status);
 			//close pipes
