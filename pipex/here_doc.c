@@ -23,8 +23,8 @@ void	here_doc(t_pipex *pipex, char *lim)
 	if (pipe(pipex->out) == -1)
 		error_exit("Pipe: ");
 	
-	pipex->pid = fork();
-	if (pipex->pid == 0) {
+	ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
+	if (ft_lstlast(pipex->pid)->content == 0) {
 		pipex->here_doc = 1;
 		len[1] = ft_strlen(lim);
 		while (1)
@@ -49,7 +49,7 @@ void	here_doc(t_pipex *pipex, char *lim)
 	close(pipex->out[1]);
 	pipex->out[1] = old_out;
 	pipex->in = pipex->out[0];
-	waitpid(pipex->pid, &pipex->status, 0);
+	wait_pipe(pipex);
 	pipex->status = WEXITSTATUS(pipex->status);
 	pipex->here_doc = 0;
 }

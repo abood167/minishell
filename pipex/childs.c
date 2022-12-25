@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 13:16:16 by sbokhari          #+#    #+#             */
-/*   Updated: 2022/12/14 11:26:36 by abin-saa         ###   ########.fr       */
+/*   Updated: 2022/12/22 12:00:11 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,10 @@ void	child(t_pipex pipex, int pos, char *argv[], char *envp[])
 		ft_putstr_fd(pipex.cmd, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
 		child_free(&pipex);
+		parent_free(&pipex);
 		exit(126);
 	}
+	parent_free(&pipex);
 }
 
 void	parent_free(t_pipex *pipex)
