@@ -8,6 +8,20 @@ split && || and | (special)
 make sure no empty and does not start/end have in between with special
 */
 
+void	wait_pipe(t_pipex *pipex)
+{
+    t_list *node;
+	int	status;
+
+    node = pipex->pid;
+    while(node) {
+        waitpid((pid_t)(intptr_t)pipex->pid->content, &status, 0);
+        pipex->status = WEXITSTATUS(status);
+        node = node->next;
+    }
+    ft_lstclear(&pipex->pid, NULL);
+}
+
 char	*pipe_shell(char *line, t_pipex *pipex)
 {
     t_list *pipe_line;
@@ -21,9 +35,9 @@ char	*pipe_shell(char *line, t_pipex *pipex)
         if(((char *)pipe_line->content)[0] == '|')   
             pipe_line = pipe_line->next;
         if (pipe_line->next)
-            pipe(pipex->out); //error handle?
-        pipex->pid = fork();
-        if (pipex->pid == 0) {
+            pipe(pipex->out); //error handle
+        ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
+        if (ft_lstlast(pipex->pid)->content == 0) {
             pipex->is_child = 1;
             break;
         }
@@ -38,9 +52,8 @@ char	*pipe_shell(char *line, t_pipex *pipex)
     if (pipe_line)
         line = ft_strdup((char*)pipe_line->content);
     ft_lstclear(&start, free);
-    if(pipex->pid != 0) {  
-        waitpid(pipex->pid, &pipex->status, 0);
-        pipex->status = WEXITSTATUS(pipex->status);
-    }
+    if(ft_lstlast(pipex->pid)->content != 0)
+        wait_pipe(pipex);
     return line;
 }
+

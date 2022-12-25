@@ -13,25 +13,25 @@
 #include "pipex.h"
 #include <sys/wait.h>
 
-void	shift_pipe(t_pipex *pipex, int i, char **argv, char **envp)
-{
-	int	status;
+// void	shift_pipe(t_pipex *pipex, int i, char **argv, char **envp)
+// {
+// 	int	status;
 
-	pipex->pid = fork();
-	if (pipex->pid == 0)
-		child(*pipex, i, argv, envp);
-	close(pipex->in);
-	close(pipex->out[1]);
-	pipex->in = pipex->out[0];
-	waitpid(pipex->pid, &status, 0);
-	pipex->status = WEXITSTATUS(status);
-}
+// 	pipex->pid = fork();
+// 	if (pipex->pid == 0)
+// 		child(*pipex, i, argv, envp);
+// 	close(pipex->in);
+// 	close(pipex->out[1]);
+// 	pipex->in = pipex->out[0];
+// 	waitpid(pipex->pid, &status, 0);
+// 	pipex->status = WEXITSTATUS(status);
+// }
 
 void	pipex_init(t_pipex *pipex, char **envp)
 {
 	char	**path;
 	
-	pipex->pid = 0;
+	pipex->pid = NULL;
 	pipex->paths = NULL;
 	pipex->here_doc = 0;
 	pipex->in = -1;

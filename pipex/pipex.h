@@ -26,7 +26,7 @@ typedef struct s_pipex
 	int		here_doc;
 	int		in;
 	int		is_child;
-	pid_t	pid;
+	t_list	*pid;
 	int		out[2];
 	char	*cmd;
 	char	**paths;
