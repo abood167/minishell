@@ -108,6 +108,8 @@ int main(int ac, char **av, char **env)
 			ft_putstr_fd("\n", pipex.out[1]);
 			free(line);
 		}
+		else if(ft_strcmp(cmd[0],"env") == 0)
+			printarr(envp);
 		else if(ft_strcmp(cmd[0],"cd") == 0)
 			cd_cmd(cmd, g_env, l_var);
 		else if(ft_strcmp(cmd[0],"unset") == 0)
