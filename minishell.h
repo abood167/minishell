@@ -51,6 +51,7 @@ char* listtostr(t_list *arr);
 
 //input modifiers
 char	*pipe_shell(char *line, t_pipex *pipex);
+void	wait_pipe(t_pipex *pipex);
 char*   strip_redirect(char *line, t_pipex *pipex, int test);
 char** ft_wildcard(char **line);
 
