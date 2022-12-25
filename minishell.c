@@ -128,6 +128,7 @@ int main(int ac, char **av, char **env)
 		ft_freearray((void**)cmd);
 		if (ac != 1 || pipex.is_child)
 			break;
+		//flush readline?
 	}
 	return (pipex.status);
 }
