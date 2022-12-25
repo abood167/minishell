@@ -24,7 +24,7 @@ void	here_doc(t_pipex *pipex, char *lim)
 		error_exit("Pipe: ");
 	
 	ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
-	if (pipex->pid == 0) {
+	if (ft_lstlast(pipex->pid)->content == 0) {
 		pipex->here_doc = 1;
 		len[1] = ft_strlen(lim);
 		while (1)
