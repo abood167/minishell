@@ -15,7 +15,7 @@ void	wait_pipe(t_pipex *pipex)
 
     node = pipex->pid;
     while(node) {
-        waitpid((pid_t)(intptr_t)pipex->pid->content, &status, 0);
+        waitpid((pid_t)(intptr_t)node->content, &status, 0);
         pipex->status = WEXITSTATUS(status);
         node = node->next;
     }
