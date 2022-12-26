@@ -30,17 +30,13 @@ void	strip_heredoc(char *line, t_mini *m)
 
 void	heredoc_count(char *line, int *cnt)
 {
-	int len;
 	int quote;
 
 	quote = 0;
 	for (int i = 0; line[i]; i++)
 	{
 		if (in_quote(line[i], &quote))
-		{
-			len++;
 			continue ;
-		}
 		if (ft_strncmp(&line[i], "<<", 2) == 0)
 		{
 			i += 2;
