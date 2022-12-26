@@ -17,13 +17,11 @@ void	here_doc(t_pipex *pipex, char *lim)
 {
 	char	*str;
 	int		len[2];
-	int		old_out;
-	
-	old_out = pipex->out[1];
-	if (pipe(pipex->out) == -1)
-		error_exit("Pipe: ");
+	t_list  *node;
 	
 	ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
+	ft_lstadd_back(&pipex->doc_str, ft_lstnew(strdup("")));
+	node = ft_lstlast(pipex->doc_str);
 	if (ft_lstlast(pipex->pid)->content == 0) {
 		pipex->here_doc = 1;
 		len[1] = ft_strlen(lim);
@@ -37,20 +35,14 @@ void	here_doc(t_pipex *pipex, char *lim)
 			len[0] = ft_strlen(str);
 			if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
 				break;
-			write(pipex->out[1], str, len[0]);
-			write(pipex->out[1], "\n", 1);
-			free(str);
+			node->content = ft_strmerge(node->content, str);
+			node->content = ft_strjoin(node->content, ft_strdup("\n"));
 		}
-		free(str);
-		close(pipex->out[1]);
-		close(pipex->out[0]);
 		exit(EXIT_SUCCESS);
 	}
-	close(pipex->out[1]);
-	pipex->out[1] = old_out;
-	pipex->in = pipex->out[0];
-	wait_pipe(pipex);
+	waitpid((pid_t)(intptr_t)ft_lstlast(pipex->pid)->content, &pipex->status, 0);
 	pipex->status = WEXITSTATUS(pipex->status);
+    ft_lstdellast(&pipex->pid, NULL);
 	pipex->here_doc = 0;
 }
 

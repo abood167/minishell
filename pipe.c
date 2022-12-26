@@ -35,7 +35,7 @@ char	*pipe_shell(char *line, t_pipex *pipex)
         if(((char *)pipe_line->content)[0] == '|')   
             pipe_line = pipe_line->next;
         if (pipe_line->next)
-            pipe(pipex->out); //error handle
+            pipe(pipex->out); //error handle        
         ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
         if (ft_lstlast(pipex->pid)->content == 0) {
             pipex->is_child = 1;

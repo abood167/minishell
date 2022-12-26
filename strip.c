@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*strip_copy(char *str, int len)
+static char	*strip_copy(char *str, int len)
 {
 	char	*strip;
 	char	*word;
@@ -60,7 +60,7 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 		if (ft_strncmp(&line[i], ">>", 2) == 0)
 		{
 			i += 2;
-			word = get_next_word(line, &i, ' '); //handle special character
+			word = get_next_word(line, &i, ' '); //handle with and without quotes
 			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*')))
 			{
 				syntax_error(word);
@@ -113,7 +113,7 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 
 			// Handle closing if in/out is not -1
 			if(!test) 
-				here_doc(pipex, word); //handle error
+				str_doc(pipex); //handle error
 			free(word);
 			if(pipex->status != 0 && !test)
 				return NULL;
