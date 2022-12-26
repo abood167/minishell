@@ -60,7 +60,7 @@ int main(int ac, char **av, char **env)
 	m.g_env = ft_arrtolst(env);
 	m.l_var = NULL;
 	// buffer = NULL;
-	while (1)
+	while (!m.is_child)
 	{
 		m.envp = ft_lsttoarr(m.g_env);
 		mini_init(&m, m.envp);
