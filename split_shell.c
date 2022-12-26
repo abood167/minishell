@@ -46,7 +46,7 @@ int split_valid(t_list *split) {
             i = 0;
             while(str[i] && str[i] == ' ')
                 i++;
-            if (str[i] == '|' || str[i] == '&') {
+            if (str[i] == '|' || str[i] == '&' || !str[i]) {
                 syntax_error(&str[i]); //need to do update status
                 return 0;
             }
