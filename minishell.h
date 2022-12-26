@@ -28,7 +28,7 @@
 #include <dirent.h>
 
 //built in
-void echo_cmd(char **cmd, t_pipex pipex);
+void echo_cmd(char **cmd, t_mini m);
 void cd_cmd(char **cmd, t_list *g_env, t_list *l_var);
 
 //env
@@ -50,15 +50,18 @@ char* arrtostr(char **arr);
 char* listtostr(t_list *arr);
 
 //input modifiers
-char	*pipe_shell(char *line, t_pipex *pipex);
-void	wait_pipe(t_pipex *pipex);
-char*   strip_redirect(char *line, t_pipex *pipex, int test);
+char	*pipe_shell(char *line, t_mini *m);
+void	wait_pipe(t_mini *m);
+char*   strip_redirect(char *line, t_mini *m, int test);
 char** ft_wildcard(char **line);
 
 void ft_int_signal();
-t_pipex* get_pipex();
+t_mini* get_mini();
 int in_quote(char c, int *quote);
-int invalid_syntax(char *str, t_pipex *pipex);
+int invalid_syntax(char *str, t_mini *m);
 void syntax_error(char *str);
+
+void free_loop();
+void free_exit();
 
 #endif

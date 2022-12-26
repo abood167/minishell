@@ -3,7 +3,7 @@
 char	*get_var(char *varname, int len, t_list *g_env, t_list *l_var)
 {
 	if (strcmp(varname, "?") == 0)
-		return (ft_itoa(get_pipex()->status));
+		return (ft_itoa(get_mini()->status));
 	while (g_env)
 	{
 		if (strncmp(g_env->content, varname, len) == 0
@@ -162,7 +162,7 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 			flag = 1;
 		}
 	}
-	get_pipex()->status = flag;
+	get_mini()->status = flag;
 }
 
 void	unset_var(char **cmd, t_list **g_env, t_list **l_var)

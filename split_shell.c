@@ -60,7 +60,7 @@ int split_valid(t_list *split) {
 }
 
 //make status to 2 if true
-int invalid_syntax(char *str, t_pipex *pipex) {
+int invalid_syntax(char *str, t_mini *m) {
     int quote;
     int i;
     char *temp;
@@ -77,7 +77,7 @@ int invalid_syntax(char *str, t_pipex *pipex) {
         ft_putstr_fd("Quotes must close\n", 2); 
         return 1;
     }
-    temp = strip_redirect(ft_strdup(str), pipex, 1);
+    temp = strip_redirect(ft_strdup(str), m, 1);
     if(!temp)
         return 1;
     free(temp);
@@ -114,13 +114,17 @@ void syntax_error(char *str) {
         ft_putstr_fd("minishell: syntax error near unexpected token `&&'\n", 2);
     else if(!ft_strncmp(str, "|", 1))
         ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+    else if(!ft_strncmp(str, "<", 1))
+        ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
+    else if(!ft_strncmp(str, ">", 1))
+        ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
     else if(!ft_strncmp(str, "*", 1))
         ft_putstr_fd("minishell: *: ambiguous redirect\n", 2);
     else
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 }
 
-// char* for_each_line(t_list **buffer, char* line, t_pipex *pipex) {
+// char* for_each_line(t_list **buffer, char* line, t_mini *m) {
 //     if(line) {
 //         *buffer = ft_split_shell()
 //     }

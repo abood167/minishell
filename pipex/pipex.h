@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   m.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -32,23 +32,28 @@ typedef struct s_pipex
 	char	**paths;
 	char	**args;
 	int		status;
-}			t_pipex;
+	
+	char	**cmds;
+	char	*line;
+	char	**envp;
+	t_list 	*g_env;
+	t_list	*l_var;
+}			t_mini;
 
-void		pipex_init(t_pipex *pipex, char **envp);
+void		pipex_init(t_mini *m, char **envp);
 
-void		child(t_pipex pipex, int pos, char *argv[], char *envp[]);
-void		here_doc(t_pipex *pipex, char *lim);
+void		child(t_mini m, int pos, char *argv[], char *envp[]);
+void		here_doc(t_mini *m, char *lim);
 
-void		parent_free(t_pipex *pipex);
-void		child_free(t_pipex *pipex);
+void		parent_free(t_mini *m);
+void		child_free(t_mini *m);
 
 void		error_exit(char *err);
-void		error_free(t_pipex *pipex, char *error);
 void		cmdnotfound(char *cmd);
 void		filenotfound(char *file, int dir);
 void		writeline(char *str);
 
-void		check_pipe(t_pipex *pipex);
-void		exit_command(t_pipex *pipex);
+void		check_pipe(t_mini *m);
+void		exit_command(t_mini *m);
 
 #endif

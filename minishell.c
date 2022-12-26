@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-static t_pipex	pipex; //change to pointer so you can call it one variable?
+static t_mini	m; //change to pointer so you can call it one variable?
 
-t_pipex* get_pipex() {
-	return &pipex;
+t_mini* get_mini() {
+	return &m;
 }
 
 void fix_dir() {
@@ -17,6 +17,18 @@ void fix_dir() {
 		line = getcwd(NULL, 0);
 	}
 	free(line);
+}
+
+void free_loop() {
+	ft_freearray((void**)m.envp);
+	ft_freearray((void**)m.cmds);
+	ft_freearray((void**)m.paths);
+	ft_lstclear(&m.pid, NULL);
+}
+
+void free_exit() {
+	ft_lstclear(&m.g_env, free);
+	ft_lstclear(&m.l_var, free);
 }
 
 //check quote, pipe, && and || validity
@@ -40,99 +52,91 @@ void fix_dir() {
 //bash-3.2$ true || echo a && echo b
 int main(int ac, char **av, char **env)
 {
-	char	**cmd;
-	char	*line;
-	char	**envp;
-	t_list 	*g_env;
-	t_list	*l_var;
 	// t_list	*buffer;
 
-	pipex.status = EXIT_SUCCESS;
+	m.status = EXIT_SUCCESS;
 	ft_int_signal();
 
-	g_env = ft_arrtolst(env);
-	l_var = NULL;
+	m.g_env = ft_arrtolst(env);
+	m.l_var = NULL;
 	// buffer = NULL;
 	while (1)
 	{
-		envp = ft_lsttoarr(g_env);
-		pipex_init(&pipex, envp);
+		m.envp = ft_lsttoarr(m.g_env);
+		pipex_init(&m, m.envp);
 
 		fix_dir();
 
 		if (ac == 1) {
-			line = readline("minishell % ");
-			if (line == NULL)
+			m.line = readline("minishell % ");
+			if (m.line == NULL)
 			{
 				//remember to clean the memory before exiting
 				ft_putstr_fd("exit\n", 1);
 				exit(0);
 			}
 
-			if(line[0])
-				add_history(line);
-			if(invalid_syntax(line, &pipex))
+			if(m.line[0])
+				add_history(m.line);
+			if(invalid_syntax(m.line, &m))
 				continue;
-			if(ft_strchr(line, '|'))
-				line = pipe_shell(line, &pipex);
-			if(!line)
+			if(ft_strchr(m.line, '|'))
+				m.line = pipe_shell(m.line, &m);
+			if(!m.line)
 				continue;
-			line = set_var(line, g_env, &l_var); 
-			line = strip_redirect(line, &pipex, 0); //handle bash: *: ambiguous redirect
-			if(!line) //update status code
+			m.line = set_var(m.line, m.g_env, &m.l_var); 
+			m.line = strip_redirect(m.line, &m, 0); //handle bash: *: ambiguous redirect
+			if(!m.line) //update status code
 				continue; //If null could
 			//Handle * before this
-			cmd = ft_splitquote(line, ' '); //record which arr index is quote
+			m.cmds = ft_splitquote(m.line, ' '); //record which arr index is quote
 			// Sort wildcard?./m //make ignore qoute
-			cmd = ft_wildcard(cmd);
-			free(line);
+			m.cmds = ft_wildcard(m.cmds);
+			free(m.line);
 		}
 		else
-			cmd = ft_copyarr(&av[1]);
+			m.cmds = ft_copyarr(&av[1]);
 
-		if(!cmd || (cmd && !cmd[0]))
+		if(!m.cmds || (m.cmds && !m.cmds[0]))
 			continue;
 
-		check_pipe(&pipex);
+		check_pipe(&m);
 		
-		if(ft_strcmp(cmd[0],"exit") == 0)
+		if(ft_strcmp(m.cmds[0],"exit") == 0)
 		{
-			pipex.args = cmd;
-			exit_command(&pipex);
+			m.args = m.cmds;
+			exit_command(&m);
 		}
-		else if(ft_strcmp(cmd[0],"echo") == 0)
-			echo_cmd(cmd, pipex);
-		else if(ft_strcmp(cmd[0],"pwd") == 0){
+		else if(ft_strcmp(m.cmds[0],"echo") == 0)
+			echo_cmd(m.cmds, m);
+		else if(ft_strcmp(m.cmds[0],"pwd") == 0){
 			//switch to print env
-			line = getcwd(NULL, 0);
-			ft_putstr_fd(line, pipex.out[1]);
-			ft_putstr_fd("\n", pipex.out[1]);
-			free(line);
+			m.line = getcwd(NULL, 0);
+			ft_putstr_fd(m.line, m.out[1]);
+			ft_putstr_fd("\n", m.out[1]);
+			free(m.line);
 		}
-		else if(ft_strcmp(cmd[0],"env") == 0)
-			printarr(envp);
-		else if(ft_strcmp(cmd[0],"cd") == 0)
-			cd_cmd(cmd, g_env, l_var);
-		else if(ft_strcmp(cmd[0],"unset") == 0)
-			unset_var(&cmd[1], &g_env, &l_var);
-		else if(ft_strcmp(cmd[0],"export") == 0)
-			export_var(cmd, &g_env, &l_var);
+		else if(ft_strcmp(m.cmds[0],"env") == 0)
+			printarr(m.envp);
+		else if(ft_strcmp(m.cmds[0],"cd") == 0)
+			cd_cmd(m.cmds, m.g_env, m.l_var);
+		else if(ft_strcmp(m.cmds[0],"unset") == 0)
+			unset_var(&m.cmds[1], &m.g_env, &m.l_var);
+		else if(ft_strcmp(m.cmds[0],"export") == 0)
+			export_var(m.cmds, &m.g_env, &m.l_var);
 		else {
-			// printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
-        	ft_lstadd_back(&pipex.pid, ft_lstnew((void*)(intptr_t)fork()));
-			if (ft_lstlast(pipex.pid)->content == 0) 
-				child(pipex, 0, cmd, envp);		
-        	waitpid((pid_t)(intptr_t)ft_lstlast(pipex.pid)->content, &pipex.status, 0);
-			pipex.status = WEXITSTATUS(pipex.status); //enviroment variable 
-			// printf("stat: %d", pipex.status);
+        	ft_lstadd_back(&m.pid, ft_lstnew((void*)(intptr_t)fork()));
+			if (ft_lstlast(m.pid)->content == 0) 
+				child(m, 0, m.cmds, m.envp);		
+        	waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &m.status, 0);
+			m.status = WEXITSTATUS(m.status);
 			//close pipes
 		}
-		ft_freearray((void**)envp);
-		ft_freearray((void**)cmd);
-		// ft_freearray((void**)pipex.args);
-		if (ac != 1 || pipex.is_child)
+		free_loop();
+		if (ac != 1 || m.is_child)
 			break;
 		//flush readline?
 	}
-	return (pipex.status);
+	free_exit();
+	return (m.status);
 }

@@ -8,21 +8,21 @@ split && || and | (special)
 make sure no empty and does not start/end have in between with special
 */
 
-void	wait_pipe(t_pipex *pipex)
+void	wait_pipe(t_mini *m)
 {
     t_list *node;
 	int	status;
 
-    node = pipex->pid;
+    node = m->pid;
     while(node) {
         waitpid((pid_t)(intptr_t)node->content, &status, 0);
-        pipex->status = WEXITSTATUS(status);
+        m->status = WEXITSTATUS(status);
         node = node->next;
     }
-    ft_lstclear(&pipex->pid, NULL);
+    ft_lstclear(&m->pid, NULL);
 }
 
-char	*pipe_shell(char *line, t_pipex *pipex)
+char	*pipe_shell(char *line, t_mini *m)
 {
     t_list *pipe_line;
     t_list *start;
@@ -35,25 +35,25 @@ char	*pipe_shell(char *line, t_pipex *pipex)
         if(((char *)pipe_line->content)[0] == '|')   
             pipe_line = pipe_line->next;
         if (pipe_line->next)
-            pipe(pipex->out); //error handle
-        ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
-        if (ft_lstlast(pipex->pid)->content == 0) {
-            pipex->is_child = 1;
+            pipe(m->out); //error handle
+        ft_lstadd_back(&m->pid, ft_lstnew((void*)(intptr_t)fork()));
+        if (ft_lstlast(m->pid)->content == 0) {
+            m->is_child = 1;
             break;
         }
-        if(pipex->in != 0)
-            close(pipex->in);
-        if(pipex->out[1] != 1)
-            close(pipex->out[1]);
-        pipex->in = pipex->out[0];
-		pipex->out[1] = 1;
+        if(m->in != 0)
+            close(m->in);
+        if(m->out[1] != 1)
+            close(m->out[1]);
+        m->in = m->out[0];
+		m->out[1] = 1;
         pipe_line = pipe_line->next;
     }
     if (pipe_line)
         line = ft_strdup((char*)pipe_line->content);
     ft_lstclear(&start, free);
-    if(ft_lstlast(pipex->pid)->content != 0)
-        wait_pipe(pipex);
+    if(ft_lstlast(m->pid)->content != 0)
+        wait_pipe(m);
     return line;
 }
 

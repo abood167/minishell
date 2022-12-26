@@ -2,16 +2,16 @@
 
 void ctrl_c()
 {
-    t_pipex *pipex;
+    t_mini *m;
     
-    pipex = get_pipex();
-	//Maybe do wait here and then apply pipex.status?
-	if(pipex->here_doc) 
+    m = get_mini();
+	//Maybe do wait here and then apply m.status?
+	if(m->here_doc) 
 		exit(130);
-		// kill(pipex->pid, SIGTERM); //could cause leaks? // free stuff and do exit instead?
-	if(pipex->pid && ft_lstlast(pipex->pid)->content != 0)
+		// kill(m->pid, SIGTERM); //could cause leaks? // free stuff and do exit instead?
+	if(m->pid && ft_lstlast(m->pid)->content != 0)
 		return;
-	pipex->status = 130;
+	m->status = 130;
 	rl_replace_line("", 0);
 	printf("\n");
 	rl_on_new_line();

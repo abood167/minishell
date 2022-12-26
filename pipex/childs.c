@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include "../minishell.h"
 #include <sys/stat.h>
 
 char	*getcommand(char **paths, char *cmd)
@@ -48,72 +49,76 @@ char	*getcommand(char **paths, char *cmd)
 	return (NULL);
 }
 
-void	exit_command(t_pipex *pipex)
+void	exit_command(t_mini *m)
 {
 	int	exit_code;
 
 	// ft_putstr_fd("exit\n", 2);
-	if (ft_2dlen((void **)pipex->args) == 1)
+	if (ft_2dlen((void **)m->args) == 1)
 	{
-		child_free(pipex);
+		child_free(m);
 		exit(1);
 	}
-	else if (!ft_isstrdigit(pipex->args[1]))
+	else if (!ft_isstrdigit(m->args[1]))
 	{
-		write(2, "pipex: exit: ", 13);
-		write(2, pipex->args[1], ft_strlen(pipex->args[1]));
+		ft_putstr_fd("minishell: exit: ", 2);
+		write(2, m->args[1], ft_strlen(m->args[1]));
 		write(2, ": numeric argument required\n", 29);
-		child_free(pipex);
+		child_free(m);
 		exit(2);
 	}
-	else if (ft_2dlen((void **)pipex->args) > 2)
+	else if (ft_2dlen((void **)m->args) > 2)
 	{
-		write(2, "pipex: exit: too many arguments\n", 33);
-		child_free(pipex);
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		child_free(m);
 		exit(1);
 	}
-	exit_code = atoi(pipex->args[1]);
-	child_free(pipex);
+	exit_code = atoi(m->args[1]);
+	child_free(m);
 	exit(exit_code);
 }
 
-void	child(t_pipex pipex, int pos, char *argv[], char *envp[])
+void	child(t_mini m, int pos, char *argv[], char *envp[])
 {
-	if (pos == 2 + pipex.here_doc)
-		close(pipex.out[0]);
-	dup2(pipex.in, STDIN_FILENO);
-	dup2(pipex.out[1], STDOUT_FILENO);
-	pipex.args = argv;
-	if (ft_strcmp(pipex.args[0], "exit") == 0)
-		exit_command(&pipex);
-	pipex.cmd = getcommand(pipex.paths, pipex.args[0]);
-	if (!pipex.cmd)
+	if (pos == 2 + m.here_doc)
+		close(m.out[0]);
+	dup2(m.in, STDIN_FILENO);
+	dup2(m.out[1], STDOUT_FILENO);
+	m.args = argv;
+	if (ft_strcmp(m.args[0], "exit") == 0)
+		exit_command(&m);
+	m.cmd = getcommand(m.paths, m.args[0]);
+	if (!m.cmd)
 	{
-		child_free(&pipex);
+		child_free(&m);
 		exit(127);
 	}
-	if(execve(pipex.cmd, pipex.args, envp))
+	if(execve(m.cmd, m.args, envp))
 	{
 		ft_putstr_fd("minishell: " , 2);
-		ft_putstr_fd(pipex.cmd, 2);
+		ft_putstr_fd(m.cmd, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
-		child_free(&pipex);
-		parent_free(&pipex);
+		child_free(&m);
+		parent_free(&m);
 		exit(126);
 	}
-	parent_free(&pipex);
+	parent_free(&m);
 }
 
-void	parent_free(t_pipex *pipex)
+void	parent_free(t_mini *m)
 {
-	close(pipex->in);
-	close(pipex->out[0]);
-	close(pipex->out[1]);
-	ft_freearray((void **)pipex->paths);
+	free_loop();
+	free_exit();
+	close(m->in);
+	close(m->out[0]);
+	close(m->out[1]);
 }
 
-void	child_free(t_pipex *pipex)
+void	child_free(t_mini *m)
 {
-	ft_freearray((void **)pipex->args);
-	free(pipex->cmd);
+	if (m->args != m->cmds)
+		ft_freearray((void **)m->args);
+	free_loop();
+	free_exit();
+	free(m->cmd);
 }

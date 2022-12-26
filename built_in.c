@@ -14,7 +14,7 @@ int check_n(char *s)
 	return (0);
 }
 
-void echo_cmd(char **cmd, t_pipex pipex)
+void echo_cmd(char **cmd, t_mini m)
 {
 	int i = 1;
 	int x = 1;
@@ -43,17 +43,17 @@ void echo_cmd(char **cmd, t_pipex pipex)
 	while (cmd[i])
 	{
 		
-		ft_putstr_fd(cmd[i],pipex.out[1]);
+		ft_putstr_fd(cmd[i], m.out[1]);
 		if(cmd[(i + 1)] != NULL)
 		{
-			ft_putstr_fd(" ",pipex.out[1]);
+			ft_putstr_fd(" ", m.out[1]);
 		}
 		i++;
 	}
 	
 	if (t == 0)
     {
-        ft_putstr_fd("\n",pipex.out[1]);
+        ft_putstr_fd("\n", m.out[1]);
     }
 }
 

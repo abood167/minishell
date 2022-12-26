@@ -13,19 +13,19 @@
 #include "pipex.h"
 #include "../minishell.h"
 
-void	here_doc(t_pipex *pipex, char *lim)
+void	here_doc(t_mini *m, char *lim)
 {
 	char	*str;
 	int		len[2];
 	int		old_out;
 	
-	old_out = pipex->out[1];
-	if (pipe(pipex->out) == -1)
+	old_out = m->out[1];
+	if (pipe(m->out) == -1)
 		error_exit("Pipe: ");
 	
-	ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
-	if (ft_lstlast(pipex->pid)->content == 0) {
-		pipex->here_doc = 1;
+	ft_lstadd_back(&m->pid, ft_lstnew((void*)(intptr_t)fork()));
+	if (ft_lstlast(m->pid)->content == 0) {
+		m->here_doc = 1;
 		len[1] = ft_strlen(lim);
 		while (1)
 		{
@@ -37,21 +37,21 @@ void	here_doc(t_pipex *pipex, char *lim)
 			len[0] = ft_strlen(str);
 			if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
 				break;
-			write(pipex->out[1], str, len[0]);
-			write(pipex->out[1], "\n", 1);
+			write(m->out[1], str, len[0]);
+			write(m->out[1], "\n", 1);
 			free(str);
 		}
 		free(str);
-		close(pipex->out[1]);
-		close(pipex->out[0]);
+		close(m->out[1]);
+		close(m->out[0]);
 		exit(EXIT_SUCCESS);
 	}
-	close(pipex->out[1]);
-	pipex->out[1] = old_out;
-	pipex->in = pipex->out[0];
-	wait_pipe(pipex);
-	pipex->status = WEXITSTATUS(pipex->status);
-	pipex->here_doc = 0;
+	close(m->out[1]);
+	m->out[1] = old_out;
+	m->in = m->out[0];
+	wait_pipe(m);
+	m->status = WEXITSTATUS(m->status);
+	m->here_doc = 0;
 }
 
 void	cmdnotfound(char *cmd)
@@ -79,14 +79,8 @@ void	error_exit(char *error)
 		write(2, "Error: Invalid Number of Params\n", 33);
 	else
 	{
-		write(2, "pipex: ", 7);
+		write(2, "minishell: ", 7);
 		perror(error);
 	}
 	exit(EXIT_FAILURE);
-}
-
-void	error_free(t_pipex *pipex, char *error)
-{
-	parent_free(pipex);
-	error_exit(error);
 }

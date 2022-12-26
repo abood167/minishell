@@ -42,7 +42,7 @@ char	*strip_copy(char *str, int len)
 	return (strip);
 }
 
-char	*strip_redirect(char *line, t_pipex *pipex, int test)
+char	*strip_redirect(char *line, t_mini *m, int test)
 {
 	int len;
 	int quote;
@@ -61,15 +61,15 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' '); //handle special character
-			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*')))
+			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
 				return (NULL);
 			}
 			// Handle closing if out is not -1
 			if(!test) {
-				pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_APPEND, 0644);
-				if (pipex->out[1] < 0)
+				m->out[1] = open(word, O_CREAT | O_WRONLY | O_APPEND, 0644);
+				if (m->out[1] < 0)
 				{
 					ft_putstr_fd("minishell: ", 2);
 					perror(word);
@@ -83,15 +83,15 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 		{
 			i++;
 			word = get_next_word(line, &i, ' ');
-			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*')))
+			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
 				return (NULL);
 			}
 			// Handle closing if out is not -1
 			if(!test) {
-				pipex->out[1] = open(word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-				if (pipex->out[1] < 0)
+				m->out[1] = open(word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+				if (m->out[1] < 0)
 				{
 					ft_putstr_fd("minishell: ", 2);
 					perror(word);
@@ -105,7 +105,7 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' ');
-			if (!word || (word && (word[0] == '&' || word[0] == '|')))
+			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
 				return (NULL);
@@ -113,24 +113,24 @@ char	*strip_redirect(char *line, t_pipex *pipex, int test)
 
 			// Handle closing if in/out is not -1
 			if(!test) 
-				here_doc(pipex, word); //handle error
+				here_doc(m, word); //handle error
 			free(word);
-			if(pipex->status != 0 && !test)
+			if(m->status != 0 && !test)
 				return NULL;
 		}
 		else if (ft_strncmp(&line[i], "<", 1) == 0)
 		{
 			i++;
 			word = get_next_word(line, &i, ' ');
-			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*')))
+			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
 				return (NULL);
 			}
 			// Handle closing if in is not -1
 			if(!test) {
-				pipex->in = open(word, O_RDONLY);
-				if (pipex->in < 0)
+				m->in = open(word, O_RDONLY);
+				if (m->in < 0)
 				{
 					ft_putstr_fd("minishell: ", 2);
 					perror(word);

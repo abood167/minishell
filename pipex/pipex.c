@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   m.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,55 +13,55 @@
 #include "pipex.h"
 #include <sys/wait.h>
 
-// void	shift_pipe(t_pipex *pipex, int i, char **argv, char **envp)
+// void	shift_pipe(t_mini *m, int i, char **argv, char **envp)
 // {
 // 	int	status;
 
-// 	pipex->pid = fork();
-// 	if (pipex->pid == 0)
+// 	m->pid = fork();
+// 	if (m->pid == 0)
 // 		child(*pipex, i, argv, envp);
-// 	close(pipex->in);
-// 	close(pipex->out[1]);
-// 	pipex->in = pipex->out[0];
-// 	waitpid(pipex->pid, &status, 0);
-// 	pipex->status = WEXITSTATUS(status);
+// 	close(m->in);
+// 	close(m->out[1]);
+// 	m->in = m->out[0];
+// 	waitpid(m->pid, &status, 0);
+// 	m->status = WEXITSTATUS(status);
 // }
 
-void	pipex_init(t_pipex *pipex, char **envp)
+void	pipex_init(t_mini *m, char **envp)
 {
 	char	**path;
 	
-	pipex->pid = NULL;
-	pipex->paths = NULL;
-	pipex->here_doc = 0;
-	pipex->in = -1;
-	pipex->out[1] = -1;
-	pipex->is_child = 0;
+	m->pid = NULL;
+	m->paths = NULL;
+	m->here_doc = 0;
+	m->in = -1;
+	m->out[1] = -1;
+	m->is_child = 0;
 	path = envp;
 	while (*path && ft_strncmp("PATH", *path, 4))
 		path++;
 	if (*path){
-		pipex->paths = ft_split((*path + 5), ':');
+		m->paths = ft_split((*path + 5), ':');
 	}
 	else
-		pipex->paths = ft_split(" ", ' ');
-	pipex->cmd = NULL;
+		m->paths = ft_split(" ", ' ');
+	m->cmd = NULL;
 }
 
-void check_pipe(t_pipex *pipex) {
-	if (pipex->in == -1)
-		pipex->in = 0;
-	if (pipex->out[1] == -1)
-		pipex->out[1] = 1;
+void check_pipe(t_mini *m) {
+	if (m->in == -1)
+		m->in = 0;
+	if (m->out[1] == -1)
+		m->out[1] = 1;
 }
 
 // int	main(int argc, char **argv, char **envp)
 // {
-// 	t_pipex	pipex;
+// 	t_mini	pipex;
 
 // 	if (argc < 5)
 // 		error_exit(NULL);
-// 	pipex_init(&pipex, argc, argv, envp);
-// 	main2(&pipex, argv, envp);
-// 	return (pipex.status);
+// 	pipex_init(&m, argc, argv, envp);
+// 	main2(&m, argv, envp);
+// 	return (m.status);
 // }
