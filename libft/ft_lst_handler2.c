@@ -36,6 +36,19 @@ t_list	*ft_lstlast(t_list *lst)
 	return (lst);
 }
 
+t_list	*ft_lstindex(t_list *lst, int index)
+{
+	int	i;
+
+	i = 0;
+	while (lst && i < index)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (lst);
+}
+
 void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
 	while (lst)

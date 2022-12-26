@@ -80,7 +80,7 @@ void	exit_command(t_mini *m)
 
 void	child(t_mini m, int pos, char *argv[], char *envp[])
 {
-	if (pos == 2 + m.here_doc)
+	if (m.in != m.out[0])
 		close(m.out[0]);
 	dup2(m.in, STDIN_FILENO);
 	dup2(m.out[1], STDOUT_FILENO);
@@ -99,10 +99,8 @@ void	child(t_mini m, int pos, char *argv[], char *envp[])
 		ft_putstr_fd(m.cmd, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
 		child_free(&m);
-		parent_free(&m);
 		exit(126);
 	}
-	parent_free(&m);
 }
 
 void	parent_free(t_mini *m)

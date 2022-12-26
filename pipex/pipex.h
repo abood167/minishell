@@ -23,6 +23,7 @@
 
 typedef struct s_pipex
 {
+	t_list  *doc_str;
 	int		here_doc;
 	int		in;
 	int		is_child;

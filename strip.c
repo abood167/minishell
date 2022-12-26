@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*strip_copy(char *str, int len)
+static char	*strip_copy(char *str, int len)
 {
 	char	*strip;
 	char	*word;
@@ -113,10 +113,8 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 
 			// Handle closing if in/out is not -1
 			if(!test) 
-				here_doc(m, word); //handle error
+				str_doc(m); //handle error
 			free(word);
-			if(m->status != 0 && !test)
-				return NULL;
 		}
 		else if (ft_strncmp(&line[i], "<", 1) == 0)
 		{

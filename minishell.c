@@ -80,6 +80,9 @@ int main(int ac, char **av, char **env)
 				add_history(m.line);
 			if(invalid_syntax(m.line, &m))
 				continue;
+			strip_heredoc(m.line, &m); //handle bash: *: ambiguous redirect
+			if(m.status != 0)
+				continue;
 			if(ft_strchr(m.line, '|'))
 				m.line = pipe_shell(m.line, &m);
 			if(!m.line)

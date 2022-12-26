@@ -17,41 +17,29 @@ void	here_doc(t_mini *m, char *lim)
 {
 	char	*str;
 	int		len[2];
-	int		old_out;
+	t_list  *node;
+	rl_getc_func_t *bak;
 	
-	old_out = m->out[1];
-	if (pipe(m->out) == -1)
-		error_exit("Pipe: ");
-	
-	ft_lstadd_back(&m->pid, ft_lstnew((void*)(intptr_t)fork()));
-	if (ft_lstlast(m->pid)->content == 0) {
-		m->here_doc = 1;
-		len[1] = ft_strlen(lim);
-		while (1)
-		{
-			str = readline("> ");
-			// str = get_next_line(0);
-			if(str == NULL)
-				exit(130);
-				
-			len[0] = ft_strlen(str);
-			if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
-				break;
-			write(m->out[1], str, len[0]);
-			write(m->out[1], "\n", 1);
-			free(str);
+	ft_lstadd_back(&m->doc_str, ft_lstnew(strdup("")));
+	node = ft_lstlast(m->doc_str);
+	bak = rl_getc_function;
+	rl_getc_function = getc;
+	len[1] = ft_strlen(lim);
+	while (1)
+	{
+		str = readline("> ");
+		// str = get_next_line(0);
+		if(str == NULL){
+			rl_getc_function = bak;
+			return;
 		}
-		free(str);
-		close(m->out[1]);
-		close(m->out[0]);
-		exit(EXIT_SUCCESS);
+		len[0] = ft_strlen(str);
+		if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
+			break;
+		node->content = ft_strmerge(node->content, str);
+		node->content = ft_strjoin(node->content, ft_strdup("\n"));
 	}
-	close(m->out[1]);
-	m->out[1] = old_out;
-	m->in = m->out[0];
-	wait_pipe(m);
-	m->status = WEXITSTATUS(m->status);
-	m->here_doc = 0;
+	rl_getc_function = bak;
 }
 
 void	cmdnotfound(char *cmd)

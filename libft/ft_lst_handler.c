@@ -50,8 +50,30 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 
 void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
-	del(lst->content);
+	if(del)
+		del(lst->content);
 	free(lst);
+}
+
+void ft_lstdellast(t_list **list, void (*del)(void *)) {
+    t_list *node;
+    
+    if(!(*list)->next) {
+		if (del)
+			del((*list)->content);
+        free(*list);
+        *list = NULL;
+        return;
+    }
+    node = *list;
+    while (node->next->next)
+	{
+    	node = node->next;
+	}
+	if (del)
+		del(node->next->content);
+    free(node->next);
+    node->next = NULL;
 }
 
 void	ft_lstclear(t_list **lst, void (*del)(void *))
