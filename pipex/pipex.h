@@ -21,7 +21,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-typedef struct s_pipex
+typedef struct s_mini
 {
 	t_list  *doc_str;
 	int		here_doc;
@@ -41,9 +41,9 @@ typedef struct s_pipex
 	t_list	*l_var;
 }			t_mini;
 
-void		pipex_init(t_mini *m, char **envp);
+void		mini_init(t_mini *m, char **envp);
 
-void		child(t_mini m, int pos, char *argv[], char *envp[]);
+void		child(t_mini m, char *argv[], char *envp[]);
 void		here_doc(t_mini *m, char *lim);
 
 void		parent_free(t_mini *m);

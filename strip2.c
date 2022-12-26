@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	strip_heredoc(char *line, t_pipex *pipex)
+void	strip_heredoc(char *line, t_mini *m)
 {
 	int len;
 	int quote;
@@ -8,7 +8,7 @@ void	strip_heredoc(char *line, t_pipex *pipex)
 
 	len = 0;
 	quote = 0;
-	pipex->status = 0;
+	m->status = 0;
 	for (int i = 0; line[i]; i++)
 	{
 		if (in_quote(line[i], &quote))
@@ -21,7 +21,7 @@ void	strip_heredoc(char *line, t_pipex *pipex)
 			i += 2;
 			word = get_next_word(line, &i, ' ');
 			// Handle closing if in/out is not -1
-			here_doc(pipex, word); //handle error
+			here_doc(m, word); //handle error
 			free(word);
 		}
 		len++;
@@ -49,18 +49,18 @@ void	heredoc_count(char *line, int *cnt)
 	}
 }
 
-void	str_doc(t_pipex *pipex)
+void	str_doc(t_mini *m)
 {
 	int		old_out;
 
-	old_out = pipex->out[1];
-	if (pipe(pipex->out) == -1)
+	old_out = m->out[1];
+	if (pipe(m->out) == -1)
 		error_exit("Pipe: ");
-	ft_putstr_fd(ft_lstindex(pipex->doc_str, pipex->here_doc++)->content, pipex->out[1]);
-	write(pipex->out[1], "\0", 1);
-	if (pipex->in != 0)
-		close(pipex->in);
-	close(pipex->out[1]);
-	pipex->out[1] = old_out;
-	pipex->in = pipex->out[0];
+	ft_putstr_fd(ft_lstindex(m->doc_str, m->here_doc++)->content, m->out[1]);
+	write(m->out[1], "\0", 1);
+	if (m->in != 0)
+		close(m->in);
+	close(m->out[1]);
+	m->out[1] = old_out;
+	m->in = m->out[0];
 }

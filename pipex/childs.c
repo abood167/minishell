@@ -78,7 +78,7 @@ void	exit_command(t_mini *m)
 	exit(exit_code);
 }
 
-void	child(t_mini m, int pos, char *argv[], char *envp[])
+void	child(t_mini m, char *argv[], char *envp[])
 {
 	if (m.in != m.out[0])
 		close(m.out[0]);

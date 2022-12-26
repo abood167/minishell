@@ -63,7 +63,7 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		m.envp = ft_lsttoarr(m.g_env);
-		pipex_init(&m, m.envp);
+		mini_init(&m, m.envp);
 
 		fix_dir();
 
@@ -130,7 +130,7 @@ int main(int ac, char **av, char **env)
 		else {
         	ft_lstadd_back(&m.pid, ft_lstnew((void*)(intptr_t)fork()));
 			if (ft_lstlast(m.pid)->content == 0) 
-				child(m, 0, m.cmds, m.envp);		
+				child(m, m.cmds, m.envp);		
         	waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &m.status, 0);
 			m.status = WEXITSTATUS(m.status);
 			//close pipes

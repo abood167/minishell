@@ -27,7 +27,7 @@
 // 	m->status = WEXITSTATUS(status);
 // }
 
-void	pipex_init(t_mini *m, char **envp)
+void	mini_init(t_mini *m, char **envp)
 {
 	char	**path;
 	
@@ -62,7 +62,7 @@ void check_pipe(t_mini *m) {
 
 // 	if (argc < 5)
 // 		error_exit(NULL);
-// 	pipex_init(&m, argc, argv, envp);
+// 	mini_init(&m, argc, argv, envp);
 // 	main2(&m, argv, envp);
 // 	return (m.status);
 // }
