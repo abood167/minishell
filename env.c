@@ -117,6 +117,20 @@ char	*set_var(char *line, t_list *g_env, t_list **l_var)
 	return (newline);
 }
 
+void export_print(t_list *g_env){
+	t_mini *m;
+
+	m = get_mini();
+	while (g_env)
+	{
+		ft_putstr_fd("declare -x ", m->out[1]);
+		ft_putstr_fd(g_env->content, m->out[1]);
+		ft_putstr_fd("\n", m->out[1]);
+		g_env =	g_env->next;
+	}
+	
+}
+
 void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 	int i;
 	int j;
@@ -162,6 +176,8 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 			flag = 1;
 		}
 	}
+	if(i == 1)
+		export_print(*g_env);
 	get_mini()->status = flag;
 }
 
