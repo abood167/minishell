@@ -3,15 +3,14 @@
 void ctrl_c()
 {
     t_pipex *pipex;
-    
     pipex = get_pipex();
 	//Maybe do wait here and then apply pipex.status?
-	if(pipex->here_doc) 
-		exit(130);
-		// kill(pipex->pid, SIGTERM); //could cause leaks? // free stuff and do exit instead?
+	pipex->status = 130;
+	if(rl_getc_function == getc)
+		return;
+	// kill(pipex->pid, SIGTERM); //could cause leaks? // free stuff and do exit instead?
 	if(pipex->pid && ft_lstlast(pipex->pid)->content != 0)
 		return;
-	pipex->status = 130;
 	rl_replace_line("", 0);
 	printf("\n");
 	rl_on_new_line();

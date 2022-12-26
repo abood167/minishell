@@ -77,9 +77,9 @@ void	exit_command(t_pipex *pipex)
 	exit(exit_code);
 }
 
-void	child(t_pipex pipex, int pos, char *argv[], char *envp[])
+void	child(t_pipex pipex, char *argv[], char *envp[])
 {
-	if (pos == 2 + pipex.here_doc)
+	if (pipex.in != pipex.out[0])
 		close(pipex.out[0]);
 	dup2(pipex.in, STDIN_FILENO);
 	dup2(pipex.out[1], STDOUT_FILENO);
@@ -98,10 +98,9 @@ void	child(t_pipex pipex, int pos, char *argv[], char *envp[])
 		ft_putstr_fd(pipex.cmd, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
 		child_free(&pipex);
-		parent_free(&pipex);
 		exit(126);
 	}
-	parent_free(&pipex);
+	child_free(&pipex);
 }
 
 void	parent_free(t_pipex *pipex)
@@ -114,6 +113,8 @@ void	parent_free(t_pipex *pipex)
 
 void	child_free(t_pipex *pipex)
 {
+	//more free 
+	ft_freearray((void **)pipex->paths);
 	ft_freearray((void **)pipex->args);
 	free(pipex->cmd);
 }

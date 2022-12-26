@@ -53,6 +53,9 @@ char* listtostr(t_list *arr);
 char	*pipe_shell(char *line, t_pipex *pipex);
 void	wait_pipe(t_pipex *pipex);
 char*   strip_redirect(char *line, t_pipex *pipex, int test);
+void	strip_heredoc(char *line, t_pipex *pipex);
+void     heredoc_count(char *line, int *cnt);
+void    str_doc(t_pipex *pipex);
 char** ft_wildcard(char **line);
 
 void ft_int_signal();

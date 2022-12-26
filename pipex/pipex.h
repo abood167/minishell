@@ -23,6 +23,7 @@
 
 typedef struct s_pipex
 {
+	t_list  *doc_str;
 	int		here_doc;
 	int		in;
 	int		is_child;
@@ -36,7 +37,7 @@ typedef struct s_pipex
 
 void		pipex_init(t_pipex *pipex, char **envp);
 
-void		child(t_pipex pipex, int pos, char *argv[], char *envp[]);
+void		child(t_pipex pipex, char *argv[], char *envp[]);
 void		here_doc(t_pipex *pipex, char *lim);
 
 void		parent_free(t_pipex *pipex);

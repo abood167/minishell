@@ -35,7 +35,7 @@ char	*pipe_shell(char *line, t_pipex *pipex)
         if(((char *)pipe_line->content)[0] == '|')   
             pipe_line = pipe_line->next;
         if (pipe_line->next)
-            pipe(pipex->out); //error handle
+            pipe(pipex->out); //error handle        
         ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
         if (ft_lstlast(pipex->pid)->content == 0) {
             pipex->is_child = 1;
@@ -47,6 +47,7 @@ char	*pipe_shell(char *line, t_pipex *pipex)
             close(pipex->out[1]);
         pipex->in = pipex->out[0];
 		pipex->out[1] = 1;
+        heredoc_count(pipe_line->content, &pipex->here_doc);
         pipe_line = pipe_line->next;
     }
     if (pipe_line)

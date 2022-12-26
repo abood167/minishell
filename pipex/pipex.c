@@ -33,6 +33,7 @@ void	pipex_init(t_pipex *pipex, char **envp)
 	
 	pipex->pid = NULL;
 	pipex->paths = NULL;
+	pipex->doc_str = NULL;
 	pipex->here_doc = 0;
 	pipex->in = -1;
 	pipex->out[1] = -1;

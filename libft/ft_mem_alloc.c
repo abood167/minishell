@@ -30,9 +30,11 @@ void	ft_freearray(void **arr)
 	size_t	i;
 
 	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
+	if(arr) {
+		while (arr[i])
+			free(arr[i++]);
+		free(arr);
+	}
 }
 
 int	ft_2dlen(void **arr)

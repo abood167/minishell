@@ -73,6 +73,9 @@ int main(int ac, char **av, char **env)
 				add_history(line);
 			if(invalid_syntax(line, &pipex))
 				continue;
+			strip_heredoc(line, &pipex); //handle bash: *: ambiguous redirect
+			if(pipex.status != 0)
+				continue;
 			if(ft_strchr(line, '|'))
 				line = pipe_shell(line, &pipex);
 			if(!line)
@@ -121,12 +124,11 @@ int main(int ac, char **av, char **env)
 			// printf("\x1B[31mexecuting command %s\x1B[0m\n", cmd[0]); //to remove
         	ft_lstadd_back(&pipex.pid, ft_lstnew((void*)(intptr_t)fork()));
 			if (ft_lstlast(pipex.pid)->content == 0) 
-				child(pipex, 0, cmd, envp);		
+				child(pipex, cmd, envp);		
         	waitpid((pid_t)(intptr_t)ft_lstlast(pipex.pid)->content, &pipex.status, 0);
 			pipex.status = WEXITSTATUS(pipex.status); //enviroment variable 
-			// printf("stat: %d", pipex.status);
-			//close pipes
 		}
+		ft_lstclear(&pipex.doc_str, free);
 		ft_freearray((void**)envp);
 		ft_freearray((void**)cmd);
 		// ft_freearray((void**)pipex.args);
