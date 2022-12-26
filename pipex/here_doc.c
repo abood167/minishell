@@ -18,32 +18,28 @@ void	here_doc(t_pipex *pipex, char *lim)
 	char	*str;
 	int		len[2];
 	t_list  *node;
+	rl_getc_func_t *bak;
 	
-	ft_lstadd_back(&pipex->pid, ft_lstnew((void*)(intptr_t)fork()));
 	ft_lstadd_back(&pipex->doc_str, ft_lstnew(strdup("")));
 	node = ft_lstlast(pipex->doc_str);
-	if (ft_lstlast(pipex->pid)->content == 0) {
-		pipex->here_doc = 1;
-		len[1] = ft_strlen(lim);
-		while (1)
-		{
-			str = readline("> ");
-			// str = get_next_line(0);
-			if(str == NULL)
-				exit(130);
-				
-			len[0] = ft_strlen(str);
-			if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
-				break;
-			node->content = ft_strmerge(node->content, str);
-			node->content = ft_strjoin(node->content, ft_strdup("\n"));
+	bak = rl_getc_function;
+	rl_getc_function = getc;
+	len[1] = ft_strlen(lim);
+	while (1)
+	{
+		str = readline("> ");
+		// str = get_next_line(0);
+		if(str == NULL){
+			rl_getc_function = bak;
+			return;
 		}
-		exit(EXIT_SUCCESS);
+		len[0] = ft_strlen(str);
+		if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
+			break;
+		node->content = ft_strmerge(node->content, str);
+		node->content = ft_strjoin(node->content, ft_strdup("\n"));
 	}
-	waitpid((pid_t)(intptr_t)ft_lstlast(pipex->pid)->content, &pipex->status, 0);
-	pipex->status = WEXITSTATUS(pipex->status);
-    ft_lstdellast(&pipex->pid, NULL);
-	pipex->here_doc = 0;
+	rl_getc_function = bak;
 }
 
 void	cmdnotfound(char *cmd)

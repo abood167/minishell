@@ -47,6 +47,7 @@ char	*pipe_shell(char *line, t_pipex *pipex)
             close(pipex->out[1]);
         pipex->in = pipex->out[0];
 		pipex->out[1] = 1;
+        heredoc_count(pipe_line->content, &pipex->here_doc);
         pipe_line = pipe_line->next;
     }
     if (pipe_line)

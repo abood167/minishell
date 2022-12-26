@@ -74,6 +74,8 @@ int main(int ac, char **av, char **env)
 			if(invalid_syntax(line, &pipex))
 				continue;
 			strip_heredoc(line, &pipex); //handle bash: *: ambiguous redirect
+			if(pipex.status != 0)
+				continue;
 			if(ft_strchr(line, '|'))
 				line = pipe_shell(line, &pipex);
 			if(!line)
@@ -126,7 +128,7 @@ int main(int ac, char **av, char **env)
         	waitpid((pid_t)(intptr_t)ft_lstlast(pipex.pid)->content, &pipex.status, 0);
 			pipex.status = WEXITSTATUS(pipex.status); //enviroment variable 
 		}
-		ft_freearray((void*)pipex.doc_str);
+		ft_lstclear(&pipex.doc_str, free);
 		ft_freearray((void**)envp);
 		ft_freearray((void**)cmd);
 		// ft_freearray((void**)pipex.args);

@@ -8,6 +8,7 @@ void	strip_heredoc(char *line, t_pipex *pipex)
 
 	len = 0;
 	quote = 0;
+	pipex->status = 0;
 	for (int i = 0; line[i]; i++)
 	{
 		if (in_quote(line[i], &quote))

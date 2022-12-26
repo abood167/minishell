@@ -78,10 +78,12 @@ void ft_lstdellast(t_list **list, void (*del)(void *)) {
 
 void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	if ((*lst)->next)
-		ft_lstclear(&(*lst)->next, del);
-	if(del)
-		del((*lst)->content);
-	free(*lst);
-	*lst = NULL;
+	if(*lst) {
+		if ((*lst)->next)
+			ft_lstclear(&(*lst)->next, del);
+		if(del)
+			del((*lst)->content);
+		free(*lst);
+		*lst = NULL;
+	}
 }
