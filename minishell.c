@@ -78,8 +78,10 @@ int main(int ac, char **av, char **env)
 
 			if(m.line[0])
 				add_history(m.line);
-			if(invalid_syntax(m.line, &m))
+			if(invalid_syntax(m.line, &m)) {
+				m.status = 1;
 				continue;
+			}
 			strip_heredoc(m.line, &m); //handle bash: *: ambiguous redirect
 			if(m.status != 0)
 				continue;

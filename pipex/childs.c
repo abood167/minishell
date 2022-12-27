@@ -91,7 +91,7 @@ void	child(t_mini m, char *argv[], char *envp[])
 	if (!m.cmd)
 	{
 		child_free(&m);
-		exit(127);
+		exit(126);
 	}
 	if(execve(m.cmd, m.args, envp))
 	{
