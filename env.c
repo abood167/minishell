@@ -2,7 +2,7 @@
 
 char	*get_var(char *varname, int len, t_list *g_env, t_list *l_var)
 {
-	if (strcmp(varname, "?") == 0)
+	if (strncmp(varname, "?", 1) == 0)
 		return (ft_itoa(get_mini()->status));
 	while (g_env)
 	{
@@ -103,7 +103,7 @@ char	*set_var(char *line, t_list *g_env, t_list **l_var)
 		while (ft_isalpha(line[j]) || line[j] == '_' || (j > i
 				&& ft_isdigit(line[j])))
 			j++;
-		if (line[j] != '=')
+		if (!j || line[j] != '=')
 			break ;
 		newline = get_next_word(line, &i, ' ');
 		word = replace_withvar(newline, g_env, *l_var);
@@ -155,7 +155,6 @@ void export_print(t_list *g_env){
 		ft_putstr_fd("\n", m->out[1]);
 		g_env =	g_env->next;
 	}
-	
 }
 
 int invalid_var(char* str) {
@@ -188,7 +187,7 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 		while (ft_isalpha(cmd[i][j]) || cmd[i][j] == '_' || (j
 				&& ft_isdigit(cmd[i][j])))
 			j++;
-		if (cmd[i][j] == '=')
+		if (j && cmd[i][j] == '=')
 		{
 			temp[0] = ft_substr(cmd[i], 0, j);
 			temp_s = ft_split(temp[0], '\0');

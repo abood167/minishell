@@ -50,7 +50,7 @@ void free_exit() {
 //bash-3.2$ false || (echo aaa && echo bbb)
 //bash-3.2$ false && echo a && echo b
 //bash-3.2$ true || echo a && echo b
-
+//export a  (need to update how export with = works)
 // =   (try = alone)
 
 int main(int ac, char **av, char **env)

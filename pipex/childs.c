@@ -50,6 +50,23 @@ char	*getcommand(char **paths, char *cmd, t_mini *m)
 	return (NULL);
 }
 
+int num_large(char *str){
+	int val;
+
+	if(ft_isstrdigit(str)) {
+		val = ft_atoi(str);
+		if(val == -1) {
+			if (str[0] != '-')
+				return 1;
+		}
+		else if (val == 0) {
+			if (str[0] == '-')
+				return 1;
+		}
+	}
+	return 0;
+}
+
 void	exit_command(t_mini *m)
 {
 	int	exit_code;
@@ -60,7 +77,7 @@ void	exit_command(t_mini *m)
 		child_free(m);
 		exit(1);
 	}
-	else if (!ft_isstrdigit(m->args[1]))
+	else if (!ft_isstrdigit(m->args[1]) || num_large(m->args[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(m->args[1], 2);
@@ -74,7 +91,7 @@ void	exit_command(t_mini *m)
 		child_free(m);
 		exit(1);
 	}
-	exit_code = atoi(m->args[1]);
+	exit_code = ft_atoi(m->args[1]);
 	child_free(m);
 	exit(exit_code);
 }

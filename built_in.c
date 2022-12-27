@@ -75,9 +75,8 @@ void cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 			perror(getenv("HOME"));
 			m->status = 1;
 		}
-		return;
 	}
-	if(cmd[2] != NULL) {
+	else if(cmd[2] != NULL) {
 		ft_putstr_fd("minishell: cd: too many arguments", 2);
 		m->status = 1;
 	}
@@ -86,6 +85,10 @@ void cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 		ft_putstr_fd("minishell: cd: ", 2);
 		perror(cmd[1]);	//handle error
 		m->status = 1;
+	}
+	if(!m->status)
+	{
+		
 	}
 }
 
