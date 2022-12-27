@@ -63,8 +63,8 @@ void	exit_command(t_mini *m)
 	else if (!ft_isstrdigit(m->args[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
-		write(2, m->args[1], ft_strlen(m->args[1]));
-		write(2, ": numeric argument required\n", 29);
+		ft_putstr_fd(m->args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 		child_free(m);
 		exit(2);
 	}
