@@ -14,7 +14,7 @@
 #include "../minishell.h"
 #include <sys/stat.h>
 
-char	*getcommand(char **paths, char *cmd)
+char	*getcommand(char **paths, char *cmd, t_mini *m)
 {
 	char	*temp;
 	char	*command;
@@ -27,6 +27,7 @@ char	*getcommand(char **paths, char *cmd)
 			stat(cmd, &path);
 			if(S_ISREG(path.st_mode) == 0) {
 				filenotfound(cmd, 1);
+				m->status = 126;
 				return NULL;
 			}
 			return (cmd);
@@ -79,7 +80,8 @@ void	exit_command(t_mini *m)
 }
 
 void	child(t_mini m, char *argv[], char *envp[])
-{
+{	
+	m.status = 127;
 	if (m.in != m.out[0])
 		close(m.out[0]);
 	dup2(m.in, STDIN_FILENO);
@@ -87,20 +89,17 @@ void	child(t_mini m, char *argv[], char *envp[])
 	m.args = argv;
 	if (ft_strcmp(m.args[0], "exit") == 0)
 		exit_command(&m);
-	m.cmd = getcommand(m.paths, m.args[0]);
+	m.cmd = getcommand(m.paths, m.args[0], &m);
 	if (!m.cmd)
 	{
 		child_free(&m);
-		exit(126);
+		exit(m.status);
 	}
-	if(execve(m.cmd, m.args, envp))
-	{
-		ft_putstr_fd("minishell: " , 2);
-		ft_putstr_fd(m.cmd, 2);
-		ft_putstr_fd(": Permission denied\n", 2);
-		child_free(&m);
-		exit(126);
-	}
+	execve(m.cmd, m.args, envp);
+	ft_putstr_fd("minishell: " , 2);
+	perror(m.cmd);
+	child_free(&m);
+	exit(126);
 }
 
 void	parent_free(t_mini *m)

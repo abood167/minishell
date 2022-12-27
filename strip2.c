@@ -1,13 +1,15 @@
 #include "minishell.h"
 
-void	strip_heredoc(char *line, t_mini *m)
+int	strip_heredoc(char *line, t_mini *m)
 {
 	int len;
 	int quote;
 	char *word;
+	int  bak;
 
 	len = 0;
 	quote = 0;
+	bak = m->status;
 	m->status = 0;
 	for (int i = 0; line[i]; i++)
 	{
@@ -26,6 +28,13 @@ void	strip_heredoc(char *line, t_mini *m)
 		}
 		len++;
 	}
+	if(m->status) {
+		m->status = 1;
+		return 1;
+	}
+	m->status = bak;
+	return 0;
+	
 }
 
 void	heredoc_count(char *line, int *cnt)

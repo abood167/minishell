@@ -59,23 +59,44 @@ void echo_cmd(char **cmd, t_mini m)
 
 void cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 {
+	t_mini *m;
+
+	m = get_mini();
 	char *tmp;
 	if(cmd[1] == NULL)
 	{
 		tmp = get_var("HOME", 4, g_env, l_var);
-		if(tmp == NULL)
+		if(tmp == NULL) {
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+			m->status = 1;
+		}
 		else if (chdir(getenv("HOME")) < 0) {
 			ft_putstr_fd("minishell: cd: ", 2);
 			perror(getenv("HOME"));
+			m->status = 1;
 		}
+		return;
 	}
-	else
+	if(cmd[2] != NULL) {
+		ft_putstr_fd("minishell: cd: too many arguments", 2);
+		m->status = 1;
+	}
+	else if (chdir(cmd[1]) < 0) 
 	{
-		 if (chdir(cmd[1]) < 0) 
-		 {
-			ft_putstr_fd("minishell: cd: ", 2);
-			perror(cmd[1]);	//handle error
-		 }
+		ft_putstr_fd("minishell: cd: ", 2);
+		perror(cmd[1]);	//handle error
+		m->status = 1;
+	}
+}
+
+void print_env() {
+	t_mini *m;
+	t_list *node;
+
+	m = get_mini();
+	node = m->g_env;
+	while(node) {
+		ft_putstr_fd(node->content, m->out[1]);
+		node = node->next;
 	}
 }

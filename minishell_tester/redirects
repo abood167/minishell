@@ -1,4 +1,4 @@
-grep hi <./test_files/infile
+lgrep hi <./test_files/infile
 grep hi "<infile" <         ./test_files/infile
 echo hi < ./test_files/infile bye bye
 grep hi <./test_files/infile_big <./test_files/infile

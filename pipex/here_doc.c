@@ -44,10 +44,10 @@ void	here_doc(t_mini *m, char *lim)
 
 void	cmdnotfound(char *cmd)
 {
-	write(2, "Command '", 9);
+	ft_putstr_fd("minishell: ", 2);
 	while (*cmd)
 		write(2, cmd++, 1);
-	write(2, "' not found\n", 13);
+	ft_putstr_fd(": command not found\n", 2);
 }
 
 void	filenotfound(char *file, int dir)

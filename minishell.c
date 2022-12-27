@@ -50,6 +50,9 @@ void free_exit() {
 //bash-3.2$ false || (echo aaa && echo bbb)
 //bash-3.2$ false && echo a && echo b
 //bash-3.2$ true || echo a && echo b
+
+// =   (try = alone)
+
 int main(int ac, char **av, char **env)
 {
 	// t_list	*buffer;
@@ -82,8 +85,7 @@ int main(int ac, char **av, char **env)
 				m.status = 1;
 				continue;
 			}
-			strip_heredoc(m.line, &m); //handle bash: *: ambiguous redirect
-			if(m.status != 0)
+			if(strip_heredoc(m.line, &m)) //handle bash: *: ambiguous redirect
 				continue;
 			if(ft_strchr(m.line, '|'))
 				m.line = pipe_shell(m.line, &m);
@@ -107,6 +109,7 @@ int main(int ac, char **av, char **env)
 
 		check_pipe(&m);
 		
+		m.status = 0;
 		if(ft_strcmp(m.cmds[0],"exit") == 0)
 		{
 			m.args = m.cmds;
@@ -120,9 +123,10 @@ int main(int ac, char **av, char **env)
 			ft_putstr_fd(m.line, m.out[1]);
 			ft_putstr_fd("\n", m.out[1]);
 			free(m.line);
+			m.status = 0;
 		}
 		else if(ft_strcmp(m.cmds[0],"env") == 0)
-			printarr(m.envp);
+			print_env();
 		else if(ft_strcmp(m.cmds[0],"cd") == 0)
 			cd_cmd(m.cmds, m.g_env, m.l_var);
 		else if(ft_strcmp(m.cmds[0],"unset") == 0)

@@ -30,6 +30,7 @@
 //built in
 void echo_cmd(char **cmd, t_mini m);
 void cd_cmd(char **cmd, t_list *g_env, t_list *l_var);
+void print_env();
 
 //env
 char*   get_var(char *varname, int len, t_list *g_env, t_list *l_var);
@@ -53,7 +54,7 @@ char* listtostr(t_list *arr);
 char	*pipe_shell(char *line, t_mini *m);
 void	wait_pipe(t_mini *m);
 char*   strip_redirect(char *line, t_mini *m, int test);
-void	strip_heredoc(char *line, t_mini *m);
+int	strip_heredoc(char *line, t_mini *m);
 void     heredoc_count(char *line, int *cnt);
 void    str_doc(t_mini *m);
 char** ft_wildcard(char **line);

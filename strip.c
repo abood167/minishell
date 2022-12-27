@@ -74,6 +74,7 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 					ft_putstr_fd("minishell: ", 2);
 					perror(word);
 					free(word);
+					m->status = 1;
 					return (NULL);
 				}
 			}
@@ -96,6 +97,7 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 					ft_putstr_fd("minishell: ", 2);
 					perror(word);
 					free(word);
+					m->status = 1;
 					return (NULL);
 				}
 			}
@@ -133,6 +135,7 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 					ft_putstr_fd("minishell: ", 2);
 					perror(word);
 					free(word);
+					m->status = 1;
 					return (NULL);
 				}
 			}
