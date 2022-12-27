@@ -97,6 +97,7 @@ void print_env() {
 	node = m->g_env;
 	while(node) {
 		ft_putstr_fd(node->content, m->out[1]);
+		ft_putstr_fd("\n", m->out[1]);
 		node = node->next;
 	}
 }
