@@ -118,14 +118,39 @@ char	*set_var(char *line, t_list *g_env, t_list **l_var)
 }
 
 //Sort
+
+void sort_export(t_list *g_env)
+{
+	t_list *tmp;
+	t_list *tmp2;
+	char *tmp3;
+
+	tmp = g_env;
+	while (tmp)
+	{
+		tmp2 = tmp->next;
+		while (tmp2)
+		{
+			if (ft_strcmp(tmp->content, tmp2->content) > 0)
+			{
+				tmp3 = tmp->content;
+				tmp->content = tmp2->content;
+				tmp2->content = tmp3;
+			}
+			tmp2 = tmp2->next;
+		}
+		tmp = tmp->next;
+	}
+}
+
 void export_print(t_list *g_env){
 	t_mini *m;
 
+	sort_export(g_env);
 	m = get_mini();
 	while (g_env)
 	{
 		ft_putstr_fd("declare -x ", m->out[1]);
-		ft_putstr_fd(g_env->content, m->out[1]);
 		ft_putstr_fd(g_env->content, m->out[1]);
 		ft_putstr_fd("\n", m->out[1]);
 		g_env =	g_env->next;
