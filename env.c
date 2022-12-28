@@ -145,13 +145,25 @@ void sort_export(t_list *g_env)
 
 void export_print(t_list *g_env){
 	t_mini *m;
+	int i;
+	char *str;
 
 	sort_export(g_env);
 	m = get_mini();
 	while (g_env)
 	{
 		ft_putstr_fd("declare -x ", m->out[1]);
-		ft_putstr_fd(g_env->content, m->out[1]);
+		i = 0;
+		while(((char *)g_env->content)[i] && ((char *)g_env->content)[i] != '=')
+			i++;
+		str = ft_substr((char *)g_env->content, 0, i);
+		ft_putstr_fd(str, m->out[1]);
+		if(((char *)g_env->content)[i] == '=') {
+			ft_putstr_fd("=\"", m->out[1]);
+			ft_putstr_fd(get_var(str, ft_strlen(str), g_env, NULL), m->out[1]);
+			ft_putstr_fd("\"", m->out[1]);
+		}
+		free(str);
 		ft_putstr_fd("\n", m->out[1]);
 		g_env =	g_env->next;
 	}

@@ -55,7 +55,11 @@ int num_large(char *str){
 
 	if(ft_isstrdigit(str)) {
 		val = ft_atoi(str);
-		if(val == -1) {
+		if(val == -1 && ft_strstr(str, "9223372036854775807")) //This is hardcoded
+			return 0;
+		else if (!val && ft_strstr(str, "-9223372036854775808"))
+			return 0;
+		else if(val == -1) {
 			if (str[0] != '-')
 				return 1;
 		}
