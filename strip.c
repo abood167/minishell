@@ -50,14 +50,12 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 
 	len = 0;
 	quote = 0;
-	for (int i = 0; line[i]; i++)
+	int i = 0;
+	while (line[i])
 	{
 		if (in_quote(line[i], &quote))
-		{
-			len++;
-			continue ;
-		}
-		if (ft_strncmp(&line[i], ">>", 2) == 0)
+			(void)NULL;
+		else if (ft_strncmp(&line[i], ">>", 2) == 0)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' '); 
@@ -109,6 +107,7 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 				return (NULL);
 			free(word);
 		}
+		i++;
 		len++;
 	}
 	return (strip_copy(line, len));

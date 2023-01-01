@@ -24,14 +24,16 @@ void free_loop() {
 	ft_freearray((void**)m.cmds);
 	ft_freearray((void**)m.paths);
 	ft_lstclear(&m.pid, NULL);
-	alt_close(m.in);
-	alt_close(m.out[1]);
-	close(m.out[0]);
+	free(m.line);
+	alt_close(&m.in);
+	alt_close(&m.out[0]);
+	alt_close(&m.out[1]);
 }
 
 void free_exit() {
 	ft_lstclear(&m.g_env, free);
 	ft_lstclear(&m.l_var, free);
+	rl_clear_history();
 }
 
 // wildcard in quotes
@@ -80,7 +82,7 @@ int main(int ac, char **av, char **env)
 				continue;
 			if(strip_heredoc(m.line, &m))
 				continue;
-			if(ft_strchr(m.line, '|'))
+			if(ft_strchr(m.line, '|')) //do a better method for check
 				m.line = pipe_shell(m.line, &m);
 			if(!m.line)
 				continue;
@@ -91,7 +93,6 @@ int main(int ac, char **av, char **env)
 			m.cmds = ft_splitquote(m.line, ' '); //record which arr index is quote
 			// Sort wildcard? //make ignore qoute (need put before split)
 			m.cmds = ft_wildcard(m.cmds);
-			free(m.line);
 		}
 		else
 			m.cmds = ft_copyarr(&av[1]);

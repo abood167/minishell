@@ -75,6 +75,8 @@ char	**ft_wildcard(char **line)
 		i++;
 	}
 	closedir(dir);
-	//list
-	return (ft_lsttoarr(list));
+	ft_freearray((void**)line);
+	line = ft_lsttoarr(list);
+	ft_lstclear(&list, free);
+	return (line);
 }

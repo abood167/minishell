@@ -22,8 +22,7 @@ int	strip_heredoc(char *line, t_mini *m)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' ');
-			// Handle closing if in/out is not -1
-			here_doc(m, word); //handle error
+			here_doc(m, word);
 			free(word);
 		}
 		len++;
