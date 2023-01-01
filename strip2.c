@@ -6,19 +6,18 @@ int	strip_heredoc(char *line, t_mini *m)
 	int quote;
 	char *word;
 	int  bak;
+	int  i;
 
 	len = 0;
 	quote = 0;
 	bak = m->status;
 	m->status = 0;
-	for (int i = 0; line[i] && !m->status; i++)
+	i = 0;
+	while (line[i] && !m->status)
 	{
 		if (in_quote(line[i], &quote))
-		{
-			len++;
-			continue ;
-		}
-		if (ft_strncmp(&line[i], "<<", 2) == 0)
+			(void)NULL;
+		else if (ft_strncmp(&line[i], "<<", 2) == 0)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' ');
@@ -26,6 +25,7 @@ int	strip_heredoc(char *line, t_mini *m)
 			free(word);
 		}
 		len++;
+		i++;
 	}
 	if(m->status) {
 		m->status = 1;
@@ -39,17 +39,20 @@ int	strip_heredoc(char *line, t_mini *m)
 void	heredoc_count(char *line, int *cnt)
 {
 	int quote;
+	int i;
 
 	quote = 0;
-	for (int i = 0; line[i]; i++)
+	i = 0;
+	while (line[i])
 	{
 		if (in_quote(line[i], &quote))
-			continue ;
-		if (ft_strncmp(&line[i], "<<", 2) == 0)
+			(void)NULL;
+		else if (ft_strncmp(&line[i], "<<", 2) == 0)
 		{
 			i += 2;
 			(*cnt)++;
 		}
+		i++;
 	}
 }
 
