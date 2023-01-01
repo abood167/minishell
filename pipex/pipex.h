@@ -46,7 +46,6 @@ void		mini_init(t_mini *m, char **envp);
 void		child(t_mini m, char *argv[], char *envp[]);
 void		here_doc(t_mini *m, char *lim);
 
-void		parent_free(t_mini *m);
 void		child_free(t_mini *m);
 
 void		error_exit(char *err);

@@ -1,5 +1,31 @@
 #include "minishell.h"
 
+char	**update_envp(t_list *list)
+{
+	char	**arr;
+	int		i;
+	int		len;
+	t_list	*node;
+
+	node = list;
+	len = 0;
+	while(node) {
+		if(ft_strchr((char*)node->content, '='))
+			len++;
+		node = node->next;
+	}
+	arr = (char **)malloc(sizeof(char *) * (len + 1));
+	i = 0;
+	while (list)
+	{
+		if(ft_strchr((char*)list->content, '='))
+			arr[i++] = ft_strdup((char *)list->content);
+		list = list->next;
+	}
+	arr[i] = NULL;
+	return (arr);
+}
+
 char	*get_var(char *varname, int len, t_list *g_env, t_list *l_var)
 {
 	if (strncmp(varname, "?", 1) == 0)
@@ -211,14 +237,16 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var) {
 		else if(!cmd[i][j])
 		{
 			temp[0] = get_var(cmd[i], ft_strlen(cmd[i]), *g_env, *l_var);
-			if (!temp[0])
-				continue;
-			temp[1] = ft_strjoin(cmd[i], "=");
-			temp[2] = ft_strjoin(temp[1], temp[0]);
+			if (temp[0]) {
+				temp[1] = ft_strjoin(cmd[i], "=");
+				temp[2] = ft_strjoin(temp[1], temp[0]);
+				free(temp[1]);
+			}
+			else
+				temp[2] = ft_strdup(cmd[i]);
 			temp_s = ft_split(cmd[i], '\0');
 			unset_var(temp_s, g_env, l_var);
 			ft_lstadd_back(g_env, ft_lstnew((void *)temp[2]));
-			free(temp[1]);
 			ft_freearray((void**)temp_s);
 
 		}
@@ -251,7 +279,7 @@ void	unset_var(char **cmd, t_list **g_env, t_list **l_var)
 		while (g_point)
 		{
 			if (strncmp(g_point->content, cmd[i], len) == 0
-				&& ((char *)g_point->content)[len] == '=')
+				&& (((char *)g_point->content)[len] == '=' || !((char *)g_point->content)[len]))
 			{
 				if (g_point == *g_env)
 					*g_env = (*g_env)->next;

@@ -94,13 +94,13 @@ void cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 
 void print_env() {
 	t_mini *m;
-	t_list *node;
+	char **str;
 
 	m = get_mini();
-	node = m->g_env;
-	while(node) {
-		ft_putstr_fd(node->content, m->out[1]);
+	str = m->envp;
+	while(*str) {
+		ft_putstr_fd(*str, m->out[1]);
 		ft_putstr_fd("\n", m->out[1]);
-		node = node->next;
+		str++;
 	}
 }

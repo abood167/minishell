@@ -1,7 +1,7 @@
 NAME = minishell
 
 SRCS =	minishell.c split_qoute.c utils.c strip.c env.c pipe.c wildcard.c \
-		built_in.c signals.c split_shell.c strip2.c \
+		built_in.c signals.c split_shell.c strip2.c alt_fds.c \
 		pipex/childs.c pipex/here_doc.c pipex/pipex.c 
 
 CC = gcc -g3 -I/usr/local/opt/readline/include

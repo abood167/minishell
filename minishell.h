@@ -33,6 +33,7 @@ void cd_cmd(char **cmd, t_list *g_env, t_list *l_var);
 void print_env();
 
 //env
+char	**update_envp(t_list *list);
 char*   get_var(char *varname, int len, t_list *g_env, t_list *l_var);
 char* set_var(char *line, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
@@ -64,6 +65,11 @@ t_mini* get_mini();
 int in_quote(char c, int *quote);
 int invalid_syntax(char *str, t_mini *m);
 void syntax_error(char *str);
+
+int alt_open(int *fd, char *file, int flag, int write);
+void alt_close(int *fd);
+int alt_pipe(int out[]);
+void	shift_pipe(t_mini *m);
 
 void free_loop();
 void free_exit();

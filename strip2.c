@@ -11,7 +11,7 @@ int	strip_heredoc(char *line, t_mini *m)
 	quote = 0;
 	bak = m->status;
 	m->status = 0;
-	for (int i = 0; line[i]; i++)
+	for (int i = 0; line[i] && !m->status; i++)
 	{
 		if (in_quote(line[i], &quote))
 		{
@@ -63,9 +63,6 @@ void	str_doc(t_mini *m)
 		error_exit("Pipe: ");
 	ft_putstr_fd(ft_lstindex(m->doc_str, m->here_doc++)->content, m->out[1]);
 	write(m->out[1], "\0", 1);
-	if (m->in != 0)
-		close(m->in);
-	close(m->out[1]);
+	shift_pipe(m);
 	m->out[1] = old_out;
-	m->in = m->out[0];
 }

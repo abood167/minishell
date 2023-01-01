@@ -18,11 +18,9 @@ void	here_doc(t_mini *m, char *lim)
 	char	*str;
 	int		len[2];
 	t_list  *node;
-	rl_getc_func_t *bak;
 	
 	ft_lstadd_back(&m->doc_str, ft_lstnew(strdup("")));
 	node = ft_lstlast(m->doc_str);
-	bak = rl_getc_function;
 	rl_getc_function = getc;
 	len[1] = ft_strlen(lim);
 	while (1)
@@ -30,7 +28,9 @@ void	here_doc(t_mini *m, char *lim)
 		str = readline("> ");
 		// str = get_next_line(0);
 		if(str == NULL){
-			rl_getc_function = bak;
+			if(!m->status)
+				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 2); //confirm if same as mac
+			rl_getc_function = rl_getc;
 			return;
 		}
 		len[0] = ft_strlen(str);
@@ -39,7 +39,7 @@ void	here_doc(t_mini *m, char *lim)
 		node->content = ft_strmerge(node->content, str);
 		node->content = ft_strjoin(node->content, ft_strdup("\n"));
 	}
-	rl_getc_function = bak;
+	rl_getc_function = rl_getc;
 }
 
 void	cmdnotfound(char *cmd)

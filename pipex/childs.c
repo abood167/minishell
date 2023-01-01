@@ -75,7 +75,8 @@ void	exit_command(t_mini *m)
 {
 	int	exit_code;
 
-	// ft_putstr_fd("exit\n", 2);
+	if(!m->is_child)
+		printf("exit\n");
 	if (ft_2dlen((void **)m->args) == 1)
 	{
 		child_free(m);
@@ -121,15 +122,6 @@ void	child(t_mini m, char *argv[], char *envp[])
 	perror(m.cmd);
 	child_free(&m);
 	exit(126);
-}
-
-void	parent_free(t_mini *m)
-{
-	free_loop();
-	free_exit();
-	close(m->in);
-	close(m->out[0]);
-	close(m->out[1]);
 }
 
 void	child_free(t_mini *m)

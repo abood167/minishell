@@ -13,20 +13,6 @@
 #include "pipex.h"
 #include <sys/wait.h>
 
-// void	shift_pipe(t_mini *m, int i, char **argv, char **envp)
-// {
-// 	int	status;
-
-// 	m->pid = fork();
-// 	if (m->pid == 0)
-// 		child(*pipex, i, argv, envp);
-// 	close(m->in);
-// 	close(m->out[1]);
-// 	m->in = m->out[0];
-// 	waitpid(m->pid, &status, 0);
-// 	m->status = WEXITSTATUS(status);
-// }
-
 void	mini_init(t_mini *m, char **envp)
 {
 	char	**path;

@@ -1,13 +1,5 @@
 #include "minishell.h"
 
-/*Solution for validation
-first clone line
-make sure quotes closes
-empty strip redirect (to find issues)
-split && || and | (special)
-make sure no empty and does not start/end have in between with special
-*/
-
 void	wait_pipe(t_mini *m)
 {
     t_list *node;
@@ -35,18 +27,13 @@ char	*pipe_shell(char *line, t_mini *m)
         if(((char *)pipe_line->content)[0] == '|')   
             pipe_line = pipe_line->next;
         if (pipe_line->next)
-            pipe(m->out); //error handle
+            alt_pipe(m->out); //error handle
         ft_lstadd_back(&m->pid, ft_lstnew((void*)(intptr_t)fork()));
         if (ft_lstlast(m->pid)->content == 0) {
             m->is_child = 1;
             break;
         }
-        if(m->in != 0)
-            close(m->in);
-        if(m->out[1] != 1)
-            close(m->out[1]);
-        m->in = m->out[0];
-		m->out[1] = 1;
+        shift_pipe(m);
         heredoc_count(pipe_line->content, &m->here_doc);
         pipe_line = pipe_line->next;
     }
@@ -57,4 +44,3 @@ char	*pipe_shell(char *line, t_mini *m)
         wait_pipe(m);
     return line;
 }
-

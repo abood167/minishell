@@ -24,6 +24,9 @@ void free_loop() {
 	ft_freearray((void**)m.cmds);
 	ft_freearray((void**)m.paths);
 	ft_lstclear(&m.pid, NULL);
+	alt_close(m.in);
+	alt_close(m.out[1]);
+	close(m.out[0]);
 }
 
 void free_exit() {
@@ -31,30 +34,20 @@ void free_exit() {
 	ft_lstclear(&m.l_var, free);
 }
 
+// wildcard in quotes
 //check quote, pipe, && and || validity
-//upgrade splitquotes for both | and ""
 //Need to figure out sort order of env
-//update status in more places
-//exit status for other errors
-//exit status of execve
-//Set cannot be mixed with other commands. If mixed, nothing happens
-//export alpha=5
-//exit prints exit
 //test with symbolic link
-//handle for execution and redirect? bash: /home/zin: Is a directory
-//command not found with number has different output
-// <<lm | <<lm  //Solution do pipe without forking in function. Make it handle | && || 
-// echo <d <<lm  (does here_doc first before error)
-// <<should be done before pipe and &&
+// <<lm || <<lm  
 //bash-3.2$ true || (echo aaa && echo bbb)
 //bash-3.2$ false || (echo aaa && echo bbb)
 //bash-3.2$ false && echo a && echo b
 //bash-3.2$ true || echo a && echo b
-//export a  (need to update how export with = works)
-// =   (try = alone)
-
+//Test on mac ctrl+D  on here_doc and incomplete syntax (ie unclosed quotes)
+// ()
 int main(int ac, char **av, char **env)
 {
+	int syntax;
 	// t_list	*buffer;
 
 	m.status = EXIT_SUCCESS;
@@ -65,7 +58,7 @@ int main(int ac, char **av, char **env)
 	// buffer = NULL;
 	while (!m.is_child)
 	{
-		m.envp = ft_lsttoarr(m.g_env);
+		m.envp = update_envp(m.g_env);
 		mini_init(&m, m.envp);
 
 		fix_dir();
@@ -78,26 +71,25 @@ int main(int ac, char **av, char **env)
 				ft_putstr_fd("exit\n", 1);
 				exit(0);
 			}
-
 			if(m.line[0])
 				add_history(m.line);
-			if(invalid_syntax(m.line, &m)) {
-				m.status = 1;
+			syntax = 2;
+			while(syntax == 2)
+				syntax = invalid_syntax(m.line, &m);
+			if(syntax)
 				continue;
-			}
-			if(strip_heredoc(m.line, &m)) //handle bash: *: ambiguous redirect
+			if(strip_heredoc(m.line, &m))
 				continue;
 			if(ft_strchr(m.line, '|'))
 				m.line = pipe_shell(m.line, &m);
 			if(!m.line)
 				continue;
 			m.line = set_var(m.line, m.g_env, &m.l_var); 
-			m.line = strip_redirect(m.line, &m, 0); //handle bash: *: ambiguous redirect
+			m.line = strip_redirect(m.line, &m, 0);
 			if(!m.line) //update status code
 				continue; //If null could
-			//Handle * before this
 			m.cmds = ft_splitquote(m.line, ' '); //record which arr index is quote
-			// Sort wildcard?./m //make ignore qoute
+			// Sort wildcard? //make ignore qoute (need put before split)
 			m.cmds = ft_wildcard(m.cmds);
 			free(m.line);
 		}
@@ -137,8 +129,12 @@ int main(int ac, char **av, char **env)
         	ft_lstadd_back(&m.pid, ft_lstnew((void*)(intptr_t)fork()));
 			if (ft_lstlast(m.pid)->content == 0) 
 				child(m, m.cmds, m.envp);		
-        	waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &m.status, 0);
-			m.status = WEXITSTATUS(m.status);
+			if(m.status == 130) {
+        		waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &m.status, 0);
+				m.status = WEXITSTATUS(m.status);
+			}
+			else
+        		waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, NULL, 0);
 			//close pipes
 		}
 		free_loop();

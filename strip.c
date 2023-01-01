@@ -60,24 +60,14 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 		if (ft_strncmp(&line[i], ">>", 2) == 0)
 		{
 			i += 2;
-			word = get_next_word(line, &i, ' '); //handle special character
+			word = get_next_word(line, &i, ' '); 
 			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
 				return (NULL);
 			}
-			// Handle closing if out is not -1
-			if(!test) {
-				m->out[1] = open(word, O_CREAT | O_WRONLY | O_APPEND, 0644);
-				if (m->out[1] < 0)
-				{
-					ft_putstr_fd("minishell: ", 2);
-					perror(word);
-					free(word);
-					m->status = 1;
-					return (NULL);
-				}
-			}
+			if (!test && !alt_open(&m->out[1], word, O_CREAT | O_WRONLY | O_APPEND, 1))
+				return (NULL);
 			free(word);
 		}
 		else if (ft_strncmp(&line[i], ">", 1) == 0)
@@ -89,18 +79,8 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 				syntax_error(word);
 				return (NULL);
 			}
-			// Handle closing if out is not -1
-			if(!test) {
-				m->out[1] = open(word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-				if (m->out[1] < 0)
-				{
-					ft_putstr_fd("minishell: ", 2);
-					perror(word);
-					free(word);
-					m->status = 1;
-					return (NULL);
-				}
-			}
+			if (!test && !alt_open(&m->out[1], word, O_CREAT | O_WRONLY | O_TRUNC, 1))
+				return (NULL);
 			free(word);
 		}
 		else if (ft_strncmp(&line[i], "<<", 2) == 0)
@@ -112,8 +92,6 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 				syntax_error(word);
 				return (NULL);
 			}
-
-			// Handle closing if in/out is not -1
 			if(!test) 
 				str_doc(m); //handle error
 			free(word);
@@ -127,18 +105,8 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 				syntax_error(word);
 				return (NULL);
 			}
-			// Handle closing if in is not -1
-			if(!test) {
-				m->in = open(word, O_RDONLY);
-				if (m->in < 0)
-				{
-					ft_putstr_fd("minishell: ", 2);
-					perror(word);
-					free(word);
-					m->status = 1;
-					return (NULL);
-				}
-			}
+			if (!test && !alt_open(&m->in, word, O_RDONLY, 0))
+				return (NULL);
 			free(word);
 		}
 		len++;

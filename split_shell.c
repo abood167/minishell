@@ -33,7 +33,31 @@ t_list*	ft_split_shell(char *str, int mode)
 	return (split);
 }
 
-int split_valid(t_list *split) {
+static int complete(char *oldline, t_mini *m) {
+    int bak;
+    char* str;
+
+	bak = m->status;
+	m->status = 0;
+	rl_getc_function = getc;
+    str = readline("> ");
+    if(str == NULL) {
+        if(!m->status) {
+            ft_putstr_fd("minishell: syntax error: unexpected end of file\nexit\n", 2); //confirm if same as mac //test for leaks
+            free_loop();
+            free_exit();
+            exit(2);
+        }
+        free(m->line);
+        m->line = NULL;
+        return 1;
+    }
+    m->line = ft_strmerge(oldline, str);
+	m->status = bak;
+    return 2;
+}
+
+int split_valid(t_list *split, char *oldline, int *val) {
     int key;
     int i;
     char *str;
@@ -46,20 +70,22 @@ int split_valid(t_list *split) {
             i = 0;
             while(str[i] && str[i] == ' ')
                 i++;
-            if (str[i] == '|' || str[i] == '&' || !str[i]) {
+            if (str[i] == '|' || !ft_strncmp(&str[i], "&&", 2) || str[i] == ')') {
                 syntax_error(&str[i]); //need to do update status
-                return 0;
+                return ((*val = 1) && 0);
             }
+            else if(!str[i])
+                key = 0;
+
         }
         key = !key;
         split = split->next;
     }
     if(key)
-        ft_putstr_fd("Error description tbd\n", 2);
-    return !key;
+        return ((*val = complete(oldline, get_mini())) && 0);
+    return 1;
 }
 
-//make status to 2 if true
 int invalid_syntax(char *str, t_mini *m) {
     int quote;
     int i;
@@ -70,13 +96,12 @@ int invalid_syntax(char *str, t_mini *m) {
     
     quote = 0;
     i =0;
+    if(!str)
+        return 1;
     while(str[i]) 
         in_quote(str[i++], &quote);
     if(quote) 
-    {
-        ft_putstr_fd("Quotes must close\n", 2); 
-        return 1;
-    }
+        return complete(str, m);
     temp = strip_redirect(ft_strdup(str), m, 1);
     if(!temp)
         return 1;
@@ -84,17 +109,17 @@ int invalid_syntax(char *str, t_mini *m) {
     split = ft_split_shell(str, 2);
     if(!split)
         return 0;
-    if(!split_valid(split)) {
+    if(!split_valid(split, str, &i)) {
         ft_lstclear(&split, free);
-        return 1;
+        return i;
     }
     start = split;
     while(split) {
         sub_split = ft_split_shell((char *)split->content, 1);     
-        if(!split_valid(sub_split)) {
+        if(!split_valid(sub_split, str, &i)) {
             ft_lstclear(&sub_split, free);
             ft_lstclear(&start, free);
-            return 1;
+            return i;
         }
         ft_lstclear(&sub_split, free);
         split = split->next;
@@ -106,6 +131,7 @@ int invalid_syntax(char *str, t_mini *m) {
 }
 
 void syntax_error(char *str) {
+    get_mini()->status = 2;
     if(!str)
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
     else if(!ft_strncmp(str, "||", 2))
@@ -118,15 +144,10 @@ void syntax_error(char *str) {
         ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
     else if(!ft_strncmp(str, ">", 1))
         ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
-    else if(!ft_strncmp(str, "*", 1))
-        ft_putstr_fd("minishell: *: ambiguous redirect\n", 2);
+    else if(!ft_strncmp(str, "*", 1)) {
+        ft_putstr_fd("minishell: *: ambiguous redirect\n", 2);  
+        get_mini()->status = 1;
+    }
     else
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 }
-
-// char* for_each_line(t_list **buffer, char* line, t_mini *m) {
-//     if(line) {
-//         *buffer = ft_split_shell()
-//     }
-
-// }
