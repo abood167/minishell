@@ -23,8 +23,12 @@ void free_loop() {
 	ft_freearray((void**)m.envp);
 	ft_freearray((void**)m.cmds);
 	ft_freearray((void**)m.paths);
+	m.envp = NULL;
+	m.cmds = NULL;
+	m.paths = NULL;
 	ft_lstclear(&m.pid, NULL);
 	free(m.line);
+	m.line = NULL;
 	alt_close(&m.in);
 	alt_close(&m.out[0]);
 	alt_close(&m.out[1]);
@@ -46,20 +50,26 @@ void free_exit() {
 //bash-3.2$ false && echo a && echo b
 //bash-3.2$ true || echo a && echo b
 //Test on mac ctrl+D  on here_doc and incomplete syntax (ie unclosed quotes)
+// echo a (echo b)
 // ()
 int main(int ac, char **av, char **env)
 {
 	int syntax;
-	// t_list	*buffer;
+	int start;
 
 	m.status = EXIT_SUCCESS;
 	ft_int_signal();
 
 	m.g_env = ft_arrtolst(env);
 	m.l_var = NULL;
+	m.is_child = 0;
+	start = 1;
 	// buffer = NULL;
 	while (!m.is_child)
 	{
+		if(!start)
+			free_loop();
+		start = 0;
 		m.envp = update_envp(m.g_env);
 		mini_init(&m, m.envp);
 
@@ -138,11 +148,11 @@ int main(int ac, char **av, char **env)
         		waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, NULL, 0);
 			//close pipes
 		}
-		free_loop();
-		if (ac != 1 || m.is_child)
+		if (ac != 1)
 			break;
 		//flush readline?
 	}
+	free_loop();
 	free_exit();
 	return (m.status);
 }

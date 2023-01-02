@@ -68,7 +68,7 @@ int split_valid(t_list *split, char *oldline, int *val) {
         {
             str = (char*) split->content;
             i = 0;
-            while(str[i] && str[i] == ' ')
+            while(str[i] && (str[i] == ' ' || str[i] == '('))
                 i++;
             if (str[i] == '|' || !ft_strncmp(&str[i], "&&", 2) || str[i] == ')') {
                 syntax_error(&str[i]); //need to do update status
@@ -84,6 +84,53 @@ int split_valid(t_list *split, char *oldline, int *val) {
     if(key)
         return ((*val = complete(oldline, get_mini())) && 0);
     return 1;
+}
+
+int bracket_invalid(char *str, int *val) {
+	int i;
+    int quote;
+    int brace;
+
+    quote = 0;
+    brace = 0;
+    i = 0;
+	while (str[i] && brace >= 0)
+	{
+		if (in_quote(str[i], &quote))
+			(void)NULL;
+        else if (str[i] == '(') {
+            brace++;
+            i++;
+            while(str[i] && (str[i] == ' '))
+                i++;
+            if(!str[i] || str[i] == '(')
+                continue;
+            if (str[i] == '|' || !ft_strncmp(&str[i], "&&", 2) || str[i] == ')') {
+                syntax_error(&str[i]);
+                return *val = 1;
+            }
+        }
+        else if (str[i] == ')') {
+            brace--;
+            i++;
+            while(str[i] && (str[i] == ' '))
+                i++;
+            if(!str[i] || str[i] == ')')
+                continue;
+            if (str[i] != '|' && ft_strncmp(&str[i], "&&", 2)) {
+                syntax_error(&str[i]);
+                return *val = 1;
+            }
+        }
+        i++;
+    }
+    if (brace > 0)
+        return (*val = complete(str, get_mini()));
+    else if (brace) {
+        syntax_error(&str[i]);
+        return (1);
+    }
+    return 0;
 }
 
 int invalid_syntax(char *str, t_mini *m) {
@@ -102,6 +149,8 @@ int invalid_syntax(char *str, t_mini *m) {
         in_quote(str[i++], &quote);
     if(quote) 
         return complete(str, m);
+    if(bracket_invalid(str, &i))
+        return i;
     temp = strip_redirect(ft_strdup(str), m, 1);
     if(!temp)
         return 1;
@@ -131,6 +180,8 @@ int invalid_syntax(char *str, t_mini *m) {
 }
 
 void syntax_error(char *str) {
+    char **split;
+
     get_mini()->status = 2;
     if(!str)
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
@@ -144,10 +195,19 @@ void syntax_error(char *str) {
         ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
     else if(!ft_strncmp(str, ">", 1))
         ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
+    else if(!ft_strncmp(str, "(", 1))
+        ft_putstr_fd("minishell: syntax error near unexpected token `)'\n", 2);
+    else if(!ft_strncmp(str, ")", 1))
+        ft_putstr_fd("minishell: syntax error near unexpected token `)'\n", 2);
     else if(!ft_strncmp(str, "*", 1)) {
         ft_putstr_fd("minishell: *: ambiguous redirect\n", 2);  
         get_mini()->status = 1;
     }
-    else
-        ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+    else {
+        split = ft_split(str, ' ');
+        ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+        ft_putstr_fd(split[0], 2);
+        ft_putstr_fd("'\n", 2);
+        ft_freearray((void**)split);
+    }
 }
