@@ -4,3 +4,47 @@ files that dont execute dont kill the child (readme.md, ctrl+d, ctrl+d )
 ctrl+c in heredoc (child does not die)
 << lm | echo b  //handle with ^C
 echo "s*".c
+  
+echo |  "^C"
+echo $""
+echo $3$3$3$3
+echo "'$USER'"
+update PWD
+error exit code with "^C" with empty line
+error exit code with exit sdf
+
+--------------SALEM_TEST-----------
+
+// check all cause in valgrind
+echo hi > 1 > 2 > 3
+cat < 1 < 2 < 3
+chmod 0000 2    //2 is a file
+//after changing the permission then exit there is a leak
+minishell % cat < 1 < 2 < 3
+minishell: 2: Permission denied
+minishell % exit
+exit   
+
+//invalid read
+export 2134@!#$23
+ cat << 1
+
+ leaks 
+ ls | ls | ls
+
+ repeated spaces
+ cat | cat | cat  then CTR C  cause leaks
+ sdflkjgasdn\  leaks
+  cat < 1 | cat << 1 | cat < 1
+  echo hi | grep he
+
+  expand stuff inside heredoc
+
+  exit << 1   // a lot of leaks
+
+  unset a=3  //wrong error messages and exit code
+  minishell: export: `a=3': not a valid identifier
+minishell % echo $?
+0
+
+exit 3 4 // leaks

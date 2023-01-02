@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 15:58:04 by sbokhari          #+#    #+#             */
-/*   Updated: 2022/12/14 14:45:05 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/01/02 08:59:04 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	filenotfound(char *file, int dir)
 	if (dir == 0)
 		ft_putstr_fd(": No such file or directory\n", 2);
 	else
-		ft_putstr_fd(": Is a directory\n", 2);
+		ft_putstr_fd(": is a directory\n", 2);
 }
 
 void	error_exit(char *error)
