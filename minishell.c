@@ -56,6 +56,7 @@ void free_exit() {
 // ()
 // asd (
 // (echo a && echo b) && sleep 2 && echo c | cat -n && cd ..
+// (echo a)) //incorrect syntax error
 int main(int ac, char **av, char **env)
 {
 	int status;
@@ -99,6 +100,8 @@ int main(int ac, char **av, char **env)
 				if(strip_heredoc(m.line, &m))
 					continue;
 			}
+			if(shell_conditions(&m))
+				continue;
 			if(ft_strchr(m.line, '|')) //do a better method for check
 				m.line = pipe_shell(m.line, &m);
 			if(!m.line)  //check for if start with braces
@@ -149,7 +152,7 @@ int main(int ac, char **av, char **env)
 			if (ft_lstlast(m.pid)->content == 0) 
 				child(m, m.cmds, m.envp);		
 			waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &status, 0);
-			if(m.status != 130)
+			if(m.status != 130 && m.status != 131)
 				m.status = WEXITSTATUS(status);
 			else
 				printf("\n");

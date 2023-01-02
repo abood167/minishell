@@ -146,7 +146,7 @@ int invalid_syntax(char *str, t_mini *m) {
     
     quote = 0;
     i =0;
-    if(!str)
+    if(!str[0])
         return 1;
     while(str[i]) 
         in_quote(str[i++], &quote);

@@ -52,6 +52,7 @@ char* arrtostr(char **arr);
 char* listtostr(t_list *arr);
 
 //input modifiers
+int shell_conditions(t_mini *m);
 char	*pipe_shell(char *line, t_mini *m);
 void	wait_pipe(t_mini *m);
 char*   strip_redirect(char *line, t_mini *m, int test);

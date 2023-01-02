@@ -19,7 +19,7 @@ int is_brace_block(char *line) {
     }
     while(line[i] && line [i] == ' ')
         i++;
-    if(!line[i])
+    if(!line[i] && !start)
         return 1;
     return 0;
 }
@@ -75,6 +75,7 @@ int shell_conditions(t_mini *m) {
     else if(is_brace_block((char*)m->buffer->content)) {
         pid = fork();
         if (pid == 0) {
+            m->is_child = 1;
             m->line = brace_peel((char*)m->buffer->content);
             ft_lstclear(&m->buffer, free);
             return shell_conditions(m);
