@@ -1,1 +1,1 @@
-valgrind -s --track-fds=yes --tool=memcheck  --trace-children=yes --leak-check=full --show-leak-kinds=all --suppressions=.ignore_readline.txt ./minishell
+valgrind -s --suppressions=readline.supp --track-origins=yes --track-fds=yes --leak-check=full --show-leak-kinds=all --trace-children=yes  ./minishell
