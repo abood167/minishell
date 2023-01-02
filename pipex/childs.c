@@ -107,6 +107,7 @@ void	child(t_mini m, char *argv[], char *envp[])
 		child_free(&m);
 		exit(m.status);
 	}
+	signal(SIGQUIT, m.slash_dfl);
 	execve(m.cmd, m.args, envp);
 	ft_putstr_fd("minishell: " , 2);
 	perror(m.cmd);
