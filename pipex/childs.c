@@ -51,22 +51,12 @@ char	*getcommand(char **paths, char *cmd, t_mini *m)
 }
 
 int num_large(char *str){
-	int val;
+	int status;
 
 	if(ft_isstrdigit(str)) {
-		val = ft_atoi(str);
-		if(val == -1 && ft_strstr(str, "9223372036854775807")) //This is hardcoded
-			return 0;
-		else if (!val && ft_strstr(str, "-9223372036854775808"))
-			return 0;
-		else if(val == -1) {
-			if (str[0] != '-')
-				return 1;
-		}
-		else if (val == 0) {
-			if (str[0] == '-')
-				return 1;
-		}
+		ft_atoi(str, &status);
+		if(!status)
+			return 1;
 	}
 	return 0;
 }
@@ -80,7 +70,7 @@ void	exit_command(t_mini *m)
 	if (ft_2dlen((void **)m->args) == 1)
 	{
 		child_free(m);
-		exit(1);
+		exit(m->is_child);
 	}
 	else if (!ft_isstrdigit(m->args[1]) || num_large(m->args[1]))
 	{
@@ -96,7 +86,7 @@ void	exit_command(t_mini *m)
 		child_free(m);
 		exit(1);
 	}
-	exit_code = ft_atoi(m->args[1]);
+	exit_code = ft_atoi(m->args[1], NULL);
 	child_free(m);
 	exit(exit_code);
 }

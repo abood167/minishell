@@ -41,14 +41,3 @@ void check_pipe(t_mini *m) {
 	if (m->out[1] == -1)
 		m->out[1] = 1;
 }
-
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	t_mini	pipex;
-
-// 	if (argc < 5)
-// 		error_exit(NULL);
-// 	mini_init(&m, argc, argv, envp);
-// 	main2(&m, argv, envp);
-// 	return (m.status);
-// }

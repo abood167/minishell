@@ -27,16 +27,17 @@ void alt_close(int *fd) {
 }
 
 int alt_pipe(int out[]) {
-    alt_close(&out[0]);
+    if (out[0] != get_mini()->in)
+        alt_close(&out[0]);
     alt_close(&out[1]);
     pipe(out);  //error handle?
     return 1;
 }
-
 
 void	shift_pipe(t_mini *m)
 {
 	alt_close(&m->in);
 	alt_close(&m->out[1]);
 	m->in = m->out[0];
+    m->out[1] = -1;
 }

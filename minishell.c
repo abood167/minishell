@@ -52,8 +52,10 @@ void free_exit() {
 //Test on mac ctrl+D  on here_doc and incomplete syntax (ie unclosed quotes)
 // echo a (echo b)
 // ()
+// asd (
 int main(int ac, char **av, char **env)
 {
+	int status;
 	int syntax;
 	int start;
 
@@ -126,6 +128,7 @@ int main(int ac, char **av, char **env)
 			ft_putstr_fd(m.line, m.out[1]);
 			ft_putstr_fd("\n", m.out[1]);
 			free(m.line);
+			m.line = NULL;
 			m.status = 0;
 		}
 		else if(ft_strcmp(m.cmds[0],"env") == 0)
@@ -140,12 +143,11 @@ int main(int ac, char **av, char **env)
         	ft_lstadd_back(&m.pid, ft_lstnew((void*)(intptr_t)fork()));
 			if (ft_lstlast(m.pid)->content == 0) 
 				child(m, m.cmds, m.envp);		
-			if(m.status == 130) {
-        		waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &m.status, 0);
-				m.status = WEXITSTATUS(m.status);
-			}
+			waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &status, 0);
+			if(m.status != 130)
+				m.status = WEXITSTATUS(status);
 			else
-        		waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, NULL, 0);
+				printf("\n");
 			//close pipes
 		}
 		if (ac != 1)

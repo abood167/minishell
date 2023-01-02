@@ -77,7 +77,7 @@ void cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 		}
 	}
 	else if(cmd[2] != NULL) {
-		ft_putstr_fd("minishell: cd: too many arguments", 2);
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		m->status = 1;
 	}
 	else if (chdir(cmd[1]) < 0) 
