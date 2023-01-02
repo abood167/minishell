@@ -32,6 +32,7 @@ void	mini_init(t_mini *m, char **envp)
 	}
 	else
 		m->paths = ft_split(" ", ' ');
+	m->line = NULL;
 	m->cmd = NULL;
 }
 

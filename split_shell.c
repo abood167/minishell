@@ -2,7 +2,7 @@
 
 //Mode 2 = || &&
 //Mode 1 = |
-t_list*	ft_split_shell(char *str, int mode)
+t_list*	ft_split_shell(char *str, int mode, int brace)
 {
 	t_list	*split;
 	int		start;
@@ -15,17 +15,20 @@ t_list*	ft_split_shell(char *str, int mode)
     quote = 0;
 	while (str[pos])
 	{
-		if (!in_quote(str[pos], &quote))
-		{
-            if((mode == 2 && !ft_strncmp(&str[pos], "&&", 2)) || !ft_strncmp(&str[pos], "||", mode)) { 
-	            if (pos - start > 0)
-				    ft_lstadd_back(&split, ft_lstnew(ft_substr(str, start, pos - start)));      
-				ft_lstadd_back(&split, ft_lstnew(ft_substr(str, pos, mode)));
-                pos += mode;
-                start = pos;
-                continue;
-            }
-		}
+		if (in_quote(str[pos], &quote))
+            (void)NULL;
+        else if(brace && str[pos] == '(') 
+            brace++;
+        else if(brace && str[pos] == ')') 
+            brace--;
+        else if(brace <= 1 && ((mode == 2 && !ft_strncmp(&str[pos], "&&", 2)) || !ft_strncmp(&str[pos], "||", mode))) { 
+            if (pos - start > 0)
+                ft_lstadd_back(&split, ft_lstnew(ft_substr(str, start, pos - start)));      
+            ft_lstadd_back(&split, ft_lstnew(ft_substr(str, pos, mode)));
+            pos += mode;
+            start = pos;
+            continue;
+        }
         pos++;
 	}
 	if (pos - start > 0)
@@ -155,7 +158,7 @@ int invalid_syntax(char *str, t_mini *m) {
     if(!temp)
         return 1;
     free(temp);
-    split = ft_split_shell(str, 2);
+    split = ft_split_shell(str, 2, 0);
     if(!split)
         return 0;
     if(!split_valid(split, str, &i)) {
@@ -164,7 +167,7 @@ int invalid_syntax(char *str, t_mini *m) {
     }
     start = split;
     while(split) {
-        sub_split = ft_split_shell((char *)split->content, 1);     
+        sub_split = ft_split_shell((char *)split->content, 1, 0);     
         if(!split_valid(sub_split, str, &i)) {
             ft_lstclear(&sub_split, free);
             ft_lstclear(&start, free);

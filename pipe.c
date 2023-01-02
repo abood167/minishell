@@ -19,7 +19,7 @@ char	*pipe_shell(char *line, t_mini *m)
     t_list *pipe_line;
     t_list *start;
 
-	pipe_line = ft_split_shell(line, 1);
+	pipe_line = ft_split_shell(line, 1, 1);
     start = pipe_line;
     free(line);
     line = NULL;

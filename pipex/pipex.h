@@ -39,6 +39,7 @@ typedef struct s_mini
 	char	**envp;
 	t_list 	*g_env;
 	t_list	*l_var;
+	t_list   *buffer;
 }			t_mini;
 
 void		mini_init(t_mini *m, char **envp);

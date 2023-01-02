@@ -35,6 +35,8 @@ void free_loop() {
 }
 
 void free_exit() {
+	ft_lstclear(&m.pid, NULL);
+	ft_lstclear(&m.buffer, free);
 	ft_lstclear(&m.g_env, free);
 	ft_lstclear(&m.l_var, free);
 	rl_clear_history();
@@ -53,6 +55,7 @@ void free_exit() {
 // echo a (echo b)
 // ()
 // asd (
+// (echo a && echo b) && sleep 2 && echo c | cat -n && cd ..
 int main(int ac, char **av, char **env)
 {
 	int status;
@@ -66,8 +69,8 @@ int main(int ac, char **av, char **env)
 	m.l_var = NULL;
 	m.is_child = 0;
 	start = 1;
-	// buffer = NULL;
-	while (!m.is_child)
+	m.buffer = NULL;
+	while (!m.is_child || m.buffer)
 	{
 		if(!start)
 			free_loop();
@@ -78,25 +81,27 @@ int main(int ac, char **av, char **env)
 		fix_dir();
 
 		if (ac == 1) {
-			m.line = readline("minishell % ");
-			if (m.line == NULL)
-			{
-				//remember to clean the memory before exiting
-				ft_putstr_fd("exit\n", 1);
-				exit(0);
+			if(!m.buffer) {
+				m.line = readline("minishell % ");
+				if (m.line == NULL)
+				{
+					//remember to clean the memory before exiting
+					ft_putstr_fd("exit\n", 1);
+					exit(0);
+				}
+				if(m.line[0])
+					add_history(m.line);
+				syntax = 2;
+				while(syntax == 2)
+					syntax = invalid_syntax(m.line, &m);
+				if(syntax)
+					continue;
+				if(strip_heredoc(m.line, &m))
+					continue;
 			}
-			if(m.line[0])
-				add_history(m.line);
-			syntax = 2;
-			while(syntax == 2)
-				syntax = invalid_syntax(m.line, &m);
-			if(syntax)
-				continue;
-			if(strip_heredoc(m.line, &m))
-				continue;
 			if(ft_strchr(m.line, '|')) //do a better method for check
 				m.line = pipe_shell(m.line, &m);
-			if(!m.line)
+			if(!m.line)  //check for if start with braces
 				continue;
 			m.line = set_var(m.line, m.g_env, &m.l_var); 
 			m.line = strip_redirect(m.line, &m, 0);

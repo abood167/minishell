@@ -41,7 +41,7 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var);
 
 //Arrays, list and strings
 char**  ft_splitquote(char *s, char c);
-t_list*	ft_split_shell(char *str, int mode);
+t_list*	ft_split_shell(char *str, int mode, int brace);
 char* get_next_word(const char *str, int *pos, char c);
 t_list* ft_arrtolst(char **arr);
 char** ft_lsttoarr(t_list *list);
