@@ -1,44 +1,41 @@
 #include "minishell.h"
 
-int	match_pattern(const char *pattern, const char *str, int *quote)
+int	match_pattern(const char *pattern, const char *str, int quote)
 {
 	int val;
 	while (*pattern != '\0')
 	{	
-		val = in_quote(*pattern, quote);
+		val = in_quote(*pattern, &quote);
 		if(val == 1 || val == 2) {
 			pattern++;
 			continue;
 		}
-		// Handle wildcard characters in the pattern
-		if (!*quote && *pattern == '*' && *str != '.')
+		if (!quote && *pattern == '*' && *str != '.')
 		{
-			// The "*" wildcard matches any sequence of characters
 			pattern++;
-			// Try to match the rest of the pattern with the remaining part of the string
 			while (*str != '\0')
 			{
 				if (match_pattern(pattern, str, quote))
-					return (1); // match found
+					return (1);
 				str++;
 			}
-			return (*pattern == '\0'); // match found if end of pattern reached
-		} // Regular characters must match exactly
+			return (*pattern == '\0'); 
+		}
 		else if (*pattern != *str)
-			return (0); // no match
+			return (0); 
 		pattern++;
 		str++;
 	}
-	// Match found if end of pattern and string reached
 	return (*pattern == '\0' && *str == '\0');
 }
 
-char	**ft_wildcard(char **line)
+char	*ft_wildcard(char *line)
 {
 	t_list *list;
 	int i;
+	int j;
 	int flag;
-	int quote;
+	char *word;
 
 	DIR *dir = opendir(".");
 	struct dirent *entry;
@@ -47,27 +44,38 @@ char	**ft_wildcard(char **line)
 	while (line[i])
 	{
 		flag = 0;
-		if (ft_strchr(line[i], '*'))
+		while(line[i] == ' ')
+			i++;
+		j = i;
+		word = get_next_word(line, &i, ' ');
+		free(word);
+		word = ft_substr(line, j, i - j);
+		if (ft_strchr(word, '*'))
 		{
 			while ((entry = readdir(dir)) != NULL)
 			{
-				quote = 0;
-				if (match_pattern(line[i], entry->d_name, &quote))
+				if (match_pattern(word, entry->d_name, 0))
 				{
 					ft_lstadd_back(&list, ft_lstnew(ft_strdup(entry->d_name)));
+					ft_lstadd_back(&list, ft_lstnew(ft_strdup(" ")));
 					flag = 1;
 				}
 			}
-			if (!flag)
-				ft_lstadd_back(&list, ft_lstnew(ft_strdup(line[i])));
+			if (!flag) {
+				ft_lstadd_back(&list, ft_lstnew(ft_strdup(word)));
+				ft_lstadd_back(&list, ft_lstnew(ft_strdup(" ")));
+			}
 		}
 		else
-			ft_lstadd_back(&list, ft_lstnew(ft_strdup(line[i])));
-		i++;
+		{
+			ft_lstadd_back(&list, ft_lstnew(ft_strdup(word)));
+			ft_lstadd_back(&list, ft_lstnew(ft_strdup(" ")));
+		}
+		free(word);
 	}
 	closedir(dir);
-	ft_freearray((void**)line);
-	line = ft_lsttoarr(list);
+	free(line);
+	line = ft_lsttostr(list);
 	ft_lstclear(&list, free);
 	return (line);
 }

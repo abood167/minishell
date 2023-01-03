@@ -60,7 +60,7 @@ char	**ft_copyarr(char **arr)
 	return (copy);
 }
 
-char	*listtostr(t_list *arr)
+char	*ft_lsttostr(t_list *arr)
 {
 	char	*str;
 	int		len;

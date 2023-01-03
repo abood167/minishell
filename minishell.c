@@ -111,9 +111,9 @@ int main(int ac, char **av, char **env)
 			m.line = strip_redirect(m.line, &m, 0);
 			if(!m.line)
 				continue; 
-			m.cmds = ft_splitquote(m.line, ' '); 
 			// Sort wildcard? //make ignore qoute (need put before split)
-			m.cmds = ft_wildcard(m.cmds);
+			m.line = ft_wildcard(m.line);
+			m.cmds = ft_splitquote(m.line, ' '); 
 		}
 		else
 			m.cmds = ft_copyarr(&av[1]);

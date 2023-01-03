@@ -49,7 +49,7 @@ char** ft_copyarr(char **arr);
 void    printarr(char **list);
 void    printlist(t_list *list);
 char* arrtostr(char **arr);
-char* listtostr(t_list *arr);
+char* ft_lsttostr(t_list *arr);
 
 //input modifiers
 int shell_conditions(t_mini *m);
@@ -59,7 +59,7 @@ char*   strip_redirect(char *line, t_mini *m, int test);
 int	strip_heredoc(char *line, t_mini *m);
 void     heredoc_count(char *line, int *cnt);
 void    str_doc(t_mini *m);
-char** ft_wildcard(char **line);
+char* ft_wildcard(char *line);
 
 void ft_int_signal();
 t_mini* get_mini();

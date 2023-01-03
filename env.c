@@ -105,7 +105,7 @@ char	*replace_withvar(char *str, t_list *g_env, t_list *l_var)
 		ft_lstadd_back(&list, ft_lstnew(ft_strdup(&str[start])));
 	else if (pos == 0)
 		return (ft_strdup(""));
-	val = listtostr(list);
+	val = ft_lsttostr(list);
 	ft_lstclear(&list, free);
 	return (val);
 }
