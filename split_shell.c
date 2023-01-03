@@ -53,10 +53,12 @@ static int complete(char *oldline, t_mini *m) {
         }
         free(m->line);
         m->line = NULL;
+        rl_getc_function = rl_getc;
         return 1;
     }
     m->line = ft_strmerge(oldline, str);
 	m->status = bak;
+    rl_getc_function = rl_getc;
     return 2;
 }
 

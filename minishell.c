@@ -135,11 +135,10 @@ int main(int ac, char **av, char **env)
 		else if(ft_strcmp(m.cmds[0],"echo") == 0)
 			echo_cmd(m.cmds, m);
 		else if(ft_strcmp(m.cmds[0],"pwd") == 0){
+			free(m.line);
 			m.line = getcwd(NULL, 0);
 			ft_putstr_fd(m.line, m.out[1]);
 			ft_putstr_fd("\n", m.out[1]);
-			free(m.line);
-			m.line = NULL;
 			m.status = 0;
 		}
 		else if(ft_strcmp(m.cmds[0],"env") == 0)
