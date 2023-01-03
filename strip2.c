@@ -15,19 +15,17 @@ int	strip_heredoc(char *line, t_mini *m)
 	i = 0;
 	while (line[i] && !m->status)
 	{
-		if (in_quote(line[i], &quote))
-			(void)NULL;
-		else if (ft_strncmp(&line[i], "<<", 2) == 0)
+		if (!in_quote(line[i], &quote) && ft_strncmp(&line[i], "<<", 2) == 0)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' ');
 			here_doc(m, word);
 			free(word);
+			continue;
 		}
-		else {
-			len++;
-			i++;
-		}
+		len++;
+		i++;
+			
 	}
 	if(m->status) {
 		m->status = 1;

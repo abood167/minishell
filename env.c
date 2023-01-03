@@ -79,7 +79,8 @@ char	*replace_withvar(char *str, t_list *g_env, t_list *l_var)
 	quote = 0;
 	while (str[pos])
 	{
-		if(in_quote(str[pos], &quote) && quote != '\'' && (str[pos] == '$' && (ft_isalpha(str[pos + 1]) || str[pos + 1] == '_'
+		in_quote(str[pos], &quote);
+		if(quote != '\'' && (str[pos] == '$' && (ft_isalpha(str[pos + 1]) || str[pos + 1] == '_'
 					|| str[pos + 1] == '$' || str[pos + 1] == '?'
 					|| ft_isdigit(str[pos + 1])))) {
 				ft_lstadd_back(&list, ft_lstnew(ft_substr(str, start, pos - start)));
@@ -93,9 +94,12 @@ char	*replace_withvar(char *str, t_list *g_env, t_list *l_var)
 				if (!val)
 					val = "";
 				ft_lstadd_back(&list, ft_lstnew(ft_strdup(val)));
+				if (strncmp(&str[start], "?", 1) == 0)
+					free(val);
 				start = pos;
 		}
-		pos++;
+		else
+			pos++;
 	}
 	if (pos - start > 0)
 		ft_lstadd_back(&list, ft_lstnew(ft_strdup(&str[start])));
