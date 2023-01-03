@@ -53,8 +53,10 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 	int i = 0;
 	while (line[i])
 	{
-		if (in_quote(line[i], &quote))
-			(void)NULL;
+		if (in_quote(line[i], &quote)){
+			i++;
+			len++;
+		}
 		else if (ft_strncmp(&line[i], ">>", 2) == 0)
 		{
 			i += 2;
@@ -107,8 +109,10 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 				return (NULL);
 			free(word);
 		}
-		i++;
-		len++;
+		else {
+			i++;
+			len++;
+		}
 	}
 	return (strip_copy(line, len));
 }

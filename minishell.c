@@ -133,7 +133,6 @@ int main(int ac, char **av, char **env)
 		else if(ft_strcmp(m.cmds[0],"echo") == 0)
 			echo_cmd(m.cmds, m);
 		else if(ft_strcmp(m.cmds[0],"pwd") == 0){
-			//switch to print env
 			m.line = getcwd(NULL, 0);
 			ft_putstr_fd(m.line, m.out[1]);
 			ft_putstr_fd("\n", m.out[1]);
@@ -158,7 +157,6 @@ int main(int ac, char **av, char **env)
 				m.status = WEXITSTATUS(status);
 			else
 				printf("\n");
-			//close pipes
 		}
 		if (ac != 1)
 			break;
