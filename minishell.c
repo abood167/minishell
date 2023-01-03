@@ -88,9 +88,8 @@ int main(int ac, char **av, char **env)
 				m.line = readline("minishell % ");
 				if (m.line == NULL)
 				{
-					//remember to clean the memory before exiting
 					ft_putstr_fd("exit\n", 1);
-					exit(0);
+					break;
 				}
 				if(m.line[0])
 					add_history(m.line);
