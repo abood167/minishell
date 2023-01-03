@@ -13,7 +13,7 @@
 #include "pipex.h"
 #include <sys/wait.h>
 
-int pipe_brace(char *line, t_mini *m);
+int has_brace(char *line, t_mini *m);
 
 void	mini_init(t_mini *m, char **envp)
 {

@@ -24,7 +24,7 @@ int is_brace_block(char *line) {
     return 0;
 }
 
-int pipe_brace(char *line, t_mini *m) {
+int has_brace(char *line, t_mini *m) {
     int i;
 
     i = 0;

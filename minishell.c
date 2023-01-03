@@ -106,7 +106,7 @@ int main(int ac, char **av, char **env)
 				continue;
 			if(has_pipe(m.line))
 				m.line = pipe_shell(m.line, &m);
-			if(!m.line || pipe_brace(m.line, &m))  
+			if(!m.line || has_brace(m.line, &m))  
 				continue;
 			m.line = set_var(m.line, m.g_env, &m.l_var); 
 			m.line = strip_redirect(m.line, &m, 0);
