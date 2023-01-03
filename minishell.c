@@ -47,7 +47,6 @@ void free_exit() {
 	rl_clear_history();
 }
 
-// wildcard in quotes
 //check quote, pipe, && and || validity
 //Need to figure out sort order of env
 //test with symbolic link
@@ -111,7 +110,6 @@ int main(int ac, char **av, char **env)
 			m.line = strip_redirect(m.line, &m, 0);
 			if(!m.line)
 				continue; 
-			// Sort wildcard? //make ignore qoute (need put before split)
 			m.line = ft_wildcard(m.line);
 			m.cmds = ft_splitquote(m.line, ' '); 
 		}
@@ -160,7 +158,6 @@ int main(int ac, char **av, char **env)
 		}
 		if (ac != 1)
 			break;
-		//flush readline?
 	}
 	free_loop();
 	free_exit();
