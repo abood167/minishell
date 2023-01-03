@@ -84,6 +84,7 @@ int shell_conditions(t_mini *m) {
             ft_lstclear(&m->buffer, free);
             return shell_conditions(m);
         }
+        heredoc_count((char*)m->buffer->content, &m->here_doc);
         waitpid(pid, &m->status, 0);
         m->status = WEXITSTATUS(m->status);
         ft_lstdelfirst(&m->buffer, free);

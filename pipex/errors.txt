@@ -59,3 +59,4 @@ exit 3 4 // leaks
 
 ---------------pending
   unset a=3  //wrong error messages and exit code
+  ctrl+\

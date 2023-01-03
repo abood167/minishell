@@ -46,7 +46,7 @@ char	*get_next_word(const char *str, int *pos, char c)
 	if (!str[*pos])
 		return (NULL);
 	start = *pos;
-	while (str[*pos] && (str[*pos] != c || quote))
+	while (str[*pos] && ((str[*pos] != c && str[*pos] != ')') || quote))
 	{
 		if (in_quote(str[*pos], &quote) == 2)
 			count++;
@@ -64,7 +64,7 @@ char	*get_next_word(const char *str, int *pos, char c)
 	words = (char **)malloc(sizeof(char *) * (count + 1));
 	*pos = start;
 	count = 0;
-	while (str[*pos] && str[*pos] != c)
+	while (str[*pos] && str[*pos] != c && str[*pos] != ')')
 	{
 		start = *pos;
 		if (in_quote(str[*pos], &quote) == 2)
@@ -77,7 +77,7 @@ char	*get_next_word(const char *str, int *pos, char c)
 		}
 		else
 		{
-			while (str[*pos] && str[*pos] != c && !in_quote(str[*pos], &quote))
+			while (str[*pos] && str[*pos] != c && str[*pos] != ')' && !in_quote(str[*pos], &quote))
 				(*pos)++;
 			words[count++] = ft_substr(str, start, *pos - start);
 			if (quote)
