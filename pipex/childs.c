@@ -98,6 +98,8 @@ void	child(t_mini m, char *argv[], char *envp[])
 		close(m.out[0]);
 	dup2(m.in, STDIN_FILENO);
 	dup2(m.out[1], STDOUT_FILENO);
+	alt_close(&m.in);
+	alt_close(&m.out[1]);
 	m.args = argv;
 	if (ft_strcmp(m.args[0], "exit") == 0)
 		exit_command(&m);
