@@ -32,9 +32,13 @@ void free_loop() {
 	alt_close(&m.in);
 	alt_close(&m.out[0]);
 	alt_close(&m.out[1]);
+
 }
 
 void free_exit() {
+	alt_close(&m.in);
+	alt_close(&m.out[0]);
+	alt_close(&m.out[1]);
 	ft_lstclear(&m.pid, NULL);
 	ft_lstclear(&m.buffer, free);
 	ft_lstclear(&m.g_env, free);
@@ -47,10 +51,6 @@ void free_exit() {
 //Need to figure out sort order of env
 //test with symbolic link
 // <<lm || <<lm  
-//bash-3.2$ true || (echo aaa && echo bbb)
-//bash-3.2$ false || (echo aaa && echo bbb)
-//bash-3.2$ false && echo a && echo b
-//bash-3.2$ true || echo a && echo b
 //Test on mac ctrl+D  on here_doc and incomplete syntax (ie unclosed quotes)
 // echo a (echo b)
 // ()
@@ -104,23 +104,25 @@ int main(int ac, char **av, char **env)
 				continue;
 			if(ft_strchr(m.line, '|')) //do a better method for check
 				m.line = pipe_shell(m.line, &m);
-			if(!m.line)  //check for if start with braces
+			if(!m.line || pipe_brace(m.line, &m))  
 				continue;
 			m.line = set_var(m.line, m.g_env, &m.l_var); 
 			m.line = strip_redirect(m.line, &m, 0);
-			if(!m.line) //update status code
-				continue; //If null could
-			m.cmds = ft_splitquote(m.line, ' '); //record which arr index is quote
+			if(!m.line)
+				continue; 
+			m.cmds = ft_splitquote(m.line, ' '); 
 			// Sort wildcard? //make ignore qoute (need put before split)
 			m.cmds = ft_wildcard(m.cmds);
 		}
 		else
 			m.cmds = ft_copyarr(&av[1]);
 
-		if(!m.cmds || (m.cmds && !m.cmds[0]))
+		if(!m.cmds || (m.cmds && !m.cmds[0])) {
+			m.status = 0;
 			continue;
+		}
 
-		check_pipe(&m);
+		check_pipe(&m); //remove?
 		
 		m.status = 0;
 		if(ft_strcmp(m.cmds[0],"exit") == 0)

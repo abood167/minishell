@@ -64,6 +64,7 @@ char** ft_wildcard(char **line);
 void ft_int_signal();
 t_mini* get_mini();
 int in_quote(char c, int *quote);
+int pipe_brace(char *line, t_mini *m);
 int invalid_syntax(char *str, t_mini *m);
 void syntax_error(char *str);
 

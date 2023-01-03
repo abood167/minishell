@@ -24,14 +24,19 @@ int is_brace_block(char *line) {
     return 0;
 }
 
-int start_with_brace(char *line) {
+int pipe_brace(char *line, t_mini *m) {
     int i;
 
     i = 0;
     while(line[i] && line [i] == ' ') 
         i++;
-    if(line[i] == '(')
+    if(line[i] == '(') {
+        if(m) {
+            m->buffer = ft_lstnew(line);
+            m->line = NULL;
+        }
         return 1;
+    }
     return 0;
 }
 
@@ -51,7 +56,6 @@ static char* brace_peel(char *line) {
     return ft_substr(line, start, end);
 }
 
-//Return 0, continue with line having a value
 //use here_doc count just like in pipe
 int shell_conditions(t_mini *m) { 
     pid_t pid;

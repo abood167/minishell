@@ -70,7 +70,7 @@ void	exit_command(t_mini *m)
 	if (ft_2dlen((void **)m->args) == 1)
 	{
 		child_free(m);
-		exit(m->is_child);
+		exit(m->status);
 	}
 	else if (!ft_isstrdigit(m->args[1]) || num_large(m->args[1]))
 	{

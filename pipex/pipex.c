@@ -13,6 +13,8 @@
 #include "pipex.h"
 #include <sys/wait.h>
 
+int pipe_brace(char *line, t_mini *m);
+
 void	mini_init(t_mini *m, char **envp)
 {
 	char	**path;
@@ -21,8 +23,8 @@ void	mini_init(t_mini *m, char **envp)
 	m->paths = NULL;
 	m->doc_str = NULL;
 	m->here_doc = 0;
-	m->in = -1;
-	m->out[1] = -1;
+	m->in = 0;
+	m->out[1] = 1;
 	path = envp;
 	while (*path && ft_strncmp("PATH", *path, 4))
 		path++;
