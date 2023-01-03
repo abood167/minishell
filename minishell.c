@@ -123,7 +123,7 @@ int main(int ac, char **av, char **env)
 			continue;
 		}
 
-		check_pipe(&m); //remove?
+		check_pipe(&m);
 		
 		m.status = 0;
 		if(ft_strcmp(m.cmds[0],"exit") == 0)
