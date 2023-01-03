@@ -24,8 +24,10 @@ int	strip_heredoc(char *line, t_mini *m)
 			here_doc(m, word);
 			free(word);
 		}
-		len++;
-		i++;
+		else {
+			len++;
+			i++;
+		}
 	}
 	if(m->status) {
 		m->status = 1;
