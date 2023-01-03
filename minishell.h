@@ -50,6 +50,7 @@ void    printarr(char **list);
 void    printlist(t_list *list);
 char* arrtostr(char **arr);
 char* ft_lsttostr(t_list *arr);
+void sort_list(t_list *g_env);
 
 //input modifiers
 int shell_conditions(t_mini *m);

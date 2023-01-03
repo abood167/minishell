@@ -146,7 +146,7 @@ char	*set_var(char *line, t_list *g_env, t_list **l_var)
 
 //Sort
 
-void sort_export(t_list *g_env)
+void sort_list(t_list *g_env)
 {
 	t_list *tmp;
 	t_list *tmp2;
@@ -175,7 +175,7 @@ void export_print(t_list *g_env){
 	int i;
 	char *str;
 
-	sort_export(g_env);
+	sort_list(g_env);
 	m = get_mini();
 	while (g_env)
 	{
