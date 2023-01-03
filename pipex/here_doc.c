@@ -37,7 +37,7 @@ void	here_doc(t_mini *m, char *lim)
 		if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
 			break;
 		node->content = ft_strmerge(node->content, str);
-		node->content = ft_strjoin(node->content, ft_strdup("\n"));
+		node->content = ft_strmerge(node->content, ft_strdup("\n"));
 	}
 	rl_getc_function = rl_getc;
 }

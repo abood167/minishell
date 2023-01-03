@@ -40,6 +40,7 @@ void free_exit() {
 	alt_close(&m.out[0]);
 	alt_close(&m.out[1]);
 	ft_lstclear(&m.pid, NULL);
+	ft_lstclear(&m.doc_str, free);
 	ft_lstclear(&m.buffer, free);
 	ft_lstclear(&m.g_env, free);
 	ft_lstclear(&m.l_var, free);
@@ -71,6 +72,7 @@ int main(int ac, char **av, char **env)
 	m.is_child = 0;
 	start = 1;
 	m.buffer = NULL;
+	m.doc_str = NULL;
 	while (!m.is_child || m.buffer)
 	{
 		if(!start)

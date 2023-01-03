@@ -21,8 +21,13 @@ void	mini_init(t_mini *m, char **envp)
 	
 	m->pid = NULL;
 	m->paths = NULL;
-	m->doc_str = NULL;
-	m->here_doc = 0;
+	if (m->doc_str == NULL)
+		m->here_doc = 0;
+	else if (m->here_doc == ft_lstsize(m->doc_str))
+	{
+		ft_lstclear(&m->doc_str, free);
+		m->here_doc = 0;
+	}
 	m->in = 0;
 	m->out[1] = 1;
 	path = envp;
