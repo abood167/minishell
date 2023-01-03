@@ -93,10 +93,12 @@ int bracket_invalid(char *str, int *val) {
 	int i;
     int quote;
     int brace;
+    int key;
 
     quote = 0;
     brace = 0;
     i = 0;
+    key = has_brace(str, NULL);
 	while (str[i] && brace >= 0)
 	{
 		if (in_quote(str[i], &quote))
@@ -104,6 +106,10 @@ int bracket_invalid(char *str, int *val) {
         else if (str[i] == '(') {
             brace++;
             i++;
+            if(!key) {
+                syntax_error(&str[i - 1]);
+                return *val = 1;
+            }
             while(str[i] && (str[i] == ' '))
                 i++;
             if(!str[i] || str[i] == '(')
@@ -130,7 +136,7 @@ int bracket_invalid(char *str, int *val) {
     if (brace > 0)
         return (*val = complete(str, get_mini()));
     else if (brace) {
-        syntax_error(&str[i]);
+        syntax_error(&str[i - 1]);
         return (1);
     }
     return 0;
@@ -194,16 +200,11 @@ void syntax_error(char *str) {
         ft_putstr_fd("minishell: syntax error near unexpected token `||'\n", 2);
     else if(!ft_strncmp(str, "&&", 2))
         ft_putstr_fd("minishell: syntax error near unexpected token `&&'\n", 2);
-    else if(!ft_strncmp(str, "|", 1))
-        ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
-    else if(!ft_strncmp(str, "<", 1))
-        ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
-    else if(!ft_strncmp(str, ">", 1))
-        ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
-    else if(!ft_strncmp(str, "(", 1))
-        ft_putstr_fd("minishell: syntax error near unexpected token `)'\n", 2);
-    else if(!ft_strncmp(str, ")", 1))
-        ft_putstr_fd("minishell: syntax error near unexpected token `)'\n", 2);
+    else if(str[0] == '|' || str[0] == '<' || str[0] == '>' || str[0] == '(' || str[0] == ')') {
+        ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+        ft_putchar_fd(str[0], 2);
+        ft_putstr_fd("'\n", 2);
+    }
     else if(!ft_strncmp(str, "*", 1)) {
         ft_putstr_fd("minishell: *: ambiguous redirect\n", 2);  
         get_mini()->status = 1;

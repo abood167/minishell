@@ -13,12 +13,6 @@ update PWD
 error exit code with "^C" with empty line
 error exit code with exit sdf
 
------
-cat <<lm
-> $USER
-> lm
-zin
------
 
 --------------SALEM_TEST----------- (All fixed)
 
@@ -60,3 +54,10 @@ exit 3 4 // leaks
 ---------------pending
   unset a=3  //wrong error messages and exit code
   ctrl+\
+
+-----
+cat <<lm
+> $USER
+> lm
+zin
+-----
