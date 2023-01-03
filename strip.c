@@ -42,6 +42,11 @@ static char	*strip_copy(char *str, int len)
 	return (strip);
 }
 
+static void* alt_free(void* ptr) {
+	free(ptr);
+	return NULL;
+}
+
 char	*strip_redirect(char *line, t_mini *m, int test)
 {
 	int len;
@@ -64,10 +69,10 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
-				return (NULL);
+				return (alt_free(line));
 			}
 			if (!test && !alt_open(&m->out[1], word, O_CREAT | O_WRONLY | O_APPEND, 1))
-				return (NULL);
+				return (alt_free(line));
 			free(word);
 		}
 		else if (ft_strncmp(&line[i], ">", 1) == 0)
@@ -77,10 +82,10 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
-				return (NULL);
+				return (alt_free(line));
 			}
 			if (!test && !alt_open(&m->out[1], word, O_CREAT | O_WRONLY | O_TRUNC, 1))
-				return (NULL);
+				return (alt_free(line));
 			free(word);
 		}
 		else if (ft_strncmp(&line[i], "<<", 2) == 0)
@@ -90,7 +95,7 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
-				return (NULL);
+				return (alt_free(line));
 			}
 			if(!test) 
 				str_doc(m); //handle error
@@ -103,10 +108,10 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
 			{
 				syntax_error(word);
-				return (NULL);
+				return (alt_free(line));
 			}
 			if (!test && !alt_open(&m->in, word, O_RDONLY, 0))
-				return (NULL);
+				return (alt_free(line));
 			free(word);
 		}
 		else {

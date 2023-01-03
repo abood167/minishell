@@ -22,7 +22,7 @@ int alt_open(int *fd, char *file, int flag, int write) {
 }
 
 void alt_close(int *fd) {
-    if(*fd > 1)
+    if(*fd > 2)
         close(*fd);
 }
 

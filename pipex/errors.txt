@@ -13,7 +13,14 @@ update PWD
 error exit code with "^C" with empty line
 error exit code with exit sdf
 
---------------SALEM_TEST-----------
+-----
+cat <<lm
+> $USER
+> lm
+zin
+-----
+
+--------------SALEM_TEST----------- (All fixed)
 
 // check all cause in valgrind
 echo hi > 1 > 2 > 3
