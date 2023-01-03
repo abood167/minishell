@@ -102,7 +102,7 @@ int main(int ac, char **av, char **env)
 			}
 			if(shell_conditions(&m))
 				continue;
-			if(ft_strchr(m.line, '|')) //do a better method for check
+			if(has_pipe(m.line)) //do a better method for check
 				m.line = pipe_shell(m.line, &m);
 			if(!m.line || pipe_brace(m.line, &m))  
 				continue;

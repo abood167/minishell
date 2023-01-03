@@ -14,6 +14,19 @@ void	wait_pipe(t_mini *m)
     ft_lstclear(&m->pid, NULL);
 }
 
+int has_pipe(char *line) {
+    t_list *pipe_line;
+    int val;
+
+	pipe_line = ft_split_shell(line, 1, 1);
+    val = ft_lstsize(pipe_line);
+    ft_lstclear(&pipe_line, free);
+
+    if(val >= 2)
+        return 1;
+    return 0;
+}
+
 char	*pipe_shell(char *line, t_mini *m)
 {
     t_list *pipe_line;
