@@ -32,9 +32,15 @@ void free_loop() {
 	alt_close(&m.in);
 	alt_close(&m.out[0]);
 	alt_close(&m.out[1]);
+
 }
 
 void free_exit() {
+	alt_close(&m.in);
+	alt_close(&m.out[0]);
+	alt_close(&m.out[1]);
+	ft_lstclear(&m.pid, NULL);
+	ft_lstclear(&m.buffer, free);
 	ft_lstclear(&m.g_env, free);
 	ft_lstclear(&m.l_var, free);
 	rl_clear_history();
@@ -45,14 +51,12 @@ void free_exit() {
 //Need to figure out sort order of env
 //test with symbolic link
 // <<lm || <<lm  
-//bash-3.2$ true || (echo aaa && echo bbb)
-//bash-3.2$ false || (echo aaa && echo bbb)
-//bash-3.2$ false && echo a && echo b
-//bash-3.2$ true || echo a && echo b
 //Test on mac ctrl+D  on here_doc and incomplete syntax (ie unclosed quotes)
 // echo a (echo b)
 // ()
 // asd (
+// (echo a && echo b) && sleep 2 && echo c | cat -n && cd ..
+// (echo a)) //incorrect syntax error
 int main(int ac, char **av, char **env)
 {
 	int status;
@@ -66,8 +70,8 @@ int main(int ac, char **av, char **env)
 	m.l_var = NULL;
 	m.is_child = 0;
 	start = 1;
-	// buffer = NULL;
-	while (!m.is_child)
+	m.buffer = NULL;
+	while (!m.is_child || m.buffer)
 	{
 		if(!start)
 			free_loop();
@@ -78,41 +82,47 @@ int main(int ac, char **av, char **env)
 		fix_dir();
 
 		if (ac == 1) {
-			m.line = readline("minishell % ");
-			if (m.line == NULL)
-			{
-				//remember to clean the memory before exiting
-				ft_putstr_fd("exit\n", 1);
-				exit(0);
+			if(!m.buffer) {
+				m.line = readline("minishell % ");
+				if (m.line == NULL)
+				{
+					//remember to clean the memory before exiting
+					ft_putstr_fd("exit\n", 1);
+					exit(0);
+				}
+				if(m.line[0])
+					add_history(m.line);
+				syntax = 2;
+				while(syntax == 2)
+					syntax = invalid_syntax(m.line, &m);
+				if(syntax)
+					continue;
+				if(strip_heredoc(m.line, &m))
+					continue;
 			}
-			if(m.line[0])
-				add_history(m.line);
-			syntax = 2;
-			while(syntax == 2)
-				syntax = invalid_syntax(m.line, &m);
-			if(syntax)
-				continue;
-			if(strip_heredoc(m.line, &m))
+			if(shell_conditions(&m))
 				continue;
 			if(ft_strchr(m.line, '|')) //do a better method for check
 				m.line = pipe_shell(m.line, &m);
-			if(!m.line)
+			if(!m.line || pipe_brace(m.line, &m))  
 				continue;
 			m.line = set_var(m.line, m.g_env, &m.l_var); 
 			m.line = strip_redirect(m.line, &m, 0);
-			if(!m.line) //update status code
-				continue; //If null could
-			m.cmds = ft_splitquote(m.line, ' '); //record which arr index is quote
+			if(!m.line)
+				continue; 
+			m.cmds = ft_splitquote(m.line, ' '); 
 			// Sort wildcard? //make ignore qoute (need put before split)
 			m.cmds = ft_wildcard(m.cmds);
 		}
 		else
 			m.cmds = ft_copyarr(&av[1]);
 
-		if(!m.cmds || (m.cmds && !m.cmds[0]))
+		if(!m.cmds || (m.cmds && !m.cmds[0])) {
+			m.status = 0;
 			continue;
+		}
 
-		check_pipe(&m);
+		check_pipe(&m); //remove?
 		
 		m.status = 0;
 		if(ft_strcmp(m.cmds[0],"exit") == 0)
@@ -144,7 +154,7 @@ int main(int ac, char **av, char **env)
 			if (ft_lstlast(m.pid)->content == 0) 
 				child(m, m.cmds, m.envp);		
 			waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &status, 0);
-			if(m.status != 130)
+			if(m.status != 130 && m.status != 131)
 				m.status = WEXITSTATUS(status);
 			else
 				printf("\n");

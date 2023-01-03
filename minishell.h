@@ -41,7 +41,7 @@ void export_var(char **cmd, t_list **g_env, t_list **l_var);
 
 //Arrays, list and strings
 char**  ft_splitquote(char *s, char c);
-t_list*	ft_split_shell(char *str, int mode);
+t_list*	ft_split_shell(char *str, int mode, int brace);
 char* get_next_word(const char *str, int *pos, char c);
 t_list* ft_arrtolst(char **arr);
 char** ft_lsttoarr(t_list *list);
@@ -52,6 +52,7 @@ char* arrtostr(char **arr);
 char* listtostr(t_list *arr);
 
 //input modifiers
+int shell_conditions(t_mini *m);
 char	*pipe_shell(char *line, t_mini *m);
 void	wait_pipe(t_mini *m);
 char*   strip_redirect(char *line, t_mini *m, int test);
@@ -63,6 +64,7 @@ char** ft_wildcard(char **line);
 void ft_int_signal();
 t_mini* get_mini();
 int in_quote(char c, int *quote);
+int pipe_brace(char *line, t_mini *m);
 int invalid_syntax(char *str, t_mini *m);
 void syntax_error(char *str);
 

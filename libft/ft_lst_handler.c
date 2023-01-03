@@ -55,6 +55,16 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *))
 	free(lst);
 }
 
+void ft_lstdelfirst(t_list **list, void (*del)(void *)) {
+    t_list *node;
+    
+    node = (*list)->next;
+	if (del)
+		del((*list)->content);
+    free(*list);
+    *list = node;
+}
+
 void ft_lstdellast(t_list **list, void (*del)(void *)) {
     t_list *node;
     

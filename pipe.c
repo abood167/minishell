@@ -19,7 +19,7 @@ char	*pipe_shell(char *line, t_mini *m)
     t_list *pipe_line;
     t_list *start;
 
-	pipe_line = ft_split_shell(line, 1);
+	pipe_line = ft_split_shell(line, 1, 1);
     start = pipe_line;
     free(line);
     line = NULL;
@@ -30,7 +30,10 @@ char	*pipe_shell(char *line, t_mini *m)
             alt_pipe(m->out); //error handle
         ft_lstadd_back(&m->pid, ft_lstnew((void*)(intptr_t)fork()));
         if (ft_lstlast(m->pid)->content == 0) {
+            ft_lstclear(&m->buffer, free);
             m->is_child = 1;
+            dup2(m->in, STDIN_FILENO);
+            dup2(m->out[1], STDOUT_FILENO);
             break;
         }
         shift_pipe(m);
