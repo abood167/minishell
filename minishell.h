@@ -15,8 +15,10 @@
 
 # if __linux__
 # define INC_EXIT 2
+# define CTRL_C_E 130
 # else
 # define INC_EXIT 255
+# define CTRL_C_E 1
 #endif
 
 #include <sys/types.h>

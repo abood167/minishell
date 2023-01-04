@@ -151,7 +151,7 @@ int main(int ac, char **av, char **env)
 			if (ft_lstlast(m.pid)->content == 0) 
 				child(m, m.cmds, m.envp);		
 			waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &status, 0);
-			if(m.status != 130 && m.status != 131)
+			if(m.status != CTRL_C_E && m.status != 131)
 				m.status = WEXITSTATUS(status);
 			else
 				printf("\n");

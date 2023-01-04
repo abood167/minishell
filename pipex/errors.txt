@@ -23,8 +23,8 @@ chmod 0000 2    //2 is a file
 //after changing the permission then exit there is a leak
 minishell % cat < 1 < 2 < 3
 minishell: 2: Permission denied
-minishell % exit
-exit   
+minishell %xit
+exit 
 
 //invalid read
 export 2134@!#$23

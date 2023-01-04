@@ -5,7 +5,7 @@ void ctrl_c()
     t_mini *m;
     
     m = get_mini();
-	m->status = 130;
+	m->status = CTRL_C_E;
 	if(rl_getc_function == getc)
 		return;
 	if(m->pid && ft_lstlast(m->pid)->content != 0)
