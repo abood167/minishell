@@ -61,3 +61,5 @@ cat <<lm
 > lm
 zin
 -----
+
+./leak.sh

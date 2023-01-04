@@ -23,11 +23,8 @@ void ctrl_slash()
     m = get_mini();
 	if(!m->pid) //no childs
 	{
-		//fix
-		rl_replace_line("", 0);
-		printf("\n");
-		rl_on_new_line();
-		rl_redisplay();
+		printf("\b\b  \b\b");
+		// rl_redisplay();
 	}
 	else {
 		printf("Quit");

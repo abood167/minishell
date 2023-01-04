@@ -30,7 +30,7 @@ char	*getcommand(char **paths, char *cmd, t_mini *m)
 				m->status = 126;
 				return NULL;
 			}
-			return (cmd);
+			return (ft_strdup(cmd));
 		}
 		filenotfound(cmd, 0);
 		return NULL;
