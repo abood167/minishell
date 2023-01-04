@@ -78,7 +78,7 @@ void	exit_command(t_mini *m)
 		ft_putstr_fd(m->args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 		child_free(m);
-		exit(2);
+		exit(INC_EXIT);
 	}
 	else if (ft_2dlen((void **)m->args) > 2)
 	{

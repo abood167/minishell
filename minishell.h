@@ -13,6 +13,12 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# if __linux__
+# define INC_EXIT 2
+# else
+# define INC_EXIT 255
+#endif
+
 #include <sys/types.h>
 
 #include <unistd.h>
