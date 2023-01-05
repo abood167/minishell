@@ -65,6 +65,11 @@ zin
 ./leak.sh
 
 
+
+
+-------------------new problem--------------------
+
+
 echo | ((echo * | cat -e) | wc -w && echo 88)
 should not be syntax error
 
@@ -83,3 +88,6 @@ followed by CTRLC
 exit code sould be 130
 
 opening minishell inside minishell and then sending sigquit signals and then exiting the minishell child process prints a lot of "Quit" messages
+
+
+cat /dev/random | head -n 10 | > outfile
