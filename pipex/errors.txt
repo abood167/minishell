@@ -63,3 +63,23 @@ zin
 -----
 
 ./leak.sh
+
+
+echo | ((echo * | cat -e) | wc -w && echo 88)
+should not be syntax error
+
+cat (ls)
+
+"(         "
+
+("")
+
+echo "("
+
+cat << O << P
+
+((cat|""|""ls""|cat" -e")|wc)
+followed by CTRLC
+exit code sould be 130
+
+opening minishell inside minishell and then sending sigquit signals and then exiting the minishell child process prints a lot of "Quit" messages
