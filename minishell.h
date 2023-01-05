@@ -64,7 +64,7 @@ void sort_list(t_list *g_env);
 int shell_conditions(t_mini *m);
 char	*pipe_shell(char *line, t_mini *m);
 void	wait_pipe(t_mini *m);
-char*   strip_redirect(char *line, t_mini *m, int test);
+char	*strip_redirect(char *line, t_mini *m, int test, int brace);
 int	strip_heredoc(char *line, t_mini *m);
 void     heredoc_count(char *line, int *cnt);
 void    str_doc(t_mini *m);

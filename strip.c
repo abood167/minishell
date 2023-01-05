@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static char	*strip_copy(char *str, int len)
+static char	*strip_copy(char *str, int len, int brace)
 {
 	char	*strip;
 	char	*word;
@@ -15,8 +15,16 @@ static char	*strip_copy(char *str, int len)
 	while (i < len)
 	{
 		if (!in_quote(str[j], &quote))
-		{
-			if (ft_strncmp(&str[j], ">>", 2) == 0 || ft_strncmp(&str[j], "<<",
+		{	
+			if(brace && str[j] == '(') {
+				brace++;
+			}
+			else if(brace && str[j] == ')') {
+				brace--;
+			}
+			else if(brace > 1)
+				(void)NULL;
+			else if (ft_strncmp(&str[j], ">>", 2) == 0 || ft_strncmp(&str[j], "<<",
 					2) == 0)
 			{
 				j += 2;
@@ -47,38 +55,40 @@ static void* alt_free(void* ptr) {
 	return NULL;
 }
 
-char	*strip_redirect(char *line, t_mini *m, int test)
+char	*strip_redirect(char *line, t_mini *m, int test, int brace)
 {
 	int len;
 	int quote;
 	char *word;
-	int brace;
 
 	len = 0;
 	quote = 0;
 	int i = 0;
-	brace = 0;
 	while (line[i])
 	{
 		if (in_quote(line[i], &quote)){
 			i++;
 			len++;
 		}
-        else if(line[i] == '(') {
+        else if(brace && line[i] == '(') {
 			i++;
+			len++;
             brace++;
 		}
-        else if(line[i] == ')') {
+        else if(brace && line[i] == ')') {
 			i++;
+			len++;
             brace--;
 		}
-		else if (brace)
+		else if(brace > 1) {
 			i++;
+			len++;
+		}
 		else if (ft_strncmp(&line[i], ">>", 2) == 0)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' '); 
-			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
+			if (!word || (line[i - 1] != '\'' && line[i - 1] != '\"' && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>' || word[0] == '(' || word[0] == ')')))
 			{
 				syntax_error(word);
 				return (alt_free(line));
@@ -91,7 +101,7 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 		{
 			i++;
 			word = get_next_word(line, &i, ' ');
-			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
+			if (!word || (line[i - 1] != '\'' && line[i - 1] != '\"' && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>' || word[0] == '(' || word[0] == ')')))
 			{
 				syntax_error(word);
 				return (alt_free(line));
@@ -104,7 +114,7 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 		{
 			i += 2;
 			word = get_next_word(line, &i, ' ');
-			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '<' || word[0] == '>')))
+			if (!word || (line[i - 1] != '\'' && line[i - 1] != '\"' && (word[0] == '&' || word[0] == '|' || word[0] == '<' || word[0] == '>' || word[0] == '(' || word[0] == ')')))
 			{
 				syntax_error(word);
 				return (alt_free(line));
@@ -117,7 +127,7 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 		{
 			i++;
 			word = get_next_word(line, &i, ' ');
-			if (!word || (word && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>')))
+			if (!word || (line[i - 1] != '\'' && line[i - 1] != '\"' && (word[0] == '&' || word[0] == '|' || word[0] == '*' || word[0] == '<' || word[0] == '>' || word[0] == '(' || word[0] == ')')))
 			{
 				syntax_error(word);
 				return (alt_free(line));
@@ -131,5 +141,5 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 			len++;
 		}
 	}
-	return (strip_copy(line, len));
+	return (strip_copy(line, len, brace));
 }

@@ -5,12 +5,12 @@ static int is_brace_block(char *line) {
     int brace;
     int i;
 
-    lcopy = line; //strip_redirect(ft_strdup(line), get_mini(), 1);
+    lcopy = strip_redirect(ft_strdup(line), get_mini(), 1, 1);
     i = 0;
     while(lcopy [i] == ' ' || lcopy[i] == '\n')
         i++;
     if(lcopy[i++] != '(') {
-        // free(lcopy);
+        free(lcopy);
         return 0;
     }
     brace = 1;
@@ -24,10 +24,10 @@ static int is_brace_block(char *line) {
     while(lcopy [i] == ' ' || lcopy[i] == '\n')
         i++;
     if(!lcopy[i]) {
-        // free(lcopy);
+        free(lcopy);
         return 1;
     }
-    // free(lcopy);
+    free(lcopy);
     return 0;
 }
 
@@ -86,10 +86,13 @@ int shell_conditions(t_mini *m) {
     else if(is_brace_block((char*)m->buffer->content)) {
         pid = fork();
         if (pid == 0) {
-            // dup2(m->in, STDIN_FILENO);
-            // dup2(m->out[1], STDOUT_FILENO);
             m->is_child = 1;
-            m->line = brace_peel((char*)m->buffer->content);
+            m->buffer->content = strip_redirect(m->buffer->content, get_mini(), 0, 1);
+            m->line = brace_peel(m->buffer->content);
+            dup2(m->in, STDIN_FILENO);
+            dup2(m->out[1], STDOUT_FILENO);
+            // alt_close(&m->in);
+            // alt_close(&m->out[1]);
             ft_lstclear(&m->buffer, free);
             return shell_conditions(m);
         }

@@ -167,11 +167,13 @@ int invalid_syntax(char *str, t_mini *m) {
         in_quote(str[i++], &quote);
     if(quote) 
         return complete(str, m);
-    if(bracket_invalid(str, &i))
-        return i;
-    temp = strip_redirect(ft_strdup(str), m, 1);
+    temp = strip_redirect(ft_strdup(str), m, 1, 0);
     if(!temp)
         return 1;
+    if(bracket_invalid(temp, &i)) {
+        free(temp);
+        return i;
+    }
     free(temp);
     split = ft_split_shell(str, 2, 0);
     if(!split)
@@ -203,7 +205,7 @@ void syntax_error(char *str) {
     int     i;
 
     get_mini()->status = 2;
-    if(!str)
+    if(!str || !str[0] || str[0] == '\n')
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
     else if(!ft_strncmp(str, "||", 2))
         ft_putstr_fd("minishell: syntax error near unexpected token `||'\n", 2);

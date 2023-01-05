@@ -72,6 +72,7 @@ exit code sould be 130
 
 -------------------new problem--------------------
 
+((echo a | cat) && (echo b))
 
 echo | ((echo * | cat -e) | wc -w && echo 88)
 should not be syntax error

@@ -26,10 +26,8 @@ void ctrl_slash()
 		printf("\b\b  \b\b");
 		// rl_redisplay();
 	}
-	else {
-		printf("Quit");
+	else
 		m->status = 131;
-	}
 }
 
 void ft_int_signal()
@@ -38,5 +36,5 @@ void ft_int_signal()
     
     m = get_mini();
 	m->slash_dfl = signal(SIGQUIT, ctrl_slash);
-	m->ctrlc_dfl = signal(SIGINT, ctrl_c );
+	m->ctrlc_dfl = signal(SIGINT, ctrl_c);
 }
