@@ -53,7 +53,6 @@ exit 3 4 // leaks
 
 ---------------pending
   unset a=3  //wrong error messages and exit code
-  ctrl+\
 
 -----
 cat <<lm
@@ -64,6 +63,10 @@ zin
 
 ./leak.sh
 
+
+((cat|""|""ls""|cat" -e")|wc)
+followed by CTRLC
+exit code sould be 130
 
 
 
@@ -82,10 +85,6 @@ cat (ls)
 echo "("
 
 cat << O << P
-
-((cat|""|""ls""|cat" -e")|wc)
-followed by CTRLC
-exit code sould be 130
 
 opening minishell inside minishell and then sending sigquit signals and then exiting the minishell child process prints a lot of "Quit" messages
 

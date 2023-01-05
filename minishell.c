@@ -20,6 +20,8 @@ void fix_dir() {
 }
 
 void free_loop() {
+	if(!m.buffer)
+		ft_lstclear(&m.doc_str, free);
 	ft_freearray((void**)m.envp);
 	ft_freearray((void**)m.cmds);
 	ft_freearray((void**)m.paths);

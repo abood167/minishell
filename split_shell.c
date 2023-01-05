@@ -95,12 +95,10 @@ int bracket_invalid(char *str, int *val) {
 	int i;
     int quote;
     int brace;
-    int key;
 
     quote = 0;
     brace = 0;
     i = 0;
-    key = has_brace(str, NULL);
 	while (str[i] && brace >= 0)
 	{
 		if (in_quote(str[i], &quote))
@@ -108,32 +106,39 @@ int bracket_invalid(char *str, int *val) {
         else if (str[i] == '(') {
             brace++;
             i++;
-            if(!key) {
-                syntax_error(&str[i - 1]);
-                return *val = 1;
-            }
-            while(str[i] && (str[i] == ' '))
+            while(str[i] == ' ' || str[i] == '\n')
                 i++;
-            if(!str[i] || str[i] == '(')
-                continue;
             if (str[i] == '|' || !ft_strncmp(&str[i], "&&", 2) || str[i] == ')') {
                 syntax_error(&str[i]);
                 return *val = 1;
             }
+            continue;
         }
         else if (str[i] == ')') {
             brace--;
             i++;
-            while(str[i] && str[i] == ' ')
+            while(str[i] == ' ' || str[i] == '\n')
                 i++;
-            if(!str[i] || str[i] == ')')
-                continue;
-            if (str[i] != '|' && ft_strncmp(&str[i], "&&", 2)) {
+            if (str[i] && str[i] != '|' && ft_strncmp(&str[i], "&&", 2)) {
                 syntax_error(&str[i]);
                 return *val = 1;
             }
+            continue;
         }
-        i++;
+        else if (str[i] != ' ' && str[i] != '\n') {
+            while(str[i] && !(in_quote(str[i], &quote) || str[i] == '|' || !ft_strncmp(&str[i], "&&", 2) || str[i] == '(' || str[i] == ')'))
+                i++;
+            if(!ft_strncmp(&str[i], "&&", 2))
+                i++;
+            else if(str[i] == ')') 
+                continue;
+            else if(str[i] == '(') {
+                syntax_error(&str[++i]);
+                return *val = 1;
+            }
+        }
+        if(str[i])
+            i++;
     }
     if (brace > 0)
         return (*val = complete(str, get_mini()));
@@ -194,6 +199,8 @@ int invalid_syntax(char *str, t_mini *m) {
 
 void syntax_error(char *str) {
     char **split;
+    char  *word;
+    int     i;
 
     get_mini()->status = 2;
     if(!str)
@@ -214,8 +221,11 @@ void syntax_error(char *str) {
     else {
         split = ft_split(str, ' ');
         ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-        ft_putstr_fd(split[0], 2);
+        i = 0;
+        word = get_next_word(split[0], &i, ')');
+        ft_putstr_fd(word, 2);
         ft_putstr_fd("'\n", 2);
         ft_freearray((void**)split);
+        free(word);
     }
 }

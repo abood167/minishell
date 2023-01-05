@@ -45,8 +45,12 @@ char	*pipe_shell(char *line, t_mini *m)
         if (ft_lstlast(m->pid)->content == 0) {
             ft_lstclear(&m->buffer, free);
             m->is_child = 1;
+            if (m->in != m->out[0])
+		        alt_close(&m->out[0]);
             dup2(m->in, STDIN_FILENO);
             dup2(m->out[1], STDOUT_FILENO);
+            alt_close(&m->in);
+            alt_close(&m->out[1]);
             break;
         }
         shift_pipe(m);

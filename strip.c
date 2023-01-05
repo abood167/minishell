@@ -52,16 +52,28 @@ char	*strip_redirect(char *line, t_mini *m, int test)
 	int len;
 	int quote;
 	char *word;
+	int brace;
 
 	len = 0;
 	quote = 0;
 	int i = 0;
+	brace = 0;
 	while (line[i])
 	{
 		if (in_quote(line[i], &quote)){
 			i++;
 			len++;
 		}
+        else if(line[i] == '(') {
+			i++;
+            brace++;
+		}
+        else if(line[i] == ')') {
+			i++;
+            brace--;
+		}
+		else if (brace)
+			i++;
 		else if (ft_strncmp(&line[i], ">>", 2) == 0)
 		{
 			i += 2;

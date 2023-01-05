@@ -4,8 +4,7 @@ int alt_open(int *fd, char *file, int flag, int write) {
     t_mini *m;
 
     m = get_mini();
-    if(*fd > 1)
-        close(*fd);
+    alt_close(fd);
     if(write)
         *fd = open(file, flag, 0644);
     else
@@ -22,8 +21,10 @@ int alt_open(int *fd, char *file, int flag, int write) {
 }
 
 void alt_close(int *fd) {
-    if(*fd > 2)
+    if(*fd > 2) {
         close(*fd);
+        *fd = -1;
+    }
 }
 
 int alt_pipe(int out[]) {

@@ -42,6 +42,7 @@ typedef struct s_mini
 	t_list   *buffer;
 
 	sig_t	slash_dfl;
+	sig_t	ctrlc_dfl;
 }			t_mini;
 
 void		mini_init(t_mini *m, char **envp);

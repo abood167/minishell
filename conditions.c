@@ -1,26 +1,33 @@
 #include "minishell.h"
 
-int is_brace_block(char *line) {
+static int is_brace_block(char *line) {
+    char *lcopy;
     int brace;
     int i;
-    int start;
 
-    start = 1;
-    brace = 0;
+    lcopy = line; //strip_redirect(ft_strdup(line), get_mini(), 1);
     i = 0;
-    while(line[i] && (start || brace)) {
-        if(line[i] == '(') {
-            brace++;
-            start = 0;
-        }
-        else if (line[i] == ')')
+    while(lcopy [i] == ' ' || lcopy[i] == '\n')
+        i++;
+    if(lcopy[i++] != '(') {
+        // free(lcopy);
+        return 0;
+    }
+    brace = 1;
+    while(lcopy[i] && brace) {
+        if (lcopy[i] == ')')
             brace--;
+        else if (lcopy[i] == '(')
+            brace++;
         i++;
     }
-    while(line[i] && line [i] == ' ')
+    while(lcopy [i] == ' ' || lcopy[i] == '\n')
         i++;
-    if(!line[i] && !start)
+    if(!lcopy[i]) {
+        // free(lcopy);
         return 1;
+    }
+    // free(lcopy);
     return 0;
 }
 
@@ -79,6 +86,8 @@ int shell_conditions(t_mini *m) {
     else if(is_brace_block((char*)m->buffer->content)) {
         pid = fork();
         if (pid == 0) {
+            // dup2(m->in, STDIN_FILENO);
+            // dup2(m->out[1], STDOUT_FILENO);
             m->is_child = 1;
             m->line = brace_peel((char*)m->buffer->content);
             ft_lstclear(&m->buffer, free);
