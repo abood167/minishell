@@ -271,10 +271,6 @@ void	unset_var(char **cmd, t_list **g_env, t_list **l_var)
 	i = 0;
 	while (cmd[i])
 	{
-		if(invalid_var(cmd[i])) {
-			i++;
-			continue;
-		}
 		len = ft_strlen(cmd[i]);
 		g_point = *g_env;
 		while (g_point)

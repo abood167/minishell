@@ -71,6 +71,7 @@ void    str_doc(t_mini *m);
 char* ft_wildcard(char *line);
 
 void ft_int_signal();
+
 t_mini* get_mini();
 int in_quote(char c, int *quote);
 int has_pipe(char *line);

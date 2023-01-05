@@ -124,8 +124,8 @@ int main(int ac, char **av, char **env)
 		}
 
 		check_pipe(&m);
-		
-		m.status = 0;
+		if(ft_strcmp(m.cmds[0],"exit"))
+			m.status = 0;
 		if(ft_strcmp(m.cmds[0],"exit") == 0)
 		{
 			m.args = m.cmds;
@@ -153,7 +153,7 @@ int main(int ac, char **av, char **env)
 			if (ft_lstlast(m.pid)->content == 0) 
 				child(m, m.cmds, m.envp);		
 			waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &status, 0);
-			if(m.status != CTRL_C_E && m.status != 131)
+			if(WEXITSTATUS(status) || (m.status != CTRL_C_E && m.status != 131))
 				m.status = WEXITSTATUS(status);
 			else
 				printf("\n");
