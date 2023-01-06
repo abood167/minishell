@@ -7,7 +7,7 @@ SRCS =	minishell.c split_qoute.c utils.c strip.c env.c env2.c pipe.c wildcard.c 
 CC = gcc -g3 -I/usr/local/opt/readline/include
 
 # CFLAGS =  -Wall -Wextra -Werror  -g -fsanitize=address
-CFLAGS =  -Wall -Wextra -Werror
+CFLAGS =  -Wall -Wextra -Werror -fsanitize=address
 
 OBJS = $(SRCS:.c=.o)
 
