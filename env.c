@@ -60,54 +60,42 @@ char	*get_var(char *varname, int len, t_list *g_env, t_list *l_var)
 	return (NULL);
 }
 
+void	unset_var2(char **cmd, int i, int len, t_list **env) {
+	t_list	*node;
+	t_list	*prev;
+
+	node = *env;
+	while (node)
+	{
+		if (strncmp(node->content, cmd[i], len) == 0
+			&& (((char *)node->content)[len] == '='
+			|| !((char *)node->content)[len]))
+		{
+			if (node == *env)
+				*env = (*env)->next;
+			else
+				prev->next = node->next;
+			free(node->content);
+			free(node);
+			break ;
+		}
+		prev = node;
+		node = node->next;
+	}
+}
 
 void	unset_var(char **cmd, t_list **g_env, t_list **l_var)
 {
 	int		i;
 	int		len;
-	t_list	*g_point;
-	t_list	*l_point;
-	t_list	*prev;
 
-	i = 0;
-	while (cmd[i])
+	i = -1;
+	while (cmd[++i])
 	{
 		len = ft_strlen(cmd[i]);
-		g_point = *g_env;
-		while (g_point)
-		{
-			if (strncmp(g_point->content, cmd[i], len) == 0
-				&& (((char *)g_point->content)[len] == '='
-					|| !((char *)g_point->content)[len]))
-			{
-				if (g_point == *g_env)
-					*g_env = (*g_env)->next;
-				else
-					prev->next = g_point->next;
-				free(g_point->content);
-				free(g_point);
-				break ;
-			}
-			prev = g_point;
-			g_point = g_point->next;
-		}
-		l_point = *l_var;
-		while (l_point)
-		{
-			if (strncmp(l_point->content, cmd[i], len) == 0
-				&& ((char *)l_point->content)[len] == '=')
-			{
-				if (l_point == *l_var)
-					*l_var = (*l_var)->next;
-				else
-					prev->next = l_point->next;
-				free(l_point->content);
-				free(l_point);
-				break ;
-			}
-			prev = l_point;
-			l_point = l_point->next;
-		}
-		i++;
+		if(ft_strchr(cmd[i], '='))
+			continue;
+		unset_var2(cmd, i, len, g_env);
+		unset_var2(cmd, i, len, l_var);
 	}
 }

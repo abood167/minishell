@@ -19,7 +19,9 @@ int	update_var(char *var, t_list *g_env)
 	len = (size_t)ft_strchr(var, '=') - (size_t)var;
 	while (g_env)
 	{
-		if (!ft_strncmp((char *)g_env->content, var, len + 1) || (!ft_strncmp((char *)g_env->content, var, len) && ((char*)g_env->content)[len] == '\0'))
+		if (!ft_strncmp((char *)g_env->content, var, len + 1)
+			|| (!ft_strncmp((char *)g_env->content, var, len)
+				&& ((char *)g_env->content)[len] == '\0'))
 		{
 			free(g_env->content);
 			g_env->content = var;

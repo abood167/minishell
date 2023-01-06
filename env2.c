@@ -51,7 +51,8 @@ int	invalid_var(char *str, int set_var)
 	{
 		i++;
 	}
-	if(!set_var) {
+	if (!set_var)
+	{
 		if (str[i] == '\0')
 			return (0);
 		ft_putstr_fd("minishell: export: `", 2);
@@ -71,8 +72,7 @@ void	export_var(char **cmd, t_list **g_env, t_list **l_var)
 	char	**temp_s;
 	int		flag;
 
-	i = 0;
-	flag = 0;
+	init_zero(&i, &flag, NULL, NULL);
 	while (cmd[++i])
 	{
 		j = 0;

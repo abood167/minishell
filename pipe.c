@@ -40,6 +40,22 @@ int	has_pipe(char *line)
 	return (0);
 }
 
+int	start_pipe(t_mini *m) {
+	ft_lstadd_back(&m->pid, ft_lstnew((void *)(intptr_t)fork()));
+	if (ft_lstlast(m->pid)->content == 0)
+	{
+		ft_lstclear(&m->buffer, free);
+		m->is_child = 1;
+		if (m->in != m->out[0])
+			alt_close(&m->out[0]);
+		dup2(m->in, STDIN_FILENO);
+		dup2(m->out[1], STDOUT_FILENO);
+		return 1;
+	}
+	shift_pipe(m);
+	return 0;
+}
+
 char	*pipe_shell(char *line, t_mini *m)
 {
 	t_list	*pipe_line;
@@ -47,28 +63,15 @@ char	*pipe_shell(char *line, t_mini *m)
 
 	pipe_line = ft_split_shell(line, 1, 1);
 	start = pipe_line;
-	free(line);
-	line = NULL;
+	line = (void*)(intptr_t)alt_free(line, 0);
 	while (pipe_line)
 	{
 		if (((char *)pipe_line->content)[0] == '|')
 			pipe_line = pipe_line->next;
 		if (pipe_line->next)
 			alt_pipe(m->out); //error handle
-		ft_lstadd_back(&m->pid, ft_lstnew((void *)(intptr_t)fork()));
-		if (ft_lstlast(m->pid)->content == 0)
-		{
-			ft_lstclear(&m->buffer, free);
-			m->is_child = 1;
-			if (m->in != m->out[0])
-				alt_close(&m->out[0]);
-			dup2(m->in, STDIN_FILENO);
-			dup2(m->out[1], STDOUT_FILENO);
-			// alt_close(&m->in);
-			// alt_close(&m->out[1]);
-			break ;
-		}
-		shift_pipe(m);
+		if(start_pipe(m))
+			break;
 		heredoc_count(pipe_line->content, &m->here_doc);
 		pipe_line = pipe_line->next;
 	}
