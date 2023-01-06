@@ -64,12 +64,54 @@ int	invalid_var(char *str, int set_var)
 	return (1);
 }
 
-void	export_var(char **cmd, t_list **g_env, t_list **l_var)
+int	export_var3(char **cmd, t_mini *m, int i, int j) 
+{
+	char	*temp[3];
+	char	**temp_s;
+
+	if (!cmd[i][j])
+	{
+		temp[0] = get_var(cmd[i], ft_strlen(cmd[i]), m->g_env, m->l_var);
+		if (temp[0])
+		{
+			temp[1] = ft_strjoin(cmd[i], "=");
+			temp[2] = ft_strjoin(temp[1], temp[0]);
+			free(temp[1]);
+		}
+		else
+			temp[2] = ft_strdup(cmd[i]);
+		temp_s = ft_split(cmd[i], '\0');
+		unset_var(temp_s, &m->g_env, &m->l_var);
+		ft_lstadd_back(&m->g_env, ft_lstnew((void *)temp[2]));
+		ft_freearray((void **)temp_s);
+		return 1;
+	}
+	return 0;
+}
+
+
+int	export_var2(char **cmd, t_mini *m, int i, int j) 
+{
+	char	*temp[3];
+	char	**temp_s;
+
+	if (j && cmd[i][j] == '=')
+	{
+		temp[0] = ft_substr(cmd[i], 0, j);
+		temp_s = ft_split(temp[0], '\0');
+		unset_var(temp_s, &m->g_env, &m->l_var);
+		ft_lstadd_back(&m->g_env, ft_lstnew((void *)ft_strdup(cmd[i])));
+		free(temp[0]);
+		ft_freearray((void **)temp_s);
+		return 1;
+	}
+	return export_var3(cmd, m, i, j);
+}
+
+void	export_var(char **cmd, t_mini *m)
 {
 	int		i;
 	int		j;
-	char	*temp[3];
-	char	**temp_s;
 	int		flag;
 
 	init_zero(&i, &flag, NULL, NULL);
@@ -79,35 +121,12 @@ void	export_var(char **cmd, t_list **g_env, t_list **l_var)
 		while (ft_isalpha(cmd[i][j]) || cmd[i][j] == '_' || (j
 				&& ft_isdigit(cmd[i][j])))
 			j++;
-		if (j && cmd[i][j] == '=')
-		{
-			temp[0] = ft_substr(cmd[i], 0, j);
-			temp_s = ft_split(temp[0], '\0');
-			unset_var(temp_s, g_env, l_var);
-			ft_lstadd_back(g_env, ft_lstnew((void *)ft_strdup(cmd[i])));
-			free(temp[0]);
-			ft_freearray((void **)temp_s);
-		}
-		else if (!cmd[i][j])
-		{
-			temp[0] = get_var(cmd[i], ft_strlen(cmd[i]), *g_env, *l_var);
-			if (temp[0])
-			{
-				temp[1] = ft_strjoin(cmd[i], "=");
-				temp[2] = ft_strjoin(temp[1], temp[0]);
-				free(temp[1]);
-			}
-			else
-				temp[2] = ft_strdup(cmd[i]);
-			temp_s = ft_split(cmd[i], '\0');
-			unset_var(temp_s, g_env, l_var);
-			ft_lstadd_back(g_env, ft_lstnew((void *)temp[2]));
-			ft_freearray((void **)temp_s);
-		}
+		if(export_var2(cmd, m, i, j))
+			(void)NULL;
 		else
 			flag = invalid_var(cmd[i], 0) || flag;
 	}
 	if (i == 1)
-		export_print(*g_env);
+		export_print(m->g_env);
 	get_mini()->status = flag;
 }

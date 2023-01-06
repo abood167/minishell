@@ -45,7 +45,7 @@ char	**update_envp(t_list *list);
 char*   get_var(char *varname, int len, t_list *g_env, t_list *l_var);
 char* set_var(char *line, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
-void export_var(char **cmd, t_list **g_env, t_list **l_var);
+void export_var(char **cmd, t_mini *m);
 int	invalid_var(char *str, int set_var);
 
 //Arrays, list and strings
@@ -89,5 +89,6 @@ void	shift_pipe(t_mini *m);
 
 void free_loop();
 void free_exit();
+int get_input();
 
 #endif

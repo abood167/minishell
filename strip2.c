@@ -14,17 +14,13 @@
 
 int	strip_heredoc(char *line, t_mini *m)
 {
-	int		len;
 	int		quote;
 	char	*word;
 	int		bak;
 	int		i;
 
-	len = 0;
-	quote = 0;
 	bak = m->status;
-	m->status = 0;
-	i = 0;
+	init_zero(NULL, &quote, &m->status, &i);
 	while (line[i] && !m->status)
 	{
 		if (!in_quote(line[i], &quote) && ft_strncmp(&line[i], "<<", 2) == 0)
@@ -35,14 +31,10 @@ int	strip_heredoc(char *line, t_mini *m)
 			free(word);
 			continue ;
 		}
-		len++;
 		i++;
 	}
 	if (m->status)
-	{
-		m->status = 1;
 		return (1);
-	}
 	m->status = bak;
 	return (0);
 }

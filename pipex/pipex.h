@@ -29,6 +29,7 @@ typedef struct s_mini
 	int		here_doc;
 	int		in;
 	int		is_child;
+	int		start;
 	t_list	*pid;
 	int		out[2];
 	char	*cmd;
@@ -45,7 +46,7 @@ typedef struct s_mini
 	sig_t	ctrlc_dfl;
 }			t_mini;
 
-void		mini_init(t_mini *m, char **envp);
+void		mini_init(t_mini *m);
 
 void		child(t_mini m, char *argv[], char *envp[]);
 void		here_doc(t_mini *m, char *lim);

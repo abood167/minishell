@@ -12,56 +12,71 @@
 
 #include "minishell.h"
 
-static t_mini m; //change to pointer so you can call it one variable?
+static t_mini m;
 
 t_mini	*get_mini(void)
 {
 	return (&m);
 }
 
-void	fix_dir(void)
-{
-	char	*line;
+int mini_start(char **env) {
+	m.status = EXIT_SUCCESS;
+	ft_int_signal();
+	m.g_env = ft_arrtolst(env);
+	m.l_var = NULL;
+	m.is_child = 0;
+	m.buffer = NULL;
+	m.doc_str = NULL;
 
-	line = getcwd(NULL, 0);
-	while (!line)
+	return 1;
+}
+
+void mini_cmd2(){
+	int status;
+
+	if (ft_strcmp(m.cmds[0], "unset") == 0)
+		unset_var(&m.cmds[1], &m.g_env, &m.l_var);
+	else if (ft_strcmp(m.cmds[0], "export") == 0)
+		export_var(m.cmds, &m);
+	else
 	{
-		cd_cmd(ft_split("cd ..", ' '), NULL, NULL); //Not like bash
-		free(line);
-		line = getcwd(NULL, 0);
+		ft_lstadd_back(&m.pid, ft_lstnew((void *)(intptr_t)fork()));
+		if (ft_lstlast(m.pid)->content == 0)
+			child(m, m.cmds, m.envp);
+		waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &status, 0);
+		if (WEXITSTATUS(status) || (m.status != CTRL_C_E
+				&& m.status != 131))
+			m.status = WEXITSTATUS(status);
+		else
+			printf("\n");
 	}
-	free(line);
 }
 
-void	free_loop(void)
-{
-	if (!m.buffer)
-		ft_lstclear(&m.doc_str, free);
-	ft_freearray((void **)m.envp);
-	ft_freearray((void **)m.cmds);
-	ft_freearray((void **)m.paths);
-	m.envp = NULL;
-	m.cmds = NULL;
-	m.paths = NULL;
-	ft_lstclear(&m.pid, NULL);
-	free(m.line);
-	m.line = NULL;
-	alt_close(&m.in);
-	alt_close(&m.out[0]);
-	alt_close(&m.out[1]);
-}
-
-void	free_exit(void)
-{
-	alt_close(&m.in);
-	alt_close(&m.out[0]);
-	alt_close(&m.out[1]);
-	ft_lstclear(&m.pid, NULL);
-	ft_lstclear(&m.doc_str, free);
-	ft_lstclear(&m.buffer, free);
-	ft_lstclear(&m.g_env, free);
-	ft_lstclear(&m.l_var, free);
-	rl_clear_history();
+void mini_cmd(){
+	check_pipe(&m);
+	if (ft_strcmp(m.cmds[0], "exit"))
+		m.status = 0;
+	if (ft_strcmp(m.cmds[0], "exit") == 0)
+	{
+		m.args = m.cmds;
+		exit_command(&m);
+	}
+	else if (ft_strcmp(m.cmds[0], "echo") == 0)
+		echo_cmd(m.cmds, m);
+	else if (ft_strcmp(m.cmds[0], "pwd") == 0)
+	{
+		free(m.line);
+		m.line = getcwd(NULL, 0);
+		ft_putstr_fd(m.line, m.out[1]);
+		ft_putstr_fd("\n", m.out[1]);
+		m.status = 0;
+	}
+	else if (ft_strcmp(m.cmds[0], "env") == 0)
+		print_env();
+	else if (ft_strcmp(m.cmds[0], "cd") == 0)
+		cd_cmd(m.cmds, m.g_env, m.l_var);
+	else 
+		mini_cmd2();
 }
 
 //check quote, pipe, && and || validity
@@ -76,58 +91,16 @@ void	free_exit(void)
 // (echo a)) //incorrect syntax error
 int	main(int ac, char **av, char **env)
 {
-	int	status;
-	int	syntax;
-	int	start;
-
-	m.status = EXIT_SUCCESS;
-	ft_int_signal();
-	m.g_env = ft_arrtolst(env);
-	m.l_var = NULL;
-	m.is_child = 0;
-	start = 1;
-	m.buffer = NULL;
-	m.doc_str = NULL;
+	m.start = mini_start(env);
 	while (!m.is_child || m.buffer)
 	{
-		if (!start)
+		if (!m.start)
 			free_loop();
-		start = 0;
-		m.envp = update_envp(m.g_env);
-		mini_init(&m, m.envp);
-		fix_dir();
+		mini_init(&m);
 		if (ac == 1)
 		{
-			if (!m.buffer)
-			{
-				m.line = readline("minishell % ");
-				if (m.line == NULL)
-				{
-					ft_putstr_fd("exit\n", 1);
-					break ;
-				}
-				if (m.line[0])
-					add_history(m.line);
-				syntax = 2;
-				while (syntax == 2)
-					syntax = invalid_syntax(m.line, &m);
-				if (syntax)
-					continue ;
-				if (strip_heredoc(m.line, &m))
-					continue ;
-			}
-			if (shell_conditions(&m))
-				continue ;
-			if (has_pipe(m.line))
-				m.line = pipe_shell(m.line, &m);
-			if (!m.line || has_brace(m.line, &m))
-				continue ;
-			m.line = set_var(m.line, m.g_env, &m.l_var);
-			m.line = strip_redirect(m.line, &m, 0, 0);
-			if (!m.line)
-				continue ;
-			m.line = ft_wildcard(m.line, opendir("."));
-			m.cmds = ft_splitquote(m.line, ' ');
+			if(get_input())
+				continue;
 		}
 		else
 			m.cmds = ft_copyarr(&av[1]);
@@ -136,44 +109,7 @@ int	main(int ac, char **av, char **env)
 			m.status = 0;
 			continue ;
 		}
-		check_pipe(&m);
-		if (ft_strcmp(m.cmds[0], "exit"))
-			m.status = 0;
-		if (ft_strcmp(m.cmds[0], "exit") == 0)
-		{
-			m.args = m.cmds;
-			exit_command(&m);
-		}
-		else if (ft_strcmp(m.cmds[0], "echo") == 0)
-			echo_cmd(m.cmds, m);
-		else if (ft_strcmp(m.cmds[0], "pwd") == 0)
-		{
-			free(m.line);
-			m.line = getcwd(NULL, 0);
-			ft_putstr_fd(m.line, m.out[1]);
-			ft_putstr_fd("\n", m.out[1]);
-			m.status = 0;
-		}
-		else if (ft_strcmp(m.cmds[0], "env") == 0)
-			print_env();
-		else if (ft_strcmp(m.cmds[0], "cd") == 0)
-			cd_cmd(m.cmds, m.g_env, m.l_var);
-		else if (ft_strcmp(m.cmds[0], "unset") == 0)
-			unset_var(&m.cmds[1], &m.g_env, &m.l_var);
-		else if (ft_strcmp(m.cmds[0], "export") == 0)
-			export_var(m.cmds, &m.g_env, &m.l_var);
-		else
-		{
-			ft_lstadd_back(&m.pid, ft_lstnew((void *)(intptr_t)fork()));
-			if (ft_lstlast(m.pid)->content == 0)
-				child(m, m.cmds, m.envp);
-			waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &status, 0);
-			if (WEXITSTATUS(status) || (m.status != CTRL_C_E
-					&& m.status != 131))
-				m.status = WEXITSTATUS(status);
-			else
-				printf("\n");
-		}
+		mini_cmd();
 		if (ac != 1)
 			break ;
 	}
