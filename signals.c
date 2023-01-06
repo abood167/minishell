@@ -12,8 +12,9 @@
 
 #include "minishell.h"
 
-void	ctrl_c(void)
+void	ctrl_c(int a)
 {
+	(void)a;
 	t_mini	*m;
 
 	m = get_mini();
@@ -28,16 +29,14 @@ void	ctrl_c(void)
 	rl_redisplay();
 }
 
-void	ctrl_slash(void)
+void	ctrl_slash(int a)
 {
+	(void)a;
 	t_mini	*m;
 
 	m = get_mini();
-	if (!m->pid) //no childs
-	{
+	if (!m->pid) 
 		printf("\b\b  \b\b");
-		// rl_redisplay();
-	}
 	else
 		m->status = 131;
 }
