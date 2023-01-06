@@ -30,7 +30,8 @@ void	ft_freearray(void **arr)
 	size_t	i;
 
 	i = 0;
-	if(arr) {
+	if (arr)
+	{
 		while (arr[i])
 			free(arr[i++]);
 		free(arr);

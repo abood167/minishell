@@ -21,9 +21,11 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
+# define DEL_WARN "minishell: warning: here-document delimited by end-of-file\n"
+
 typedef struct s_mini
 {
-	t_list  *doc_str;
+	t_list	*doc_str;
 	int		here_doc;
 	int		in;
 	int		is_child;
@@ -33,14 +35,12 @@ typedef struct s_mini
 	char	**paths;
 	char	**args;
 	int		status;
-	
 	char	**cmds;
 	char	*line;
 	char	**envp;
-	t_list 	*g_env;
+	t_list	*g_env;
 	t_list	*l_var;
-	t_list   *buffer;
-
+	t_list	*buffer; 
 	sig_t	slash_dfl;
 	sig_t	ctrlc_dfl;
 }			t_mini;

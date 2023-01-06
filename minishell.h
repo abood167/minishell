@@ -58,7 +58,7 @@ void    printarr(char **list);
 void    printlist(t_list *list);
 char* arrtostr(char **arr);
 char* ft_lsttostr(t_list *arr);
-void sort_list(t_list *g_env);
+void sort_lst(t_list *g_env);
 
 //input modifiers
 int shell_conditions(t_mini *m);
@@ -79,6 +79,7 @@ int has_brace(char *line, t_mini *m);
 int invalid_syntax(char *str, t_mini *m);
 void syntax_error(char *str);
 
+int alt_free(void *ptr, int ret);
 int alt_open(int *fd, char *file, int flag, int write);
 void alt_close(int *fd);
 int alt_pipe(int out[]);

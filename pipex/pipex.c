@@ -13,12 +13,12 @@
 #include "pipex.h"
 #include <sys/wait.h>
 
-int has_brace(char *line, t_mini *m);
+int		has_brace(char *line, t_mini *m);
 
 void	mini_init(t_mini *m, char **envp)
 {
 	char	**path;
-	
+
 	m->pid = NULL;
 	m->paths = NULL;
 	if (m->doc_str == NULL)
@@ -33,7 +33,8 @@ void	mini_init(t_mini *m, char **envp)
 	path = envp;
 	while (*path && ft_strncmp("PATH", *path, 4))
 		path++;
-	if (*path){
+	if (*path)
+	{
 		m->paths = ft_split((*path + 5), ':');
 	}
 	else
@@ -42,7 +43,8 @@ void	mini_init(t_mini *m, char **envp)
 	m->cmd = NULL;
 }
 
-void check_pipe(t_mini *m) {
+void	check_pipe(t_mini *m)
+{
 	if (m->in == -1)
 		m->in = 0;
 	if (m->out[1] == -1)

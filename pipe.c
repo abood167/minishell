@@ -1,66 +1,81 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/06 05:39:36 by sbokhari          #+#    #+#             */
+/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	wait_pipe(t_mini *m)
 {
-    t_list *node;
-	int	status;
+	t_list	*node;
+	int		status;
 
-    node = m->pid;
-    while(node) {
-        waitpid((pid_t)(intptr_t)node->content, &status, 0);
-        m->status = WEXITSTATUS(status);
-        node = node->next;
-    }
-    ft_lstclear(&m->pid, NULL);
+	node = m->pid;
+	while (node)
+	{
+		waitpid((pid_t)(intptr_t)node->content, &status, 0);
+		m->status = WEXITSTATUS(status);
+		node = node->next;
+	}
+	ft_lstclear(&m->pid, NULL);
 }
 
-int has_pipe(char *line) {
-    t_list *pipe_line;
-    int val;
+int	has_pipe(char *line)
+{
+	t_list	*pipe_line;
+	int		val;
 
 	pipe_line = ft_split_shell(line, 1, 1);
-    val = ft_lstsize(pipe_line);
-    ft_lstclear(&pipe_line, free);
-
-    if(val >= 2)
-        return 1;
-    return 0;
+	val = ft_lstsize(pipe_line);
+	ft_lstclear(&pipe_line, free);
+	if (val >= 2)
+		return (1);
+	return (0);
 }
 
 char	*pipe_shell(char *line, t_mini *m)
 {
-    t_list *pipe_line;
-    t_list *start;
+	t_list	*pipe_line;
+	t_list	*start;
 
 	pipe_line = ft_split_shell(line, 1, 1);
-    start = pipe_line;
-    free(line);
-    line = NULL;
-    while(pipe_line){
-        if(((char *)pipe_line->content)[0] == '|')   
-            pipe_line = pipe_line->next;
-        if (pipe_line->next)
-            alt_pipe(m->out); //error handle
-        ft_lstadd_back(&m->pid, ft_lstnew((void*)(intptr_t)fork()));
-        if (ft_lstlast(m->pid)->content == 0) {
-            ft_lstclear(&m->buffer, free);
-            m->is_child = 1;
-            if (m->in != m->out[0])
-		        alt_close(&m->out[0]);
-            dup2(m->in, STDIN_FILENO);
-            dup2(m->out[1], STDOUT_FILENO);
-            // alt_close(&m->in);
-            // alt_close(&m->out[1]);
-            break;
-        }
-        shift_pipe(m);
-        heredoc_count(pipe_line->content, &m->here_doc);
-        pipe_line = pipe_line->next;
-    }
-    if (pipe_line)
-        line = ft_strdup((char*)pipe_line->content);
-    ft_lstclear(&start, free);
-    if(ft_lstlast(m->pid)->content != 0)
-        wait_pipe(m);
-    return line;
+	start = pipe_line;
+	free(line);
+	line = NULL;
+	while (pipe_line)
+	{
+		if (((char *)pipe_line->content)[0] == '|')
+			pipe_line = pipe_line->next;
+		if (pipe_line->next)
+			alt_pipe(m->out); //error handle
+		ft_lstadd_back(&m->pid, ft_lstnew((void *)(intptr_t)fork()));
+		if (ft_lstlast(m->pid)->content == 0)
+		{
+			ft_lstclear(&m->buffer, free);
+			m->is_child = 1;
+			if (m->in != m->out[0])
+				alt_close(&m->out[0]);
+			dup2(m->in, STDIN_FILENO);
+			dup2(m->out[1], STDOUT_FILENO);
+			// alt_close(&m->in);
+			// alt_close(&m->out[1]);
+			break ;
+		}
+		shift_pipe(m);
+		heredoc_count(pipe_line->content, &m->here_doc);
+		pipe_line = pipe_line->next;
+	}
+	if (pipe_line)
+		line = ft_strdup((char *)pipe_line->content);
+	ft_lstclear(&start, free);
+	if (ft_lstlast(m->pid)->content != 0)
+		wait_pipe(m);
+	return (line);
 }

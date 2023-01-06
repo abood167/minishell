@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 12:01:49 by abin-saa          #+#    #+#             */
-/*   Updated: 2022/12/12 12:03:07 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ char	*get_next_word(const char *str, int *pos, char c)
 		}
 		else
 		{
-			while (str[*pos] && str[*pos] != c && str[*pos] != ')' && !in_quote(str[*pos], &quote))
+			while (str[*pos] && str[*pos] != c && str[*pos] != ')'
+				&& !in_quote(str[*pos], &quote))
 				(*pos)++;
 			words[count++] = ft_substr(str, start, *pos - start);
 			if (quote)
@@ -112,9 +113,9 @@ int	in_quote(char c, int *quote)
 
 char	**ft_splitquote(char *s, char c)
 {
-	char	**split;
-	int	word;
-	int	i;
+	char **split;
+	int word;
+	int i;
 
 	word = 0;
 	i = 0;

@@ -1,30 +1,45 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/06 05:39:36 by sbokhari          #+#    #+#             */
+/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static t_mini	m; //change to pointer so you can call it one variable?
+static t_mini m; //change to pointer so you can call it one variable?
 
-t_mini* get_mini() {
-	return &m;
+t_mini	*get_mini(void)
+{
+	return (&m);
 }
 
-void fix_dir() {
-	char *line;
+void	fix_dir(void)
+{
+	char	*line;
 
 	line = getcwd(NULL, 0);
-	while(!line)
+	while (!line)
 	{
 		cd_cmd(ft_split("cd ..", ' '), NULL, NULL); //Not like bash
-		free(line);	
+		free(line);
 		line = getcwd(NULL, 0);
 	}
 	free(line);
 }
 
-void free_loop() {
-	if(!m.buffer)
+void	free_loop(void)
+{
+	if (!m.buffer)
 		ft_lstclear(&m.doc_str, free);
-	ft_freearray((void**)m.envp);
-	ft_freearray((void**)m.cmds);
-	ft_freearray((void**)m.paths);
+	ft_freearray((void **)m.envp);
+	ft_freearray((void **)m.cmds);
+	ft_freearray((void **)m.paths);
 	m.envp = NULL;
 	m.cmds = NULL;
 	m.paths = NULL;
@@ -34,10 +49,10 @@ void free_loop() {
 	alt_close(&m.in);
 	alt_close(&m.out[0]);
 	alt_close(&m.out[1]);
-
 }
 
-void free_exit() {
+void	free_exit(void)
+{
 	alt_close(&m.in);
 	alt_close(&m.out[0]);
 	alt_close(&m.out[1]);
@@ -52,14 +67,14 @@ void free_exit() {
 //check quote, pipe, && and || validity
 //Need to figure out sort order of env
 //test with symbolic link
-// <<lm || <<lm  
+// <<lm || <<lm
 //Test on mac ctrl+D  on here_doc and incomplete syntax (ie unclosed quotes)
 // echo a (echo b)
 // ()
 // asd (
 // (echo a && echo b) && sleep 2 && echo c | cat -n && cd ..
 // (echo a)) //incorrect syntax error
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
 	int status;
 	int syntax;
@@ -76,7 +91,7 @@ int main(int ac, char **av, char **env)
 	m.doc_str = NULL;
 	while (!m.is_child || m.buffer)
 	{
-		if(!start)
+		if (!start)
 			free_loop();
 		start = 0;
 		m.envp = update_envp(m.g_env);
@@ -84,82 +99,88 @@ int main(int ac, char **av, char **env)
 
 		fix_dir();
 
-		if (ac == 1) {
-			if(!m.buffer) {
+		if (ac == 1)
+		{
+			if (!m.buffer)
+			{
 				m.line = readline("minishell % ");
 				if (m.line == NULL)
 				{
 					ft_putstr_fd("exit\n", 1);
-					break;
+					break ;
 				}
-				if(m.line[0])
+				if (m.line[0])
 					add_history(m.line);
 				syntax = 2;
-				while(syntax == 2)
+				while (syntax == 2)
 					syntax = invalid_syntax(m.line, &m);
-				if(syntax)
-					continue;
-				if(strip_heredoc(m.line, &m))
-					continue;
+				if (syntax)
+					continue ;
+				if (strip_heredoc(m.line, &m))
+					continue ;
 			}
-			if(shell_conditions(&m))
-				continue;
-			if(has_pipe(m.line))
+			if (shell_conditions(&m))
+				continue ;
+			if (has_pipe(m.line))
 				m.line = pipe_shell(m.line, &m);
-			if(!m.line || has_brace(m.line, &m))  
-				continue;
-			m.line = set_var(m.line, m.g_env, &m.l_var); 
+			if (!m.line || has_brace(m.line, &m))
+				continue ;
+			m.line = set_var(m.line, m.g_env, &m.l_var);
 			m.line = strip_redirect(m.line, &m, 0, 0);
-			if(!m.line)
-				continue; 
+			if (!m.line)
+				continue ;
 			m.line = ft_wildcard(m.line);
-			m.cmds = ft_splitquote(m.line, ' '); 
+			m.cmds = ft_splitquote(m.line, ' ');
 		}
 		else
 			m.cmds = ft_copyarr(&av[1]);
 
-		if(!m.cmds || (m.cmds && !m.cmds[0])) {
+		if (!m.cmds || (m.cmds && !m.cmds[0]))
+		{
 			m.status = 0;
-			continue;
+			continue ;
 		}
 
 		check_pipe(&m);
-		if(ft_strcmp(m.cmds[0],"exit"))
+		if (ft_strcmp(m.cmds[0], "exit"))
 			m.status = 0;
-		if(ft_strcmp(m.cmds[0],"exit") == 0)
+		if (ft_strcmp(m.cmds[0], "exit") == 0)
 		{
 			m.args = m.cmds;
 			exit_command(&m);
 		}
-		else if(ft_strcmp(m.cmds[0],"echo") == 0)
+		else if (ft_strcmp(m.cmds[0], "echo") == 0)
 			echo_cmd(m.cmds, m);
-		else if(ft_strcmp(m.cmds[0],"pwd") == 0){
+		else if (ft_strcmp(m.cmds[0], "pwd") == 0)
+		{
 			free(m.line);
 			m.line = getcwd(NULL, 0);
 			ft_putstr_fd(m.line, m.out[1]);
 			ft_putstr_fd("\n", m.out[1]);
 			m.status = 0;
 		}
-		else if(ft_strcmp(m.cmds[0],"env") == 0)
+		else if (ft_strcmp(m.cmds[0], "env") == 0)
 			print_env();
-		else if(ft_strcmp(m.cmds[0],"cd") == 0)
+		else if (ft_strcmp(m.cmds[0], "cd") == 0)
 			cd_cmd(m.cmds, m.g_env, m.l_var);
-		else if(ft_strcmp(m.cmds[0],"unset") == 0)
+		else if (ft_strcmp(m.cmds[0], "unset") == 0)
 			unset_var(&m.cmds[1], &m.g_env, &m.l_var);
-		else if(ft_strcmp(m.cmds[0],"export") == 0)
+		else if (ft_strcmp(m.cmds[0], "export") == 0)
 			export_var(m.cmds, &m.g_env, &m.l_var);
-		else {
-        	ft_lstadd_back(&m.pid, ft_lstnew((void*)(intptr_t)fork()));
-			if (ft_lstlast(m.pid)->content == 0) 
-				child(m, m.cmds, m.envp);		
+		else
+		{
+			ft_lstadd_back(&m.pid, ft_lstnew((void *)(intptr_t)fork()));
+			if (ft_lstlast(m.pid)->content == 0)
+				child(m, m.cmds, m.envp);
 			waitpid((pid_t)(intptr_t)ft_lstlast(m.pid)->content, &status, 0);
-			if(WEXITSTATUS(status) || (m.status != CTRL_C_E && m.status != 131))
+			if (WEXITSTATUS(status) || (m.status != CTRL_C_E
+					&& m.status != 131))
 				m.status = WEXITSTATUS(status);
 			else
 				printf("\n");
 		}
 		if (ac != 1)
-			break;
+			break ;
 	}
 	free_loop();
 	free_exit();

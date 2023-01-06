@@ -23,7 +23,7 @@ int	ft_isstralpha(char *str)
 
 int	ft_isstrdigit(char *str)
 {
-	if(*str && (*str == '+' || *str == '-'))
+	if (*str && (*str == '+' || *str == '-'))
 		str++;
 	while (*str)
 	{

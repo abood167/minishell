@@ -10,15 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
 #include "../minishell.h"
+#include "pipex.h"
 
 void	here_doc(t_mini *m, char *lim)
 {
 	char	*str;
 	int		len[2];
-	t_list  *node;
-	
+	t_list	*node;
+
 	ft_lstadd_back(&m->doc_str, ft_lstnew(strdup("")));
 	node = ft_lstlast(m->doc_str);
 	rl_getc_function = getc;
@@ -26,16 +26,16 @@ void	here_doc(t_mini *m, char *lim)
 	while (1)
 	{
 		str = readline("> ");
-		// str = get_next_line(0);
-		if(str == NULL){
-			if(!m->status)
-				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 2); //confirm if same as mac
+		if (str == NULL)
+		{
+			if (!m->status)
+				ft_putstr_fd(DEL_WARN, 2); //confirm if same as mac
 			rl_getc_function = rl_getc;
-			return;
+			return ;
 		}
 		len[0] = ft_strlen(str);
 		if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
-			break;
+			break ;
 		node->content = ft_strmerge(node->content, str);
 		node->content = ft_strmerge(node->content, ft_strdup("\n"));
 	}
@@ -70,5 +70,4 @@ void	error_exit(char *error)
 		write(2, "minishell: ", 7);
 		perror(error);
 	}
-	exit(EXIT_FAILURE);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/06 05:41:16 by sbokhari          #+#    #+#             */
+/*   Updated: 2023/01/06 05:41:23 by sbokhari         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	printarr(char **arr)
@@ -109,4 +121,28 @@ char	*arrtostr(char **arr)
 		i++;
 	}
 	return (str);
+}
+
+void	sort_lst(t_list *list)
+{
+	t_list	*tmp;
+	t_list	*tmp2;
+	char	*tmp3;
+
+	tmp = list;
+	while (tmp)
+	{
+		tmp2 = tmp->next;
+		while (tmp2)
+		{
+			if (ft_strcmp(tmp->content, tmp2->content) > 0)
+			{
+				tmp3 = tmp->content;
+				tmp->content = tmp2->content;
+				tmp2->content = tmp3;
+			}
+			tmp2 = tmp2->next;
+		}
+		tmp = tmp->next;
+	}
 }

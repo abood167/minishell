@@ -1,14 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wildcard.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/06 05:41:15 by sbokhari          #+#    #+#             */
+/*   Updated: 2023/01/06 05:41:23 by sbokhari         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	match_pattern(const char *pattern, const char *str, int quote)
 {
-	int val;
+	int	val;
+
 	while (*pattern != '\0')
-	{	
+	{
 		val = in_quote(*pattern, &quote);
-		if(val == 1 || val == 2) {
+		if (val == 1 || val == 2)
+		{
 			pattern++;
-			continue;
+			continue ;
 		}
 		if (!quote && *pattern == '*' && *str != '.')
 		{
@@ -19,28 +33,30 @@ int	match_pattern(const char *pattern, const char *str, int quote)
 					return (1);
 				str++;
 			}
-			return (*pattern == '\0'); 
+			return (*pattern == '\0');
 		}
 		else if (*pattern != *str)
-			return (0); 
+			return (0);
 		pattern++;
 		str++;
 	}
 	return (*pattern == '\0' && *str == '\0');
 }
 
-t_list	*get_dir_list(DIR *dir){
-	t_list *list;
-	struct dirent *entry;
+t_list	*get_dir_list(DIR *dir)
+{
+	t_list			*list;
+	struct dirent	*entry;
 
 	list = NULL;
 	entry = readdir(dir);
-	while(entry) {
+	while (entry)
+	{
 		ft_lstadd_front(&list, ft_lstnew(entry->d_name));
 		entry = readdir(dir);
 	}
-	sort_list(list);
-	return list;
+	sort_lst(list);
+	return (list);
 }
 
 char	*ft_wildcard(char *line)
@@ -60,7 +76,7 @@ char	*ft_wildcard(char *line)
 	while (line[i])
 	{
 		flag = 0;
-		while(line[i] == ' ')
+		while (line[i] == ' ')
 			i++;
 		j = i;
 		word = get_next_word(line, &i, ' ');
@@ -79,7 +95,8 @@ char	*ft_wildcard(char *line)
 				}
 				node = node->next;
 			}
-			if (!flag) {
+			if (!flag)
+			{
 				ft_lstadd_back(&list, ft_lstnew(ft_strdup(word)));
 				ft_lstadd_back(&list, ft_lstnew(ft_strdup(" ")));
 			}
