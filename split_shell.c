@@ -119,7 +119,7 @@ int bracket_invalid(char *str, int *val) {
             i++;
             while(str[i] == ' ' || str[i] == '\n')
                 i++;
-            if (str[i] && str[i] != '|' && ft_strncmp(&str[i], "&&", 2)) {
+            if (str[i] && str[i] != ')' && str[i] != '|' && ft_strncmp(&str[i], "&&", 2)) {
                 syntax_error(&str[i]);
                 return *val = 1;
             }
