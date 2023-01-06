@@ -140,7 +140,8 @@ char	*set_var(char *line, t_list *g_env, t_list **l_var)
 			break ;
 		while (line[i] == ' ')
 			j = ++i;
-		while (ft_isalpha(line[j]) || line[j] == '_' || (j > i && ft_isdigit(line[j])))
+		while (ft_isalpha(line[j]) || line[j] == '_' || (j > i
+				&& ft_isdigit(line[j])))
 			j++;
 		if (!j || line[j] != '=')
 			break ;

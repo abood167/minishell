@@ -125,9 +125,9 @@ char	*arrtostr(char **arr)
 
 void	sort_lst(t_list *list)
 {
-	t_list	*tmp;
-	t_list	*tmp2;
-	char	*tmp3;
+	t_list *tmp;
+	t_list *tmp2;
+	char *tmp3;
 
 	tmp = list;
 	while (tmp)

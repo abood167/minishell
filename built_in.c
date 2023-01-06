@@ -78,8 +78,8 @@ void	cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 
 void	print_env(void)
 {
-	t_mini *m;
-	char **str;
+	t_mini	*m;
+	char	**str;
 
 	m = get_mini();
 	str = m->envp;

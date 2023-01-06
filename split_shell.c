@@ -65,7 +65,7 @@ static int	complete(char *oldline, t_mini *m)
 		if (!m->status)
 		{
 			ft_putstr_fd("minishell: syntax error: unexpected end of file\nexit\n",
-					2); //confirm if same as mac //test for leaks
+							2); //confirm if same as mac //test for leaks
 			free_loop();
 			free_exit();
 			exit(2);
@@ -245,7 +245,7 @@ void	syntax_error(char *str)
 	get_mini()->status = 2;
 	if (!str || !str[0] || str[0] == '\n')
 		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
-				2);
+						2);
 	else if (!ft_strncmp(str, "||", 2))
 		ft_putstr_fd("minishell: syntax error near unexpected token `||'\n", 2);
 	else if (!ft_strncmp(str, "&&", 2))

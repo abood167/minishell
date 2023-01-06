@@ -76,13 +76,12 @@ void	free_exit(void)
 // (echo a)) //incorrect syntax error
 int	main(int ac, char **av, char **env)
 {
-	int status;
-	int syntax;
-	int start;
+	int	status;
+	int	syntax;
+	int	start;
 
 	m.status = EXIT_SUCCESS;
 	ft_int_signal();
-
 	m.g_env = ft_arrtolst(env);
 	m.l_var = NULL;
 	m.is_child = 0;
@@ -96,9 +95,7 @@ int	main(int ac, char **av, char **env)
 		start = 0;
 		m.envp = update_envp(m.g_env);
 		mini_init(&m, m.envp);
-
 		fix_dir();
-
 		if (ac == 1)
 		{
 			if (!m.buffer)
@@ -134,13 +131,11 @@ int	main(int ac, char **av, char **env)
 		}
 		else
 			m.cmds = ft_copyarr(&av[1]);
-
 		if (!m.cmds || (m.cmds && !m.cmds[0]))
 		{
 			m.status = 0;
 			continue ;
 		}
-
 		check_pipe(&m);
 		if (ft_strcmp(m.cmds[0], "exit"))
 			m.status = 0;

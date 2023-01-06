@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	ctrl_c()
+void	ctrl_c(void)
 {
 	t_mini	*m;
 
@@ -28,7 +28,7 @@ void	ctrl_c()
 	rl_redisplay();
 }
 
-void	ctrl_slash()
+void	ctrl_slash(void)
 {
 	t_mini	*m;
 
@@ -42,9 +42,9 @@ void	ctrl_slash()
 		m->status = 131;
 }
 
-void	ft_int_signal()
+void	ft_int_signal(void)
 {
-	t_mini *m;
+	t_mini	*m;
 
 	m = get_mini();
 	m->slash_dfl = signal(SIGQUIT, ctrl_slash);

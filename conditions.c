@@ -23,7 +23,7 @@ static int	is_brace_block(char *line)
 	while (lcopy[i] == ' ' || lcopy[i] == '\n')
 		i++;
 	if (lcopy[i++] != '(')
-		return alt_free(lcopy, 0);
+		return (alt_free(lcopy, 0));
 	brace = 1;
 	while (lcopy[i] && brace)
 	{
@@ -36,8 +36,8 @@ static int	is_brace_block(char *line)
 	while (lcopy[i] == ' ' || lcopy[i] == '\n')
 		i++;
 	if (!lcopy[i])
-		return alt_free(lcopy, 1);
-	return alt_free(lcopy, 0);
+		return (alt_free(lcopy, 1));
+	return (alt_free(lcopy, 0));
 }
 
 int	has_brace(char *line, t_mini *m)
@@ -75,8 +75,9 @@ static char	*brace_peel(char *line)
 	return (ft_substr(line, start, end));
 }
 
-int	shell_conditions2(t_mini *m){
-	pid_t pid;
+int	shell_conditions2(t_mini *m)
+{
+	pid_t	pid;
 
 	if (is_brace_block((char *)m->buffer->content))
 	{
@@ -124,5 +125,5 @@ int	shell_conditions(t_mini *m)
 			ft_lstdelfirst(&m->buffer, free);
 		return (1);
 	}
-	return shell_conditions2(m);
+	return (shell_conditions2(m));
 }

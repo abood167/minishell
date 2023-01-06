@@ -113,9 +113,9 @@ int	in_quote(char c, int *quote)
 
 char	**ft_splitquote(char *s, char c)
 {
-	char **split;
-	int word;
-	int i;
+	char	**split;
+	int		word;
+	int		i;
 
 	word = 0;
 	i = 0;

@@ -12,9 +12,10 @@
 
 #include "minishell.h"
 
-int alt_free(void *ptr, int ret) {
-    free(ptr);
-    return ret;
+int	alt_free(void *ptr, int ret)
+{
+	free(ptr);
+	return (ret);
 }
 
 int	alt_open(int *fd, char *file, int flag, int write)

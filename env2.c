@@ -110,13 +110,13 @@ void	export_var(char **cmd, t_list **g_env, t_list **l_var)
 
 void	unset_var(char **cmd, t_list **g_env, t_list **l_var)
 {
-	int i;
-	int len;
-	// int flag;
-	t_list *g_point;
-	t_list *l_point;
-	t_list *prev;
+	int		i;
+	int		len;
+	t_list	*g_point;
+	t_list	*l_point;
+	t_list	*prev;
 
+	// int flag;
 	i = 0;
 	while (cmd[i])
 	{

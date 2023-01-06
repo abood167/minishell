@@ -29,9 +29,8 @@ int	match_pattern(const char *pattern, const char *str, int quote)
 			pattern++;
 			while (*str != '\0')
 			{
-				if (match_pattern(pattern, str, quote))
+				if (match_pattern(pattern, str++, quote))
 					return (1);
-				str++;
 			}
 			return (*pattern == '\0');
 		}
@@ -59,17 +58,23 @@ t_list	*get_dir_list(DIR *dir)
 	return (list);
 }
 
+static void append_wspace(t_list **list, t_list *new){
+	ft_lstadd_back(list, new);
+	ft_lstadd_back(list, ft_lstnew(ft_strdup(" ")));
+}
+
 char	*ft_wildcard(char *line)
 {
-	t_list *list;
-	t_list *entry;
-	t_list *node;
-	int i;
-	int j;
-	int flag;
-	char *word;
+	t_list	*list;
+	t_list	*entry;
+	t_list	*node;
+	int		i;
+	int		j;
+	int		flag;
+	char	*word;
+	DIR		*dir;
 
-	DIR *dir = opendir(".");
+	dir = opendir(".");
 	entry = get_dir_list(dir);
 	list = NULL;
 	i = 0;
@@ -89,23 +94,16 @@ char	*ft_wildcard(char *line)
 			{
 				if (match_pattern(word, node->content, 0))
 				{
-					ft_lstadd_back(&list, ft_lstnew(ft_strdup(node->content)));
-					ft_lstadd_back(&list, ft_lstnew(ft_strdup(" ")));
+					append_wspace(&list, ft_lstnew(ft_strdup(node->content)));
 					flag = 1;
 				}
 				node = node->next;
 			}
 			if (!flag)
-			{
-				ft_lstadd_back(&list, ft_lstnew(ft_strdup(word)));
-				ft_lstadd_back(&list, ft_lstnew(ft_strdup(" ")));
-			}
+				append_wspace(&list, ft_lstnew(ft_strdup(word)));
 		}
 		else
-		{
-			ft_lstadd_back(&list, ft_lstnew(ft_strdup(word)));
-			ft_lstadd_back(&list, ft_lstnew(ft_strdup(" ")));
-		}
+			append_wspace(&list, ft_lstnew(ft_strdup(word)));
 		free(word);
 	}
 	ft_lstclear(&entry, NULL);

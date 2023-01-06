@@ -108,11 +108,11 @@ char	*strip_redirect(char *line, t_mini *m, int test, int brace)
 					|| word[0] == ')')))
 			{
 				syntax_error(word);
-				return ((void*)(intptr_t)alt_free(line, 0));
+				return ((void *)(intptr_t)alt_free(line, 0));
 			}
 			if (!test && !alt_open(&m->out[1], word,
 					O_CREAT | O_WRONLY | O_APPEND, 1))
-				return ((void*)(intptr_t)alt_free(line, 0));
+				return ((void *)(intptr_t)alt_free(line, 0));
 			free(word);
 		}
 		else if (ft_strncmp(&line[i], ">", 1) == 0)
@@ -125,11 +125,11 @@ char	*strip_redirect(char *line, t_mini *m, int test, int brace)
 					|| word[0] == ')')))
 			{
 				syntax_error(word);
-				return ((void*)(intptr_t)alt_free(line, 0));
+				return ((void *)(intptr_t)alt_free(line, 0));
 			}
 			if (!test && !alt_open(&m->out[1], word,
 					O_CREAT | O_WRONLY | O_TRUNC, 1))
-				return ((void*)(intptr_t)alt_free(line, 0));
+				return ((void *)(intptr_t)alt_free(line, 0));
 			free(word);
 		}
 		else if (ft_strncmp(&line[i], "<<", 2) == 0)
@@ -141,7 +141,7 @@ char	*strip_redirect(char *line, t_mini *m, int test, int brace)
 					|| word[0] == '>' || word[0] == '(' || word[0] == ')')))
 			{
 				syntax_error(word);
-				return ((void*)(intptr_t)alt_free(line, 0));
+				return ((void *)(intptr_t)alt_free(line, 0));
 			}
 			if (!test)
 				str_doc(m); //handle error
@@ -157,10 +157,10 @@ char	*strip_redirect(char *line, t_mini *m, int test, int brace)
 					|| word[0] == ')')))
 			{
 				syntax_error(word);
-				return ((void*)(intptr_t)alt_free(line, 0));
+				return ((void *)(intptr_t)alt_free(line, 0));
 			}
 			if (!test && !alt_open(&m->in, word, O_RDONLY, 0))
-				return ((void*)(intptr_t)alt_free(line, 0));
+				return ((void *)(intptr_t)alt_free(line, 0));
 			free(word);
 		}
 		else
