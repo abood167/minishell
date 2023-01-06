@@ -46,6 +46,7 @@ char*   get_var(char *varname, int len, t_list *g_env, t_list *l_var);
 char* set_var(char *line, t_list *g_env, t_list **l_var);
 void unset_var(char **cmd, t_list **g_env, t_list **l_var);
 void export_var(char **cmd, t_list **g_env, t_list **l_var);
+int	invalid_var(char *str, int set_var);
 
 //Arrays, list and strings
 char**  ft_splitquote(char *s, char c);
@@ -59,6 +60,7 @@ void    printlist(t_list *list);
 char* arrtostr(char **arr);
 char* ft_lsttostr(t_list *arr);
 void sort_lst(t_list *g_env);
+void *init_zero(int *val1, int *val2, int *val3, int *val4);
 
 //input modifiers
 int shell_conditions(t_mini *m);
@@ -68,7 +70,7 @@ char	*strip_redirect(char *line, t_mini *m, int test, int brace);
 int	strip_heredoc(char *line, t_mini *m);
 void     heredoc_count(char *line, int *cnt);
 void    str_doc(t_mini *m);
-char* ft_wildcard(char *line);
+char* ft_wildcard(char *line, DIR *dir);
 
 void ft_int_signal();
 

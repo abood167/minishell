@@ -125,9 +125,9 @@ char	*arrtostr(char **arr)
 
 void	sort_lst(t_list *list)
 {
-	t_list *tmp;
-	t_list *tmp2;
-	char *tmp3;
+	t_list	*tmp;
+	t_list	*tmp2;
+	char	*tmp3;
 
 	tmp = list;
 	while (tmp)
@@ -145,4 +145,17 @@ void	sort_lst(t_list *list)
 		}
 		tmp = tmp->next;
 	}
+}
+
+void	*init_zero(int *val1, int *val2, int *val3, int *val4)
+{
+	if (val1)
+		*val1 = 0;
+	if (val2)
+		*val2 = 0;
+	if (val3)
+		*val3 = 0;
+	if (val4)
+		*val4 = 0;
+	return NULL;
 }

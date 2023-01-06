@@ -41,7 +41,7 @@ void	export_print(t_list *g_env)
 	}
 }
 
-int	invalid_var(char *str)
+int	invalid_var(char *str, int set_var)
 {
 	int	i;
 
@@ -51,11 +51,15 @@ int	invalid_var(char *str)
 	{
 		i++;
 	}
-	if (str[i] == '\0')
+	if(!set_var) {
+		if (str[i] == '\0')
+			return (0);
+		ft_putstr_fd("minishell: export: `", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+	}
+	else if (i && str[i] == '=')
 		return (0);
-	ft_putstr_fd("minishell: export: `", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd("': not a valid identifier\n", 2);
 	return (1);
 }
 
@@ -101,61 +105,9 @@ void	export_var(char **cmd, t_list **g_env, t_list **l_var)
 			ft_freearray((void **)temp_s);
 		}
 		else
-			flag = invalid_var(cmd[i]) || flag;
+			flag = invalid_var(cmd[i], 0) || flag;
 	}
 	if (i == 1)
 		export_print(*g_env);
 	get_mini()->status = flag;
-}
-
-void	unset_var(char **cmd, t_list **g_env, t_list **l_var)
-{
-	int		i;
-	int		len;
-	t_list	*g_point;
-	t_list	*l_point;
-	t_list	*prev;
-
-	// int flag;
-	i = 0;
-	while (cmd[i])
-	{
-		len = ft_strlen(cmd[i]);
-		g_point = *g_env;
-		while (g_point)
-		{
-			if (strncmp(g_point->content, cmd[i], len) == 0
-				&& (((char *)g_point->content)[len] == '='
-					|| !((char *)g_point->content)[len]))
-			{
-				if (g_point == *g_env)
-					*g_env = (*g_env)->next;
-				else
-					prev->next = g_point->next;
-				free(g_point->content);
-				free(g_point);
-				break ;
-			}
-			prev = g_point;
-			g_point = g_point->next;
-		}
-		l_point = *l_var;
-		while (l_point)
-		{
-			if (strncmp(l_point->content, cmd[i], len) == 0
-				&& ((char *)l_point->content)[len] == '=')
-			{
-				if (l_point == *l_var)
-					*l_var = (*l_var)->next;
-				else
-					prev->next = l_point->next;
-				free(l_point->content);
-				free(l_point);
-				break ;
-			}
-			prev = l_point;
-			l_point = l_point->next;
-		}
-		i++;
-	}
 }

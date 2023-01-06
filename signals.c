@@ -14,9 +14,9 @@
 
 void	ctrl_c(int a)
 {
-	(void)a;
 	t_mini	*m;
 
+	(void)a;
 	m = get_mini();
 	m->status = CTRL_C_E;
 	if (rl_getc_function == getc)
@@ -31,11 +31,11 @@ void	ctrl_c(int a)
 
 void	ctrl_slash(int a)
 {
-	(void)a;
 	t_mini	*m;
 
+	(void)a;
 	m = get_mini();
-	if (!m->pid) 
+	if (!m->pid)
 		printf("\b\b  \b\b");
 	else
 		m->status = 131;

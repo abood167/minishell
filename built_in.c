@@ -61,7 +61,7 @@ void	cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 			perror(get_var("HOME", 4, g_env, l_var));
 		}
 		else
-			get_mini()->status = 1;
+			get_mini()->status = 0;
 	}
 	else if (cmd[2] != NULL)
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
@@ -73,7 +73,7 @@ void	cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 		perror(cmd[1]);
 	}
 	else
-		get_mini()->status = 1;
+		get_mini()->status = 0;
 }
 
 void	print_env(void)

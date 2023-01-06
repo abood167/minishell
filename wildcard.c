@@ -12,10 +12,8 @@
 
 #include "minishell.h"
 
-int	match_pattern(const char *pattern, const char *str, int quote)
+int	match_pattern(const char *pattern, const char *str, int quote, int val)
 {
-	int	val;
-
 	while (*pattern != '\0')
 	{
 		val = in_quote(*pattern, &quote);
@@ -29,7 +27,7 @@ int	match_pattern(const char *pattern, const char *str, int quote)
 			pattern++;
 			while (*str != '\0')
 			{
-				if (match_pattern(pattern, str++, quote))
+				if (match_pattern(pattern, str++, quote, 0))
 					return (1);
 			}
 			return (*pattern == '\0');
@@ -58,58 +56,53 @@ t_list	*get_dir_list(DIR *dir)
 	return (list);
 }
 
-static void append_wspace(t_list **list, t_list *new){
+static void	append_wspace(t_list **list, t_list *new)
+{
 	ft_lstadd_back(list, new);
 	ft_lstadd_back(list, ft_lstnew(ft_strdup(" ")));
 }
 
-char	*ft_wildcard(char *line)
+void ft_wildcard2(char *word, int flag, t_list *list[])
 {
-	t_list	*list;
-	t_list	*entry;
-	t_list	*node;
+	list[2] = list[1];
+	while (list[2])
+	{
+		if (match_pattern(word, list[2]->content, 0, 0))
+		{
+			append_wspace(&list[0], ft_lstnew(ft_strdup(list[2]->content)));
+			flag = 1;
+		}
+		list[2] = list[2]->next;
+	}
+	if (!flag)
+		append_wspace(&list[0], ft_lstnew(ft_strdup(word)));
+}
+
+char	*ft_wildcard(char *line, DIR *dir)
+{
+	t_list	*list[3];
 	int		i;
 	int		j;
-	int		flag;
 	char	*word;
-	DIR		*dir;
 
-	dir = opendir(".");
-	entry = get_dir_list(dir);
-	list = NULL;
-	i = 0;
+	list[1] = get_dir_list(dir);
+	list[0] = init_zero(&i, &j, NULL, NULL);
 	while (line[i])
 	{
-		flag = 0;
 		while (line[i] == ' ')
-			i++;
-		j = i;
-		word = get_next_word(line, &i, ' ');
-		free(word);
+			j = ++i;
+		free(get_next_word(line, &i, ' '));
 		word = ft_substr(line, j, i - j);
 		if (ft_strchr(word, '*'))
-		{
-			node = entry;
-			while (node)
-			{
-				if (match_pattern(word, node->content, 0))
-				{
-					append_wspace(&list, ft_lstnew(ft_strdup(node->content)));
-					flag = 1;
-				}
-				node = node->next;
-			}
-			if (!flag)
-				append_wspace(&list, ft_lstnew(ft_strdup(word)));
-		}
+			ft_wildcard2(word, 0, list);
 		else
-			append_wspace(&list, ft_lstnew(ft_strdup(word)));
+			append_wspace(&list[0], ft_lstnew(ft_strdup(word)));
 		free(word);
 	}
-	ft_lstclear(&entry, NULL);
+	ft_lstclear(&list[1], NULL);
 	closedir(dir);
 	free(line);
-	line = ft_lsttostr(list);
-	ft_lstclear(&list, free);
+	line = ft_lsttostr(list[0]);
+	ft_lstclear(&list[0], free);
 	return (line);
 }

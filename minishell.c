@@ -126,7 +126,7 @@ int	main(int ac, char **av, char **env)
 			m.line = strip_redirect(m.line, &m, 0, 0);
 			if (!m.line)
 				continue ;
-			m.line = ft_wildcard(m.line);
+			m.line = ft_wildcard(m.line, opendir("."));
 			m.cmds = ft_splitquote(m.line, ' ');
 		}
 		else
