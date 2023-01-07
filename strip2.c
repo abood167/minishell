@@ -71,3 +71,20 @@ void	str_doc(t_mini *m)
 	shift_pipe(m);
 	m->out[1] = old_out;
 }
+
+int	in_brace(int *brace, char c)
+{
+	if (*brace && c == '(')
+	{
+		(*brace)++;
+		return 1;
+	}
+	else if (*brace && c == ')')
+	{
+		(*brace)--;
+		return (1);
+	}
+	else if (*brace > 1)
+		return (1);
+	return (0);
+}

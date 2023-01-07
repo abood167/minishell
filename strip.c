@@ -12,23 +12,6 @@
 
 #include "minishell.h"
 
-int	in_brace(int *brace, char c)
-{
-	if (*brace && c == '(')
-	{
-		(*brace)++;
-		return 1;
-	}
-	else if (*brace && c == ')')
-	{
-		(*brace)--;
-		return (1);
-	}
-	else if (*brace > 1)
-		return (1);
-	return (0);
-}
-
 static char	*strip_copy(char *str, int len, int brace)
 {
 	char	*strip;
@@ -41,10 +24,10 @@ static char	*strip_copy(char *str, int len, int brace)
 	strip = (char *)malloc(sizeof(char) * (len + 1));
 	while (i < len)
 	{
-		if (!in_quote(str[j], &quote) && in_brace(&brace, str[j])
+		if (!in_quote(str[j], &quote) && !in_brace(&brace, str[j])
 			&& (str[j] == '<' || str[j] == '>'))
 		{
-			j = 1 + (str[j + 1] == '<' || str[j + 1] == '>');
+			j += 1 + (str[j + 1] == '<' || str[j + 1] == '>');
 			word = get_next_word(str, &j, ' ');
 			free(word);
 			continue ;
@@ -70,65 +53,84 @@ static int syntax_check(char *line, char *word, int i, int ignoreS) {
 	return 0;
 }
 
+int	strip_redirect3(char *line, t_mini *m, int test, int *i) {
+	char	*word;
+
+	if (ft_strncmp(&line[*i], "<<", 2) == 0)
+	{
+		(*i) += 2;
+		word = get_next_word(line, i, ' ');
+		if(syntax_check(line, word, *i, 1))
+			return (alt_free(line, 0) || ((*i) = 0));
+		if (!test)
+			str_doc(m);
+		return alt_free(word, 1);
+	}
+	else if (ft_strncmp(&line[*i], "<", 1) == 0)
+	{
+		(*i)++;
+		word = get_next_word(line, i, ' ');
+		if(syntax_check(line, word, *i, 0))
+			return (alt_free(line, 0) || ((*i) = 0));
+		if (!test && !alt_open(&m->in, word, O_RDONLY, 0))
+			return (alt_free(line, 0) || ((*i) = 0));
+		return alt_free(word, 1);
+	}
+	return -1;
+}
+
+int	strip_redirect2(char *line, t_mini *m, int test, int *i) {
+	char	*word;
+
+	if (ft_strncmp(&line[*i], ">>", 2) == 0)
+	{
+		(*i) += 2;
+		word = get_next_word(line, i, ' ');
+		if(syntax_check(line, word, *i, 0))
+			return (alt_free(line, 0) || ((*i) = 0));
+		if (!test && !alt_open(&m->out[1], word,
+				O_CREAT | O_WRONLY | O_APPEND, 1))
+			return (alt_free(line, 0) || ((*i) = 0));
+		return alt_free(word, 1);
+	}
+	else if (ft_strncmp(&line[*i], ">", 1) == 0)
+	{
+		(*i)++;
+		word = get_next_word(line, i, ' ');
+		if(syntax_check(line, word, *i, 0))
+			return (alt_free(line, 0)|| ((*i) = 0));
+		if (!test && !alt_open(&m->out[1], word,
+				O_CREAT | O_WRONLY | O_TRUNC, 1))
+			return (alt_free(line, 0) || ((*i) = 0));
+		return alt_free(word, 1);
+	}
+	return -1;
+}
+
 char	*strip_redirect(char *line, t_mini *m, int test, int brace)
 {
 	int		len;
 	int		quote;
-	char	*word;
 	int		i;
 
-	word = init_zero(&len, &quote, &i, NULL);
+	init_zero(&len, &quote, &i, NULL);
 	while (line[i])
 	{
 		if (in_quote(line[i], &quote) || in_brace(&brace, line[i]))
 		{
 			i++;
 			len++;
+			continue;
 		}
-		else if (ft_strncmp(&line[i], ">>", 2) == 0)
-		{
-			i += 2;
-			word = get_next_word(line, &i, ' ');
-			if(syntax_check(line, word, i, 0))
-				return ((void *)(intptr_t)alt_free(line, 0));
-			if (!test && !alt_open(&m->out[1], word,
-					O_CREAT | O_WRONLY | O_APPEND, 1))
-				return ((void *)(intptr_t)((alt_free(line, 0)) || alt_free(word, 0)));
+		else if(strip_redirect2(line, m, test, &i) >= 0 || strip_redirect3(line, m, test, &i) >= 0) {
+			if(i == 0)
+				return NULL;
 		}
-		else if (ft_strncmp(&line[i], ">", 1) == 0)
-		{
-			i++;
-			word = get_next_word(line, &i, ' ');
-			if(syntax_check(line, word, i, 0))
-				return ((void *)(intptr_t)alt_free(line, 0));
-			if (!test && !alt_open(&m->out[1], word,
-					O_CREAT | O_WRONLY | O_TRUNC, 1))
-				return ((void *)(intptr_t)((alt_free(line, 0)) || alt_free(word, 0)));
-		}
-		else if (ft_strncmp(&line[i], "<<", 2) == 0)
-		{
-			i += 2;
-			word = get_next_word(line, &i, ' ');
-			if(syntax_check(line, word, i, 1))
-				return ((void *)(intptr_t)alt_free(line, 0));
-			if (!test)
-				str_doc(m);
-		}
-		else if (ft_strncmp(&line[i], "<", 1) == 0)
-		{
-			i++;
-			word = get_next_word(line, &i, ' ');
-			if(syntax_check(line, word, i, 0))
-				return ((void *)(intptr_t)alt_free(line, 0));
-			if (!test && !alt_open(&m->in, word, O_RDONLY, 0))
-				return ((void *)(intptr_t)((alt_free(line, 0)) || alt_free(word, 0)));
-		}
-		else
+		else 
 		{
 			i++;
 			len++;
 		}
-		word = (void *)(intptr_t)alt_free(word, 0);
 	}
 	return (strip_copy(line, len, brace));
 }

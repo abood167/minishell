@@ -76,6 +76,7 @@ void ft_int_signal();
 
 t_mini* get_mini();
 int in_quote(char c, int *quote);
+int	in_brace(int *brace, char c);
 int has_pipe(char *line);
 int has_brace(char *line, t_mini *m);
 int invalid_syntax(char *str, t_mini *m);
