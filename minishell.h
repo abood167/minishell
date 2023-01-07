@@ -57,7 +57,7 @@ char** ft_lsttoarr(t_list *list);
 char** ft_copyarr(char **arr);
 void    printarr(char **list);
 void    printlist(t_list *list);
-char* arrtostr(char **arr);
+char* arrtostr(char **arr, int tofree);
 char* ft_lsttostr(t_list *arr);
 void sort_lst(t_list *g_env);
 void *init_zero(int *val1, int *val2, int *val3, int *val4);

@@ -97,7 +97,7 @@ char	*ft_lsttostr(t_list *arr)
 	return (str);
 }
 
-char	*arrtostr(char **arr)
+char	*arrtostr(char **arr, int tofree)
 {
 	char	*str;
 	int		len;
@@ -120,6 +120,8 @@ char	*arrtostr(char **arr)
 		len += ft_strlen(arr[i]);
 		i++;
 	}
+	if(tofree)
+		(ft_freearray((void **)arr));
 	return (str);
 }
 

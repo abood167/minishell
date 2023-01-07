@@ -89,7 +89,6 @@ int	export_var3(char **cmd, t_mini *m, int i, int j)
 	return 0;
 }
 
-
 int	export_var2(char **cmd, t_mini *m, int i, int j) 
 {
 	char	*temp[3];
