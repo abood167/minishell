@@ -32,7 +32,7 @@ int	has_pipe(char *line)
 	t_list	*pipe_line;
 	int		val;
 
-	pipe_line = ft_split_shell(line, 1, 1);
+	pipe_line = ft_split_shell(line, 1, 1, 0);
 	val = ft_lstsize(pipe_line);
 	ft_lstclear(&pipe_line, free);
 	if (val >= 2)
@@ -61,7 +61,7 @@ char	*pipe_shell(char *line, t_mini *m)
 	t_list	*pipe_line;
 	t_list	*start;
 
-	pipe_line = ft_split_shell(line, 1, 1);
+	pipe_line = ft_split_shell(line, 1, 1, 0);
 	start = pipe_line;
 	line = (void*)(intptr_t)alt_free(line, 0);
 	while (pipe_line)

@@ -74,6 +74,8 @@ void	str_doc(t_mini *m)
 
 int	in_brace(int *brace, char c)
 {
+	if (!*brace)
+		return 0;
 	if (*brace && c == '(')
 	{
 		(*brace)++;

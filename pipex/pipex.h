@@ -44,6 +44,13 @@ typedef struct s_mini
 	t_list	*buffer; 
 	sig_t	slash_dfl;
 	sig_t	ctrlc_dfl;
+	int		i;
+	int		brace;
+	int		quote;
+	t_list	*split;
+	t_list	*sub_split;
+	t_list	*s_start;
+
 }			t_mini;
 
 void		mini_init(t_mini *m);

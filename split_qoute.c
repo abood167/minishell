@@ -31,12 +31,14 @@ static int	wordcount(char const *str, char c)
 	return (wordcount);
 }
 
-char	**get_next_word2(const char *str, int *pos, char c, int count[]) {
-	int quote;
-	char **words;
+char	**get_next_word2(const char *str, int *pos, char c, int count[])
+{
+	int		quote;
+	char	**words;
 
 	words = (char **)malloc(sizeof(char *) * (count[0] + 1));
-	init_zero(&count[0], (int*)(intptr_t)((*pos = count[1]) && 0), &quote, NULL);
+	init_zero(&count[0], (int *)(intptr_t)((*pos = count[1]) && 0), &quote,
+			NULL);
 	while (str[*pos] && str[*pos] != c && str[*pos] != ')')
 	{
 		count[1] = *pos;
@@ -46,7 +48,7 @@ char	**get_next_word2(const char *str, int *pos, char c, int count[]) {
 			while (in_quote(str[*pos], &quote) != 1)
 				(*pos)++;
 			words[count[0]++] = ft_substr(str, count[1], (*pos)++ - count[1]);
-			continue;
+			continue ;
 		}
 		while (str[*pos] && str[*pos] != c && str[*pos] != ')'
 			&& !in_quote(str[*pos], &quote))
@@ -55,7 +57,7 @@ char	**get_next_word2(const char *str, int *pos, char c, int count[]) {
 		quote = 0;
 	}
 	words[count[0]] = NULL;
-	return words;
+	return (words);
 }
 
 char	*get_next_word(const char *str, int *pos, char c)
@@ -75,7 +77,7 @@ char	*get_next_word(const char *str, int *pos, char c)
 		if (in_quote(str[*pos], &quote) == 2 || *pos - count[1] == 0)
 			count[0]++;
 		else if (!quote && *pos - count[1] && in_quote(str[*pos - 1], &quote))
-			init_zero(&quote, (int*)(intptr_t)(count[0]++ && 0), NULL, NULL);
+			init_zero(&quote, (int *)(intptr_t)(count[0]++ && 0), NULL, NULL);
 		(*pos)++;
 	}
 	if (quote)

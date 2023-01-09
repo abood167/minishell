@@ -107,7 +107,7 @@ int	shell_conditions(t_mini *m)
 {
 	if (m->line)
 	{
-		m->buffer = ft_split_shell(m->line, 2, 1);
+		m->buffer = ft_split_shell(m->line, 2, 1, 0);
 		free(m->line);
 		m->line = NULL;
 	}

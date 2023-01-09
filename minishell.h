@@ -21,6 +21,8 @@
 # define CTRL_C_E 1
 #endif
 
+# define DEL_MSG "minishell: syntax error: unexpected end of file\nexit\n"
+
 #include <sys/types.h>
 
 #include <unistd.h>
@@ -50,7 +52,7 @@ int	invalid_var(char *str, int set_var);
 
 //Arrays, list and strings
 char**  ft_splitquote(char *s, char c);
-t_list*	ft_split_shell(char *str, int mode, int brace);
+t_list*	ft_split_shell(char *str, int mode, int brace, int pos);
 char* get_next_word(const char *str, int *pos, char c);
 t_list* ft_arrtolst(char **arr);
 char** ft_lsttoarr(t_list *list);
@@ -63,6 +65,7 @@ void sort_lst(t_list *g_env);
 void *init_zero(int *val1, int *val2, int *val3, int *val4);
 
 //input modifiers
+int	complete(char *oldline, t_mini *m);
 int shell_conditions(t_mini *m);
 char	*pipe_shell(char *line, t_mini *m);
 void	wait_pipe(t_mini *m);
@@ -81,6 +84,8 @@ int has_pipe(char *line);
 int has_brace(char *line, t_mini *m);
 int invalid_syntax(char *str, t_mini *m);
 void syntax_error(char *str);
+int	split_valid(t_list *split, char *oldline, int *val, int key);
+int	bracket_invalid(char *str, int *val, t_mini *m);
 
 int alt_free(void *ptr, int ret);
 int alt_open(int *fd, char *file, int flag, int write);
