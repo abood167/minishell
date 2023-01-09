@@ -31,27 +31,30 @@ void	free_exit(void)
 	rl_clear_history();
 }
 
+int	get_input2(void)
+{
+	t_mini *m;
 
-
-int get_input2() {
-	if (shell_conditions(get_mini()))
-		return 1 ;
-	if (has_pipe(get_mini()->line))
-		get_mini()->line = pipe_shell(get_mini()->line, get_mini());
-	if (!get_mini()->line || has_brace(get_mini()->line, get_mini()))
-		return 1 ;
-	get_mini()->line = set_var(get_mini()->line, get_mini()->g_env, &get_mini()->l_var);
-	get_mini()->line = strip_redirect(get_mini()->line, get_mini(), 0, 0);
-	if (!get_mini()->line)
-		return 1 ;
-	get_mini()->line = ft_wildcard(get_mini()->line, opendir("."));
-	get_mini()->cmds = ft_splitquote(get_mini()->line, ' ');
-	return 0;
+	m = get_mini();
+	if (shell_conditions(m))
+		return (1);
+	if (has_pipe(m->line))
+		m->line = pipe_shell(m->line, m);
+	if (!m->line || has_brace(m->line, m))
+		return (1);
+	m->line = set_var(m->line, m->g_env,
+			&m->l_var);
+	m->line = strip_redirect(m->line, m, 0, 0);
+	if (!m->line)
+		return (1);
+	m->line = ft_wildcard(m->line, opendir("."));
+	m->cmds = ft_splitquote(m->line, ' ');
+	return (0);
 }
 
-int get_input()
+int	get_input(void)
 {
-	int	syntax;
+	int syntax;
 
 	if (!get_mini()->buffer)
 	{
@@ -69,9 +72,9 @@ int get_input()
 		while (syntax == 2)
 			syntax = invalid_syntax(get_mini()->line, get_mini());
 		if (syntax)
-			return 1 ;
+			return (1);
 		if (strip_heredoc(get_mini()->line, get_mini()))
-			return 1 ;
+			return (1);
 	}
-	return get_input2();
+	return (get_input2());
 }
