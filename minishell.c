@@ -20,7 +20,9 @@ t_mini	*get_mini(void)
 }
 
 int	mini_start(char **env)
-{
+{	
+	char *cmd[3];
+
 	g_m.status = EXIT_SUCCESS;
 	ft_int_signal();
 	g_m.g_env = ft_arrtolst(env);
@@ -28,6 +30,10 @@ int	mini_start(char **env)
 	g_m.is_child = 0;
 	g_m.buffer = NULL;
 	g_m.doc_str = NULL;
+	cmd[1] = "OLDPWD";
+	cmd[2] = NULL;
+	unset_var(&cmd[1], &g_m.g_env, &g_m.l_var);
+	export_var(cmd, &g_m);
 	return (1);
 }
 
