@@ -3,6 +3,8 @@
         "*.c": "c",
         "*.h": "c",
         "random": "c"
-    }
+    },
+    "editor.tabCompletion": "on",
+    "diffEditor.codeLens": true
     
 }

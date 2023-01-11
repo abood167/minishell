@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env3.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:35 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/10 08:20:42 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,9 @@ char	*replace_withvar(char *str)
 	{
 		in_quote(str[pos], &quote);
 		if (quote != '\'' && (str[pos] == '$' && (ft_isalpha(str[pos + 1])
-			|| str[pos + 1] == '_' || str[pos + 1] == '$' || str[pos + 1] == '?'
-			|| ft_isdigit(str[pos + 1]))))
+					|| str[pos + 1] == '_' || str[pos + 1] == '$'
+					|| str[pos + 1] == '?'
+					|| ft_isdigit(str[pos + 1]))))
 			replace_withvar2(str, &start, &pos, &list);
 		else
 			pos++;
@@ -82,9 +83,9 @@ char	*replace_withvar(char *str)
 
 char	*set_var(char *line, t_list *g_env, t_list **l_var)
 {
-	int i;
-	char *word[2];
-	int quote;
+	int		i;
+	char	*word[2];
+	int		quote;
 
 	init_zero(&i, &quote, NULL, NULL);
 	while (line[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:34 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:39:55 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/11 12:42:08 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ void	cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 		else
 			get_mini()->status = 0;
 	}
-	else if (cmd[2] != NULL)
-		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 	else if (!cmd[1][0])
 		get_mini()->status = 1;
 	else if (chdir(cmd[1]) < 0)

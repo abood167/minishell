@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 12:01:49 by abin-saa          #+#    #+#             */
-/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/10 08:35:11 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	**get_next_word2(const char *str, int *pos, char c, int count[])
 
 	words = (char **)malloc(sizeof(char *) * (count[0] + 1));
 	init_zero(&count[0], (int *)(intptr_t)((*pos = count[1]) && 0), &quote,
-			NULL);
+		NULL);
 	while (str[*pos] && str[*pos] != c && str[*pos] != ')')
 	{
 		count[1] = *pos;

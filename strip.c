@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   strip.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:40:01 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:41:23 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/10 12:51:13 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ static char	*strip_copy(char *str, int len, int brace)
 static int	syntax_check(char *line, char *word, int i, int ignoreS)
 {
 	if (!word || (line[i - 1] != '\'' && line[i - 1] != '\"' && (word[0] == '&'
-			|| word[0] == '|' || (!ignoreS && word[0] == '*') || word[0] == '<'
-			|| word[0] == '>' || word[0] == '(' || word[0] == ')')))
+				|| word[0] == '|' || (!ignoreS && word[0] == '*')
+				|| word[0] == '<'
+				|| word[0] == '>' || word[0] == '(' || word[0] == ')')))
 	{
 		free(word);
 		syntax_error(word);
@@ -122,7 +123,7 @@ char	*strip_redirect(char *line, t_mini *m, int test, int brace)
 			continue ;
 		}
 		else if (strip_redirect2(line, m, test, &m->i) >= 0
-				|| strip_redirect3(line, m, test, &m->i) >= 0)
+			|| strip_redirect3(line, m, test, &m->i) >= 0)
 		{
 			if (m->i == 0)
 				return (NULL);

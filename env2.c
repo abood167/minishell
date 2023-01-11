@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:35 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/09 08:25:21 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/01/11 12:59:02 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	export_var2(char **cmd, t_mini *m, int i, int j)
 		temp[0] = ft_substr(cmd[i], 0, j);
 		temp_s = ft_split(temp[0], '\0');
 		unset_var(temp_s, &m->g_env, &m->l_var);
+		printf("%s", cmd[i]);
 		ft_lstadd_back(&m->g_env, ft_lstnew((void *)ft_strdup(cmd[i])));
 		free(temp[0]);
 		ft_freearray((void **)temp_s);
@@ -109,9 +110,9 @@ int	export_var2(char **cmd, t_mini *m, int i, int j)
 
 void	export_var(char **cmd, t_mini *m)
 {
-	int		i;
-	int		j;
-	int		flag;
+	int	i;
+	int	j;
+	int	flag;
 
 	init_zero(&i, &flag, NULL, NULL);
 	while (cmd[++i])
@@ -123,7 +124,7 @@ void	export_var(char **cmd, t_mini *m)
 		if (export_var2(cmd, m, i, j))
 			(void)NULL;
 		else
-			flag = invalid_var(cmd[i], 0) || flag;
+			flag = (invalid_var(cmd[i], 0) || flag);
 	}
 	if (i == 1)
 		export_print(m->g_env);

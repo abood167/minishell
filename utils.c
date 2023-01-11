@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:41:16 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:41:23 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/10 08:51:40 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*arrtostr(char **arr, int tofree)
 		len += ft_strlen(arr[i]);
 		i++;
 	}
-	if(tofree)
+	if (tofree)
 		(ft_freearray((void **)arr));
 	return (str);
 }
@@ -99,5 +99,5 @@ void	*init_zero(int *val1, int *val2, int *val3, int *val4)
 		*val3 = 0;
 	if (val4)
 		*val4 = 0;
-	return NULL;
+	return (NULL);
 }

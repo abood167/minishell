@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   strip2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:41:17 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:41:23 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/10 08:50:56 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,11 @@ void	str_doc(t_mini *m)
 int	in_brace(int *brace, char c)
 {
 	if (!*brace)
-		return 0;
+		return (0);
 	if (*brace && c == '(')
 	{
 		(*brace)++;
-		return 1;
+		return (1);
 	}
 	else if (*brace && c == ')')
 	{

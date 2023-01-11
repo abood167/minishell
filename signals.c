@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:37 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/11 12:37:35 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,11 @@ void	ctrl_slash(int a)
 	(void)a;
 	m = get_mini();
 	if (!m->pid)
-		printf("\b\b  \b\b");
+	{
+		rl_on_new_line();
+		rl_redisplay();
+		printf("  \b\b  \b\b");
+	}
 	else
 		m->status = 131;
 }

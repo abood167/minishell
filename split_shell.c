@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_shell.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:52 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/10 08:37:45 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	split_valid(t_list *split, char *oldline, int *val, int key)
 	return (1);
 }
 
-int	bracket_invalid4(char *str, int *val, t_mini *m) {
+int	bracket_invalid4(char *str, int *val, t_mini *m)
+{
 	if (str[m->i] != ' ' && str[m->i] != '\n')
 	{
 		while (str[m->i] && !(in_quote(str[m->i], &m->quote) || str[m->i] == '|'
@@ -61,7 +62,8 @@ int	bracket_invalid4(char *str, int *val, t_mini *m) {
 	return (0);
 }
 
-int	bracket_invalid3(char *str, int *val, t_mini *m) {
+int	bracket_invalid3(char *str, int *val, t_mini *m)
+{
 	if (str[m->i] == ')')
 	{
 		(m->brace)--;
@@ -76,7 +78,7 @@ int	bracket_invalid3(char *str, int *val, t_mini *m) {
 		}
 		return (1);
 	}
-	return bracket_invalid4(str, val, m);
+	return (bracket_invalid4(str, val, m));
 }
 
 int	bracket_invalid2(char *str, int *val, t_mini *m)
@@ -93,9 +95,9 @@ int	bracket_invalid2(char *str, int *val, t_mini *m)
 			syntax_error(&str[m->i]);
 			return (*val = 1);
 		}
-		return 1;
+		return (1);
 	}
-	return bracket_invalid3(str, val, m);
+	return (bracket_invalid3(str, val, m));
 }
 
 int	bracket_invalid(char *str, int *val, t_mini *m)

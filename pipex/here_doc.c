@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 15:58:04 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/09 08:20:29 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/01/11 13:03:04 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	here_doc(t_mini *m, char *lim)
 {
-	char	*str;
+	char	*str[2];
 	int		len[2];
 	t_list	*node;
 
@@ -25,18 +25,18 @@ void	here_doc(t_mini *m, char *lim)
 	len[1] = ft_strlen(lim);
 	while (1)
 	{
-		str = readline("> ");
-		if (str == NULL)
+		str[0] = readline("> ");
+		if (str[0] == NULL)
 		{
-			if (!m->status)
-				ft_putstr_fd(DEL_WARN, 2);
 			rl_getc_function = rl_getc;
 			return ;
 		}
-		len[0] = ft_strlen(str);
-		if (len[0] == len[1] && ft_strncmp(str, lim, len[0]) == 0)
+		len[0] = ft_strlen(str[0]);
+		if (len[0] == len[1] && ft_strncmp(str[0], lim, len[0]) == 0)
 			break ;
-		node->content = ft_strmerge(node->content, str);
+		str[1] = replace_withvar(str[0]);
+		free(str[0]);
+		node->content = ft_strmerge(node->content, str[1]);
 		node->content = ft_strmerge(node->content, ft_strdup("\n"));
 	}
 	rl_getc_function = rl_getc;

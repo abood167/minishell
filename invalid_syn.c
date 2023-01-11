@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   invalid_syn.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/10 08:20:54 by abin-saa          #+#    #+#             */
+/*   Updated: 2023/01/10 08:22:20 by abin-saa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	invalid_syntax2(char *str, t_mini *m)
@@ -31,8 +43,8 @@ int	invalid_syntax2(char *str, t_mini *m)
 
 int	invalid_syntax(char *str, t_mini *m)
 {
-    int     quote;
-	int 	i;
+	int		quote;
+	int		i;
 	char	*temp;
 
 	init_zero(&i, &quote, NULL, NULL);
@@ -53,7 +65,7 @@ int	invalid_syntax(char *str, t_mini *m)
 		return (i);
 	}
 	free(temp);
-    return invalid_syntax2(str, m);
+	return (invalid_syntax2(str, m));
 }
 
 void	syntax_error2(char *str)
@@ -62,14 +74,14 @@ void	syntax_error2(char *str)
 	char	*word;
 	int		i;
 
-    split = ft_split(str, ' ');
-    ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-    i = 0;
-    word = get_next_word(split[0], &i, ')');
-    ft_putstr_fd(word, 2);
-    ft_putstr_fd("'\n", 2);
-    ft_freearray((void **)split);
-    free(word);
+	split = ft_split(str, ' ');
+	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+	i = 0;
+	word = get_next_word(split[0], &i, ')');
+	ft_putstr_fd(word, 2);
+	ft_putstr_fd("'\n", 2);
+	ft_freearray((void **)split);
+	free(word);
 }
 
 void	syntax_error(char *str)
@@ -77,13 +89,13 @@ void	syntax_error(char *str)
 	get_mini()->status = 2;
 	if (!str || !str[0] || str[0] == '\n')
 		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
-						2);
+			2);
 	else if (!ft_strncmp(str, "||", 2))
 		ft_putstr_fd("minishell: syntax error near unexpected token `||'\n", 2);
 	else if (!ft_strncmp(str, "&&", 2))
 		ft_putstr_fd("minishell: syntax error near unexpected token `&&'\n", 2);
 	else if (str[0] == '|' || str[0] == '<' || str[0] == '>' || str[0] == '('
-			|| str[0] == ')')
+		|| str[0] == ')')
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 		ft_putchar_fd(str[0], 2);
@@ -95,5 +107,5 @@ void	syntax_error(char *str)
 		get_mini()->status = 1;
 	}
 	else
-        syntax_error2(str);
+		(syntax_error2(str));
 }

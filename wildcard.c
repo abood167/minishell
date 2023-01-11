@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:41:15 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:41:23 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/10 08:35:27 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	append_wspace(t_list **list, t_list *new)
 	ft_lstadd_back(list, ft_lstnew(ft_strdup(" ")));
 }
 
-void ft_wildcard2(char *word, int flag, t_list *list[])
+void	ft_wildcard2(char *word, int flag, t_list *list[])
 {
 	list[2] = list[1];
 	while (list[2])

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_shell.c                                      :+:      :+:    :+:   */
+/*   split_shell2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:52 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/10 08:42:45 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	complete(char *oldline, t_mini *m)
 	{
 		if (!m->status)
 		{
-			ft_putstr_fd(DEL_MSG, 2); //confirm if same as mac //test for leaks
+			ft_putstr_fd(DEL_MSG, 2);
 			free_loop();
 			free_exit();
 			exit(2);
@@ -55,11 +55,11 @@ t_list	*ft_split_shell(char *str, int mode, int brace, int pos)
 		if (in_quote(str[pos], &quote) || in_brace(&brace, str[pos]))
 			(void)NULL;
 		else if ((mode == 2 && !ft_strncmp(&str[pos], "&&", 2))
-				|| !ft_strncmp(&str[pos], "||", mode))
+			|| !ft_strncmp(&str[pos], "||", mode))
 		{
 			if (pos - start > 0)
 				ft_lstadd_back(&split, ft_lstnew(ft_substr(str, start, pos
-								- start)));
+							- start)));
 			ft_lstadd_back(&split, ft_lstnew(ft_substr(str, pos, mode)));
 			pos += mode;
 			start = pos;
