@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env2.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbokhari <sbokhari@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:35 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 05:40:09 by sbokhari         ###   ########.fr       */
+/*   Updated: 2023/01/09 08:25:21 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	invalid_var(char *str, int set_var)
 	return (1);
 }
 
-int	export_var3(char **cmd, t_mini *m, int i, int j) 
+int	export_var3(char **cmd, t_mini *m, int i, int j)
 {
 	char	*temp[3];
 	char	**temp_s;
@@ -84,12 +84,12 @@ int	export_var3(char **cmd, t_mini *m, int i, int j)
 		unset_var(temp_s, &m->g_env, &m->l_var);
 		ft_lstadd_back(&m->g_env, ft_lstnew((void *)temp[2]));
 		ft_freearray((void **)temp_s);
-		return 1;
+		return (1);
 	}
-	return 0;
+	return (0);
 }
 
-int	export_var2(char **cmd, t_mini *m, int i, int j) 
+int	export_var2(char **cmd, t_mini *m, int i, int j)
 {
 	char	*temp[3];
 	char	**temp_s;
@@ -102,9 +102,9 @@ int	export_var2(char **cmd, t_mini *m, int i, int j)
 		ft_lstadd_back(&m->g_env, ft_lstnew((void *)ft_strdup(cmd[i])));
 		free(temp[0]);
 		ft_freearray((void **)temp_s);
-		return 1;
+		return (1);
 	}
-	return export_var3(cmd, m, i, j);
+	return (export_var3(cmd, m, i, j));
 }
 
 void	export_var(char **cmd, t_mini *m)
@@ -120,7 +120,7 @@ void	export_var(char **cmd, t_mini *m)
 		while (ft_isalpha(cmd[i][j]) || cmd[i][j] == '_' || (j
 				&& ft_isdigit(cmd[i][j])))
 			j++;
-		if(export_var2(cmd, m, i, j))
+		if (export_var2(cmd, m, i, j))
 			(void)NULL;
 		else
 			flag = invalid_var(cmd[i], 0) || flag;

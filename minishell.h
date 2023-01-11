@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 11:55:17 by abin-saa          #+#    #+#             */
-/*   Updated: 2022/12/15 11:18:10 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/01/09 08:13:49 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 
 #include <unistd.h>
 #include <sys/wait.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "libft/libft.h"

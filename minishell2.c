@@ -41,7 +41,7 @@ int get_input2() {
 	if (!get_mini()->line || has_brace(get_mini()->line, get_mini()))
 		return 1 ;
 	get_mini()->line = set_var(get_mini()->line, get_mini()->g_env, &get_mini()->l_var);
-	get_mini()->line = strip_redirect(get_mini()->line, get_mini(), 0, 0);
+	get_mini()->line = strip_redirect(get_mini()->line, get_mini(),0, 0);
 	if (!get_mini()->line)
 		return 1 ;
 	get_mini()->line = ft_wildcard(get_mini()->line, opendir("."));

@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 15:58:04 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/02 08:59:04 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/01/09 08:20:29 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	here_doc(t_mini *m, char *lim)
 	int		len[2];
 	t_list	*node;
 
-	ft_lstadd_back(&m->doc_str, ft_lstnew(strdup("")));
+	ft_lstadd_back(&m->doc_str, ft_lstnew(ft_strdup("")));
 	node = ft_lstlast(m->doc_str);
 	rl_getc_function = getc;
 	len[1] = ft_strlen(lim);
@@ -29,7 +29,7 @@ void	here_doc(t_mini *m, char *lim)
 		if (str == NULL)
 		{
 			if (!m->status)
-				ft_putstr_fd(DEL_WARN, 2); //confirm if same as mac
+				ft_putstr_fd(DEL_WARN, 2);
 			rl_getc_function = rl_getc;
 			return ;
 		}

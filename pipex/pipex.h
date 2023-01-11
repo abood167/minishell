@@ -41,7 +41,7 @@ typedef struct s_mini
 	char	**envp;
 	t_list	*g_env;
 	t_list	*l_var;
-	t_list	*buffer; 
+	t_list	*buffer;
 	sig_t	slash_dfl;
 	sig_t	ctrlc_dfl;
 	int		i;

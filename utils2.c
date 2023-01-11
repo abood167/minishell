@@ -56,6 +56,6 @@ char	**ft_copyarr(char **arr)
 	copy = (char **)malloc(sizeof(char *) * (len + 1));
 	copy[len] = NULL;
 	while (len--)
-		copy[len] = strdup(arr[len]);
+		copy[len] = ft_strdup(arr[len]);
 	return (copy);
 }

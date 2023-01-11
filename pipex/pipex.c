@@ -23,7 +23,7 @@ void	fix_dir(void)
 	line = getcwd(NULL, 0);
 	while (!line)
 	{
-		cd_cmd(ft_split("cd ..", ' '), NULL, NULL); //Not like bash
+		cd_cmd(ft_split("cd ..", ' '), NULL, NULL);
 		free(line);
 		line = getcwd(NULL, 0);
 	}

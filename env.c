@@ -6,7 +6,7 @@
 /*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:35 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/06 11:17:43 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/01/09 08:23:12 by abin-saa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ char	*get_var(char *varname, int len, t_list *g_env, t_list *l_var)
 	return (NULL);
 }
 
-void	unset_var2(char **cmd, int i, int len, t_list **env) {
+void	unset_var2(char **cmd, int i, int len, t_list **env)
+{
 	t_list	*node;
 	t_list	*prev;
 
@@ -93,8 +94,8 @@ void	unset_var(char **cmd, t_list **g_env, t_list **l_var)
 	while (cmd[++i])
 	{
 		len = ft_strlen(cmd[i]);
-		if(ft_strchr(cmd[i], '='))
-			continue;
+		if (ft_strchr(cmd[i], '='))
+			continue ;
 		unset_var2(cmd, i, len, g_env);
 		unset_var2(cmd, i, len, l_var);
 	}
