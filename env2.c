@@ -99,7 +99,6 @@ int	export_var2(char **cmd, t_mini *m, int i, int j)
 		temp[0] = ft_substr(cmd[i], 0, j);
 		temp_s = ft_split(temp[0], '\0');
 		unset_var(temp_s, &m->g_env, &m->l_var);
-		printf("%s", cmd[i]);
 		ft_lstadd_back(&m->g_env, ft_lstnew((void *)ft_strdup(cmd[i])));
 		free(temp[0]);
 		ft_freearray((void **)temp_s);
