@@ -47,6 +47,11 @@ void	echo_cmd(char **cmd, t_mini m)
 		ft_putstr_fd("\n", m.out[1]);
 }
 
+void	cd_cmd2(char **cmd, t_list *g_env, t_list *l_var){
+	get_mini()->status = 0;
+
+}
+
 void	cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 {
 	get_mini()->status = 1;
@@ -71,7 +76,7 @@ void	cd_cmd(char **cmd, t_list *g_env, t_list *l_var)
 		perror(cmd[1]);
 	}
 	else
-		get_mini()->status = 0;
+		cd_cmd2(cmd, g_env, l_var);
 }
 
 void	print_env(void)
