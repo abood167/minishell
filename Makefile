@@ -13,11 +13,17 @@ OBJS = $(SRCS:.c=.o)
 
 lib = libft/libft.a
 
+%.o: %.c
+	@$(CC) $(CFLAGS)  -c $< -o $@
+
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): header $(OBJS) 
 	@make --no-print-directory -s -C libft
 	@$(CC) $(OBJS) $(CFLAGS) $(lib) -I/usr/local/opt/readline/include -L/usr/local/opt/readline/lib -lreadline -o $(NAME)
+	$(info Build Complete)
+
+bonus: $(NAME)
 
 clean:
 	@rm -f $(OBJS)
@@ -30,3 +36,20 @@ fclean: clean
 	$(info Executable Removed)
 
 re: fclean all
+
+header:
+	@echo '	             ______'
+	@echo '                  .-"      "-.'
+	@echo '                 /            \'
+	@echo '                |              |'
+	@echo '                |,  .-.  .-.  ,|'
+	@echo '                | )(__/  \__)( |'
+	@echo '                |/     /\     \|'
+	@echo '      (@_       (_     ^^     _)'
+	@echo ' _     ) \_______\__|IIIIII|__/__________________________'
+	@echo '(_)@8@8{}<________|-\IIIIII/-|___________________________>'
+	@echo '       )_/        \          /'
+	@echo '      (@           `--------` '
+	@echo '	by Shaik Mazin Bokhari'
+	@echo '	                     and'
+	@echo '                               Abdulrahman Bin saad'  
