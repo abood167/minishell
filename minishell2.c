@@ -54,23 +54,7 @@ int	get_input2(void)
 		m->line = pipe_shell(m->line, m);
 	if (!m->line || has_brace(m->line, m))
 		return (1);
-	m->line = set_var(m->line, m->g_env,
-			&m->l_var);
-	m->line = strip_redirect(m->line, m, 0, 0);
-	if (!m->line)
-		return (1);
-	m->line = ft_wildcard(m->line, opendir("."));
-	m->cmds = ft_splitquote(m->line, ' ');
-	return (0);
-	m = get_mini();
-	if (shell_conditions(m))
-		return (1);
-	if (has_pipe(m->line))
-		m->line = pipe_shell(m->line, m);
-	if (!m->line || has_brace(m->line, m))
-		return (1);
-	m->line = set_var(m->line, m->g_env,
-			&m->l_var);
+	m->line = set_var(m->line, m->g_env, &m->l_var);
 	m->line = strip_redirect(m->line, m, 0, 0);
 	if (!m->line)
 		return (1);
@@ -81,7 +65,7 @@ int	get_input2(void)
 
 int	get_input(void)
 {
-	int syntax;
+	int	syntax;
 
 	if (!get_mini()->buffer)
 	{

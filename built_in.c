@@ -47,17 +47,19 @@ void	echo_cmd(char **cmd, t_mini m)
 		ft_putstr_fd("\n", m.out[1]);
 }
 
-void	cd_cmd2(t_list *g_env, t_list *l_var){
-	char *cmd[4];
+void	cd_cmd2(t_list *g_env, t_list *l_var)
+{
+	char	*cmd[4];
 
 	cmd[2] = init_zero(&get_mini()->status, NULL, NULL, NULL);
 	cmd[3] = NULL;
-	if(!get_var("PWD", 3, g_env, l_var)) {
+	if (!get_var("PWD", 3, g_env, l_var))
+	{
 		cmd[1] = "OLDPWD";
 		unset_var(&cmd[1], &get_mini()->g_env, &get_mini()->l_var);
 		export_var(cmd, get_mini());
 	}
-	else 
+	else
 	{
 		cmd[1] = ft_strjoin("OLDPWD=", get_var("PWD", 3, g_env, l_var));
 		cmd[2] = ft_strmerge(ft_strdup("PWD="), getcwd(NULL, 0));

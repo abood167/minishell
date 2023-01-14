@@ -20,8 +20,8 @@ t_mini	*get_mini(void)
 }
 
 int	mini_start(char **env)
-{	
-	char *cmd[3];
+{
+	char	*cmd[3];
 
 	g_m.status = EXIT_SUCCESS;
 	ft_int_signal();
