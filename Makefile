@@ -11,20 +11,22 @@ CFLAGS =  -Wall -Wextra -Werror
 
 OBJS = $(SRCS:.c=.o)
 
-all: $(NAME)
 lib = libft/libft.a
 
+all: $(NAME)
+
 $(NAME): $(OBJS)
-	make -C libft
-	$(CC) $(OBJS) $(CFLAGS) $(lib) -I/usr/local/opt/readline/include -L/usr/local/opt/readline/lib -lreadline -o $(NAME)
+	@make --no-print-directory -s -C libft
+	@$(CC) $(OBJS) $(CFLAGS) $(lib) -I/usr/local/opt/readline/include -L/usr/local/opt/readline/lib -lreadline -o $(NAME)
 
 clean:
-	rm -f $(OBJS)
-	make clean -C libft
+	@rm -f $(OBJS)
+	@make --no-print-directory -s clean -C libft 
+	$(info Objects Removed)
 
 fclean: clean
-	rm -f $(NAME)
-	make fclean -C libft
+	@rm -f $(NAME)
+	@make --no-print-directory -s fclean -C libft
+	$(info Executable Removed)
 
 re: fclean all
-
