@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leam <leam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:35 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/09 08:23:12 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/02/19 15:22:44 by leam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,18 @@ char	**update_envp(t_list *list)
 
 char	*get_var(char *varname, int len, t_list *g_env, t_list *l_var)
 {
-	if (strncmp(varname, "?", 1) == 0)
+	if (ft_strncmp(varname, "?", 1) == 0)
 		return (ft_itoa(get_mini()->status));
 	while (g_env)
 	{
-		if (strncmp(g_env->content, varname, len) == 0
+		if (ft_strncmp(g_env->content, varname, len) == 0
 			&& ((char *)g_env->content)[len] == '=')
 			return (&((char *)g_env->content)[len + 1]);
 		g_env = g_env->next;
 	}
 	while (l_var)
 	{
-		if (strncmp(l_var->content, varname, len) == 0
+		if (ft_strncmp(l_var->content, varname, len) == 0
 			&& ((char *)l_var->content)[len] == '=')
 			return (&((char *)l_var->content)[len + 1]);
 		l_var = l_var->next;
@@ -68,7 +68,7 @@ void	unset_var2(char **cmd, int i, int len, t_list **env)
 	node = *env;
 	while (node)
 	{
-		if (strncmp(node->content, cmd[i], len) == 0
+		if (ft_strncmp(node->content, cmd[i], len) == 0
 			&& (((char *)node->content)[len] == '='
 			|| !((char *)node->content)[len]))
 		{

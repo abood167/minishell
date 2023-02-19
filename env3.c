@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env3.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abin-saa <abin-saa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leam <leam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 05:39:35 by sbokhari          #+#    #+#             */
-/*   Updated: 2023/01/10 08:20:42 by abin-saa         ###   ########.fr       */
+/*   Updated: 2023/02/19 15:22:54 by leam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	replace_withvar2(char *str, int *start, int *pos, t_list **list)
 	if (!val)
 		val = "";
 	ft_lstadd_back(list, ft_lstnew(ft_strdup(val)));
-	if (strncmp(&str[*start], "?", 1) == 0)
+	if (ft_strncmp(&str[*start], "?", 1) == 0)
 		free(val);
 	*start = *pos;
 }
